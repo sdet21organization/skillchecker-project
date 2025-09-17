@@ -26,9 +26,10 @@ public class Auth {
                         .assertThat()
                         .contentType(ContentType.JSON)
                         .extract().response();
-
+response.getCookie("connect.sid");
         return response;
     }
+
 
     @Step("Verify JSON schema and status code is 200")
     public static void verifySuccessfulLoginResponse(Response response) {

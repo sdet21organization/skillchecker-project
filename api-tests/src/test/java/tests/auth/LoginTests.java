@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Auth;
 
-@DisplayName("API. Login tests")
+@DisplayName("Login tests")
 public class LoginTests extends BaseTest {
 
     @Test
@@ -29,6 +29,5 @@ public class LoginTests extends BaseTest {
         Response response = Auth.loginUser(invalidEmail, invalidPassword);
         Auth.verifyUnsuccessfulLoginResponse(response);
     }
-
 }
 

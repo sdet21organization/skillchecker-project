@@ -14,6 +14,7 @@
         <junit.version>5.13.4</junit.version>
         <allure.version>2.28.1</allure.version>
         <playwright.version>1.54.0</playwright.version>
+        <aspectj.version>1.9.24</aspectj.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -26,11 +27,6 @@
             </dependency>
             <dependency>
                 <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-junit5</artifactId>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-bom</artifactId>
                 <version>${allure.version}</version>
                 <type>pom</type>
@@ -39,18 +35,15 @@
         </dependencies>
     </dependencyManagement>
 
-
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
-            <version>${allure.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -65,24 +58,38 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.basedir}/target/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <argLine>
+                        -Dfile.encoding=${project.build.sourceEncoding}
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+                </configuration>
             </plugin>
-
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.13.0</version>
-            <configuration>
-                <source>${maven.compiler.source}</source>
-                <target>${maven.compiler.target}</target>
-            </configuration>
-        </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <release>21</release>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
@@ -91,4 +98,3 @@
         </plugins>
     </build>
 </project>
-
