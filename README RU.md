@@ -87,11 +87,11 @@ ui-tests
 
 ## 🚀 Запуск тестов и генерация отчета
 ### API-тесты
-'mvn clean test -pl api-tests' 
+`mvn clean test -pl api-tests` 
 ### UI-тесты
-'mvn clean test -pl ui-tests'
+`mvn clean test -pl ui-tests`
 ### API и UI комбо
-'mvn -f api-tests clean test && mvn -f ui-tests clean test'
+`mvn -f api-tests clean test && mvn -f ui-tests clean test`
 
 можно также использовать более привычные команды: 
 преходить в папку 'cd [название паки]'
@@ -99,15 +99,15 @@ ui-tests
 
 ### Генерация отчета 
 📄Сгенерировать отчет Allure:
-'mvn allure:generate'
+`mvn allure:generate`
 
 🌐 Открыть отчет в браузере:
-'mvn allure:serve'
+`mvn allure:serve`
 
 можно также переходить в папу target и генерировать и заускать отчеты из нее 
-'cd target'
-'allure geenerate' 
-'allure open'
+`cd target`
+`allure geenerate` 
+`allure open`
 
 ---
 
