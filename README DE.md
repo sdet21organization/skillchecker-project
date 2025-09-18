@@ -80,11 +80,13 @@ src
         └── junit-platform.properties
 ```
 
+<br>
 * In diesem Ordner befindet sich auch die Klasse **GetAuthCookie**, um Authentifizierungs-Cookies zu erhalten und in API-Tests wiederzuverwenden.  
 Zur Verwendung des Cookies muss der Parameter `cookie` bei der Anfrage übergeben werden (siehe Beispiel):  
-<img width="890" height="619" alt="api cookie" src="https://github.com/user-attachments/assets/fe6430dd-97b8-414c-83af-4c8614e8e4b1" />  
-
-** In `pages` werden **Seitenklassen** ->> `[PageName]Page` und **Locatoren** ->> `[PageName]PageElements` separat gespeichert.  
+(https://github.com/user-attachments/assets/fe6430dd-97b8-414c-83af-4c8614e8e4b1)
+<br>
+** In `pages` werden **Seitenklassen** ->> `[PageName]Page` und **Locatoren** ->> `[PageName]PageElements` separat gespeichert. 
+<br> 
 *** In `utils` gibt es ebenfalls die Klasse **GetAuthCookie** für die Wiederverwendung in UI-Tests.
 
 ---
