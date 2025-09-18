@@ -17,4 +17,27 @@ public class TestPassingTests extends BaseTest {
                 .assignTestToCandidate()
                 .verifyThatTestIsSuccessfullyAssigned();
     }
+
+    @DisplayName("Get link to the test 'Тест Прохождение тестов с одной опцией'")
+    @Test
+    public void getLinkToTest () {
+
+        new TestsPage(context)
+                .openTestsPage()
+                .findTestPassingTestWithOneOption()
+                .copyLinkToTest()
+                .verifyThatLinkIsCopiedToClipboard();
+    }
+
+    @DisplayName("Verify that passing test page opens correctly")
+    @Test
+    public void openPassingTestPage () {
+
+        new TestsPage(context)
+                .openTestsPage()
+                .findTestPassingTestWithOneOption()
+                .copyLinkToTest()
+                .navigateToPassingTestPage()
+                .verifyThatPassingTestPageOpensCorrectly();
+    }
 }
