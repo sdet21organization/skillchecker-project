@@ -14,6 +14,7 @@ import utils.GetAuthCookie;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -32,7 +33,8 @@ public class BaseTest {
     @BeforeEach
     public void beforeEach() {
         context = new TestContext();
-        context.browserContext = browser.newContext();
+        context.browserContext = browser.newContext(new Browser.NewContextOptions()
+                .setPermissions(Arrays.asList("clipboard-read", "clipboard-write")));
         context.browserContext.tracing().start(new Tracing.StartOptions()
                 .setScreenshots(true)
                 .setSnapshots(true));

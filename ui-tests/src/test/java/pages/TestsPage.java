@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Assertions;
 public class TestsPage {
     TestContext context;
 
-    public Locator searchInput;
-    public Locator testsButton;
-    public Locator assignTestButton;
-    public Locator candidateNameSelect;
-    public Locator assignTestButtonInModal;
-    public Locator copyLinkButton;
-    public Locator testAssignedNotification;
+    private final Locator searchInput;
+    private final Locator testsButton;
+    private final Locator assignTestButton;
+    private final Locator candidateNameSelect;
+    private final Locator assignTestButtonInModal;
+    private final Locator copyLinkButton;
+    private final Locator testAssignedNotification;
 
     public TestsPage(TestContext context) {
         this.context = context;
@@ -48,6 +48,43 @@ public class TestsPage {
         context.page.getByText("John Doe (john.doe@example.").click();
         assignTestButtonInModal.click();
         return this;
+    }
+
+    @Step("Copy link to the test 'Тест Прохождение тестов с одной опцией'")
+    public TestsPage copyLinkToTest() {
+        assignTestButton.click();
+        candidateNameSelect.click();
+        context.page.getByText("John Doe (john.doe@example.").click();
+        assignTestButtonInModal.click();
+        copyLinkButton.click();
+        return this;
+    }
+
+    @Step("Open new tab and navigate to URL {url}")
+    public Page openNewTabAndNavigate(String url) {
+        Page newTab = context.page.context().newPage();
+        newTab.navigate(url);
+        newTab.waitForLoadState();
+        return newTab;
+    }
+
+    @Step("Copy link to clipboard {copyLinkButton}")
+    public String copyLinkToClipboard(Locator copyButton) {
+        copyButton.click();
+        return context.page.evaluate("() => navigator.clipboard.readText()").toString();
+    }
+
+    @Step("Navigate to passing test page")
+    public PassingTestPage navigateToPassingTestPage() {
+        String testUrl = copyLinkToClipboard(copyLinkButton);
+        Page passingTestPage = openNewTabAndNavigate(testUrl);
+        return new PassingTestPage(passingTestPage, context);
+    }
+
+    @Step("Verify that link is copied to clipboard")
+    public void verifyThatLinkIsCopiedToClipboard() {
+        String actualResult = context.page.evaluate("() => navigator.clipboard.readText()").toString();
+        Assertions.assertTrue(actualResult.contains("https://skillchecker.tech/take-test/"));
     }
 
     @Step("Verify that test is successfully assigned")
