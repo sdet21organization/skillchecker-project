@@ -2,15 +2,16 @@ package tests.authandregistration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.LoginPage;
 import tests.BaseTest;
 import utils.ConfigurationReader;
-
-@DisplayName("UI. Login tests")
+@DisplayName("Login tests")
 public class LoginTests extends BaseTest {
 
     @Test
+
     @DisplayName("Successful login test")
     public void successfulLoginTest(){
         context.page.navigate(ConfigurationReader.get("URL"));
