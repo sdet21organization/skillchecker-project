@@ -156,7 +156,7 @@ Verwenden Sie Allure-Annotationen, um die Berichterstattung und Visualisierung z
 
 ### 3. Pull Request (PR)
 - Alle Änderungen über **Pull Requests** einreichen.  
-- PR muss **mindestens von einem Teammitglied genehmigt** werden, bevor er gemergt wird.
+- PR muss **mindestens von einem Teammitglied und Teamleiter genehmigt** werden, bevor er gemergt wird.
 
 > 🔄 Prozess:  
 > 1. Branch mit Aufgaben-ID erstellen  

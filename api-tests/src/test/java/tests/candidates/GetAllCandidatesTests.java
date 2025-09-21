@@ -1,5 +1,6 @@
 package tests.candidates;
 
+import helpers.ResponseVerifier;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,10 +12,9 @@ public class GetAllCandidatesTests extends BaseTest {
 
     @Test
     @DisplayName("Check getting all candidates")
-    void getAllCandidates () {
+    void getAllCandidates() {
         Response response = Candidates.getAllCandidates(cookie);
-        Candidates.verifySuccessfulGetAllCandidatesResponse(response);
+        ResponseVerifier.verifyResponse(response, 200, "schemas/candidates/GetAllCandidatesSuccessResponse.json");
 
-
-}
+    }
 }

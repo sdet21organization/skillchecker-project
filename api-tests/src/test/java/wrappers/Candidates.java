@@ -1,5 +1,6 @@
 package wrappers;
 
+import dto.candidates.CandidatesRequest;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -13,7 +14,7 @@ public class Candidates {
         Response response =
                 given()
                         .contentType("application/json")
-                        .header("Cookie",cookie)
+                        .header("Cookie", cookie)
                         .when()
                         .get("/candidates")
                         .then()
@@ -23,11 +24,21 @@ public class Candidates {
         return response;
     }
 
-    @Step("Verify JSON schema and status code is 200")
-    public static void verifySuccessfulGetAllCandidatesResponse(Response response) {
-        response.then().assertThat()
-                .statusCode(200);
-//              .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/candidates/GetAllCandidatesSuccessResponse.json"));
+    @Step("Create a new Candidate")
+    public static Response createNewCandidate(String cookie, CandidatesRequest payload) {
+
+        Response response =
+                given()
+                        .contentType("application/json")
+                        .header("Cookie", cookie)
+                        .body(payload)
+                        .when()
+                        .post("/candidates")
+                        .then()
+                        .assertThat()
+                        .contentType(ContentType.JSON)
+                        .extract().response();
+        return response;
     }
 }
 
