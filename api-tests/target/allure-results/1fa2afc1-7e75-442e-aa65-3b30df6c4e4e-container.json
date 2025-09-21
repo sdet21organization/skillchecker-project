@@ -1,0 +1,1 @@
+{"uuid":"1fa2afc1-7e75-442e-aa65-3b30df6c4e4e","name":"Get all candidates tests","children":["a0177b04-8ede-4ffb-9265-afc4e1b3fd2a"],"befores":[{"name":"setup","status":"passed","stage":"finished","steps":[],"attachments":[],"parameters":[],"start":1758136870517,"stop":1758136872022}],"afters":[],"start":1758136870502,"stop":1758136872850}

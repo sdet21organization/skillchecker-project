@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dc0cf996-64f5-427e-bc51-e5d939fa1696" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;SlavikSliepchenko&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/sdet21organization/skillchecker-project.git&quot;,
+    &quot;accountId&quot;: &quot;94c7a934-8eaa-490e-a874-b413edbc4756&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="32q2NS6AqjRVtmGZK4gVDNmFkYJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.CreateTestApiTests.addQuestionSuccessfully.executor": "Run",
+    "JUnit.CreateTestApiTests.checkApiConnection.executor": "Run",
+    "JUnit.CreateTestApiTests.createTest.executor": "Run",
+    "JUnit.CreateTestApiTests.createTestSuccessfully.executor": "Run",
+    "JUnit.CreateTestApiTests.createTestWithoutDescription.executor": "Run",
+    "JUnit.CreateTestApiTests.createTestWithoutName.executor": "Run",
+    "JUnit.CreateTestApiTests.executor": "Run",
+    "JUnit.CreateTestApiTests.generateQuestionsForTest.executor": "Run",
+    "JUnit.CreateTestApiTests.updateTestDescription.executor": "Run",
+    "JUnit.CreateTestApiTests.updateTestIsActive.executor": "Run",
+    "JUnit.CreateTestApiTests.updateTestName.executor": "Run",
+    "JUnit.CreateTestApiTests.updateTestNameAndDescription.executor": "Run",
+    "JUnit.CreateTestApiTests.updateTestPassingScore.executor": "Run",
+    "JUnit.CreateTestApiTests.updateTestTimeLimit.executor": "Run",
+    "JUnit.CreateTestUiTests.clickCreateTestButton.executor": "Run",
+    "JUnit.CreateTestUiTests.createNewTestStepByStep.executor": "Run",
+    "JUnit.CreateTestUiTests.createNewTestViaModal.executor": "Run",
+    "JUnit.CreateTestUiTests.createTest.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestButtonIsVisible.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestButtonIsVisibleDebug.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestButton_opensCreateForm.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestModalAppearsAfterClick.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestPositive.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestWithEmptyName.executor": "Run",
+    "JUnit.CreateTestUiTests.createTestWithInvalidPassingScore.executor": "Run",
+    "JUnit.CreateTestUiTests.executor": "Run",
+    "JUnit.CreateTestUiTests.openCreateTestForm.executor": "Run",
+    "JUnit.CreateTestUiTests.openTestsPage.executor": "Run",
+    "JUnit.GetAllCandidatesTests.executor": "Run",
+    "JUnit.GetAllCandidatesTests.getAllCandidates.executor": "Run",
+    "JUnit.LoginTests.executor": "Run",
+    "JUnit.LoginTests.successfulLogin.executor": "Run",
+    "JUnit.LoginTests.successfulLoginTest.executor": "Run",
+    "JUnit.LoginTests.unsuccessfulLogin.executor": "Run",
+    "JUnit.LoginTests.unsuccessfulLoginTest.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "test-management",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/viacheslavsliepchenko/skillchecker-project",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  },
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/api-tests/src/test/resources/schemas.manage" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.CreateTestApiTests">
+    <configuration name="CreateTestApiTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="api-tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.managetests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.managetests" />
+      <option name="MAIN_CLASS_NAME" value="tests.managetests.CreateTestApiTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CreateTestApiTests.addQuestionSuccessfully" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="api-tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.managetests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.managetests" />
+      <option name="MAIN_CLASS_NAME" value="tests.managetests.CreateTestApiTests" />
+      <option name="METHOD_NAME" value="addQuestionSuccessfully" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CreateTestApiTests.generateQuestionsForTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="api-tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.managetests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.managetests" />
+      <option name="MAIN_CLASS_NAME" value="tests.managetests.CreateTestApiTests" />
+      <option name="METHOD_NAME" value="generateQuestionsForTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CreateTestApiTests.updateTestIsActive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="api-tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.managetests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.managetests" />
+      <option name="MAIN_CLASS_NAME" value="tests.managetests.CreateTestApiTests" />
+      <option name="METHOD_NAME" value="updateTestIsActive" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CreateTestApiTests.updateTestPassingScore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="api-tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.managetests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.managetests" />
+      <option name="MAIN_CLASS_NAME" value="tests.managetests.CreateTestApiTests" />
+      <option name="METHOD_NAME" value="updateTestPassingScore" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.CreateTestApiTests" />
+        <item itemvalue="JUnit.CreateTestApiTests.addQuestionSuccessfully" />
+        <item itemvalue="JUnit.CreateTestApiTests.generateQuestionsForTest" />
+        <item itemvalue="JUnit.CreateTestApiTests.updateTestIsActive" />
+        <item itemvalue="JUnit.CreateTestApiTests.updateTestPassingScore" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc0cf996-64f5-427e-bc51-e5d939fa1696" name="Changes" comment="" />
+      <created>1749578368399</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749578368399</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Add API tests for test management (ManageTests + CreateTestApiTests)">
+      <option name="closed" value="true" />
+      <created>1758473894815</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1758473894815</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/test-management" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add API tests for test management (ManageTests + CreateTestApiTests)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add API tests for test management (ManageTests + CreateTestApiTests)" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../Desktop/Skillchecker/TestsPage.java</url>
+          <line>10</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
