@@ -34,7 +34,6 @@ public class ManageTests {
                         .matchesJsonSchemaInClasspath("schemas.manage/CreateTestSuccessResponse.json"));
     }
 
-
 }
 
 
