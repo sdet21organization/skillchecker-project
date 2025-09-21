@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-;
+
 
 public class ManageTests {
 
