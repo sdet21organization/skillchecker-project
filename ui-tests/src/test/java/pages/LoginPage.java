@@ -1,5 +1,6 @@
 package pages;
 
+import com.microsoft.playwright.options.LoadState;
 import context.TestContext;
 import com.microsoft.playwright.Locator;
 import io.qameta.allure.Step;
@@ -23,6 +24,7 @@ public class LoginPage {
         usernameInput.fill(email);
         passwordInput.fill(password);
         loginButton.click();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         return this;
     }
 }
