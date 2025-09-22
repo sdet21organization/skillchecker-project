@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.LoginPage;
 import pages.components.Toast;
-import tests.UiBaseTest;
+import tests.BaseTest;
 import utils.ConfigurationReader;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Auth")
 @Feature("Login")
 @DisplayName("Login tests")
-public class LoginTests extends UiBaseTest {
+public class LoginTests extends BaseTest {
 
     @Test
     @DisplayName("SS-T30: Валидные email/пароль → редирект на /dashboard")
