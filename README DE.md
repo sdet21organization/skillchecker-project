@@ -95,18 +95,18 @@ Zur Verwendung des Cookies muss der Parameter `cookie` bei der Anfrage übergebe
 
 ### API-Tests
 ```bash
-mvn clean test -pl api-tests
+mvn clean test -f api-tests/pom.xml
 ```
 
 ### UI-Tests
 ```bash
-mvn clean test -pl ui-tests
+mvn clean test -f ui-tests/pom.xml
 ```
 
 ### Kombination von API- und UI-Tests
 ```bash
-mvn -f api-tests clean test && mvn -f ui-tests clean test
-```
+mvn clean test -f api-tests/pom.xml; mvn clean test -f ui-tests/pom.xml```
+
 
 Alternativ in den Ordner wechseln: `cd [Ordnername]`  
 und Tests ausführen: `mvn clean test`
@@ -115,7 +115,7 @@ und Tests ausführen: `mvn clean test`
 
 📄 Allure-Bericht generieren:
 ```bash
-mvn allure:generate
+mvn allure:report
 ```
 
 🌐 Bericht im Browser öffnen:
