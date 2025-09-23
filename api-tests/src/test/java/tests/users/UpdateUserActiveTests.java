@@ -2,12 +2,15 @@ package tests.users;
 
 import helpers.ConfigurationReader;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Users;
 
+import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
+import static wrappers.Users.deleteByEmailIfExists;
 
 public class UpdateUserActiveTests extends BaseTest {
 
@@ -33,5 +36,13 @@ public class UpdateUserActiveTests extends BaseTest {
         Response unblock = Users.updateUserActive(cookie, id, true);
         assertEquals(200, unblock.statusCode(), "Expected 200, body=" + unblock.asString());
         assertTrue(unblock.jsonPath().getBoolean("active"), "active should be true");
+    }
+
+    @AfterEach
+    void cleanupUser() {
+        try {
+            deleteByEmailIfExists(cookie, get("test.user.email"));
+        } catch (Exception ignore) {
+        }
     }
 }

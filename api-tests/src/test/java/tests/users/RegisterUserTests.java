@@ -2,12 +2,15 @@ package tests.users;
 
 import helpers.ConfigurationReader;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Users;
 
+import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
+import static wrappers.Users.deleteByEmailIfExists;
 
 public class RegisterUserTests extends BaseTest {
 
@@ -19,7 +22,7 @@ public class RegisterUserTests extends BaseTest {
         String password = ConfigurationReader.get("test.user.password");
         String role = ConfigurationReader.get("test.user.role");
 
-        Users.deleteByEmailIfExists(cookie, email);
+        deleteByEmailIfExists(cookie, email);
 
         Response resp = Users.registerUser(cookie, email, fullName, password, role, true);
 
@@ -50,5 +53,13 @@ public class RegisterUserTests extends BaseTest {
         String msg = dup.jsonPath().getString("message");
         assertNotNull(msg, "error message should be present");
         assertFalse(msg.isBlank(), "error message should not be blank");
+    }
+
+    @AfterEach
+    void cleanupUser() {
+        try {
+            deleteByEmailIfExists(cookie, get("test.user.email"));
+        } catch (Exception ignore) {
+        }
     }
 }
