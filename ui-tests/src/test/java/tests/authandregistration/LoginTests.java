@@ -16,6 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Login tests")
 public class LoginTests extends BaseTest {
 
+    @Override
+    protected boolean needAuthCookie() {
+        return false;
+    }
+
     @Test
     @DisplayName("SS-T30: Валидные email/пароль → редирект на /dashboard")
     void successfulLogin_redirectsToDashboard() {
