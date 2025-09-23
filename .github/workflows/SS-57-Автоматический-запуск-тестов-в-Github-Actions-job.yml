@@ -34,6 +34,7 @@ jobs:
         run: mvn clean test -f api-tests/pom.xml -Dmaven.test.failure.ignore=true
 
       - name: Upload Allure Results (API)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results-api
@@ -63,6 +64,7 @@ jobs:
         run: mvn clean test -f ui-tests/pom.xml -Dmaven.test.failure.ignore=true
 
       - name: Upload Allure Results (UI)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results-ui
@@ -96,4 +98,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
-
