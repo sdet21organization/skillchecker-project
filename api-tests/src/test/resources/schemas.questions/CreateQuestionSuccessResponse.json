@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "organizationId": {
+      "type": "integer"
+    },
+    "testId": {
+      "type": "integer"
+    },
+    "content": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "correctAnswer": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "points": {
+      "type": "integer"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "imageUrl": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "codeSnippet": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "codeLanguage": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "testId",
+    "content",
+    "type",
+    "options",
+    "correctAnswer",
+    "points",
+    "order",
+    "codeLanguage"
+  ]
+}
