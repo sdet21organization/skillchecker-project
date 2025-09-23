@@ -1,20 +1,16 @@
-# === Java / JVM ===
+# Compiled class file
 *.class
 
-# VM crash logs
-hs_err_pid*
-replay_pid*
-
-# === Logs ===
+# Log file
 *.log
 
-# === BlueJ ===
+# BlueJ files
 *.ctxt
 
-# === J2ME ===
+# Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# === Archives / packages ===
+# Package Files #
 *.jar
 *.war
 *.nar
@@ -23,26 +19,28 @@ replay_pid*
 *.tar.gz
 *.rar
 
-# === IDE / Editors ===
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+# IDE / editors
 .idea/
 *.iml
 .vscode/
 
-# === Maven build output ===
-target/
+# Maven build output
+**/target/
 
-# === Allure (не коммитим) ===
-allure-results/
+# Allure artifacts (results, built reports, local CLI cache) — не коммитим
 **/allure-results/
 **/allure-report/
 ui-tests/.allure/
 allure-report-*.zip
 
-# === Playwright artifacts ===
-traces/
-playwright-report/
-trace.zip
+# Playwright artifacts
+**/traces/
+**/playwright-report/
 
-# === OS junk ===
+# OS junk
 .DS_Store
 Thumbs.db
