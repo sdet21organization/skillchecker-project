@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
+import wrappers.ManageTests;
 
 import java.util.Map;
 
