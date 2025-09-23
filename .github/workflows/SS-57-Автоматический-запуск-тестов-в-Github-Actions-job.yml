@@ -34,7 +34,7 @@ jobs:
         run: mvn clean test -f api-tests/pom.xml -Dmaven.test.failure.ignore=true
 
       - name: Upload Allure Results (API)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-results-api
           path: api-tests/target/allure-results
@@ -63,7 +63,7 @@ jobs:
         run: mvn clean test -f ui-tests/pom.xml -Dmaven.test.failure.ignore=true
 
       - name: Upload Allure Results (UI)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-results-ui
           path: ui-tests/target/allure-results
