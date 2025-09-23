@@ -1,0 +1,99 @@
+name: Maven Tests with Allure
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run API Tests
+        run: mvn clean test -f api-tests/pom.xml -Dmaven.test.failure.ignore=true
+
+      - name: Upload Allure Results (API)
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results-api
+          path: api-tests/target/allure-results
+
+  ui-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run UI Tests
+        run: mvn clean test -f ui-tests/pom.xml -Dmaven.test.failure.ignore=true
+
+      - name: Upload Allure Results (UI)
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results-ui
+          path: ui-tests/target/allure-results
+
+  allure-report:
+    needs: [api-tests, ui-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download API results
+        uses: actions/download-artifact@v3
+        with:
+          name: allure-results-api
+          path: allure-results/api
+
+      - name: Download UI results
+        uses: actions/download-artifact@v3
+        with:
+          name: allure-results-ui
+          path: allure-results/ui
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+
