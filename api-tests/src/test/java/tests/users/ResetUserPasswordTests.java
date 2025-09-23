@@ -9,16 +9,16 @@ import wrappers.Users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UpdateUserRoleTests extends BaseTest {
+public class ResetUserPasswordTests extends BaseTest {
 
     @Test
-    @DisplayName("Users: update role")
-    void updateRole_toInterviewer_returns200() {
+    @DisplayName("Users: reset password")
+    void resetPassword_returns200() {
         String email = ConfigurationReader.get("test.user.email");
         String fullName = ConfigurationReader.get("test.user.fullName");
         String password = ConfigurationReader.get("test.user.password");
         String baseRole = ConfigurationReader.get("test.user.role");
-        String newRole = ConfigurationReader.get("test.user.roleChangeTo");
+        String newPassword = ConfigurationReader.get("test.user.newPassword");
 
         String id = Users.findUserIdByEmail(cookie, email);
         if (id == null) {
@@ -27,11 +27,9 @@ public class UpdateUserRoleTests extends BaseTest {
             id = String.valueOf(create.jsonPath().get("id"));
         }
 
-        Response patch = Users.updateUserRole(cookie, id, newRole);
+        Response resp = Users.resetUserPassword(cookie, id, newPassword);
 
-        assertEquals(200, patch.statusCode(), "Expected 200, body=" + patch.asString());
-        assertEquals(newRole, patch.jsonPath().getString("role"), "role mismatch");
-        assertEquals(email, patch.jsonPath().getString("email"), "email mismatch");
-        assertEquals(fullName, patch.jsonPath().getString("fullName"), "fullName mismatch");
+        assertEquals(200, resp.statusCode(), "Expected 200, body=" + resp.asString());
+        assertEquals("Password reset successfully", resp.jsonPath().getString("message"), "message mismatch");
     }
 }
