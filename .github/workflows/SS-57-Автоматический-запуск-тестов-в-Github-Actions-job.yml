@@ -13,17 +13,14 @@ jobs:
   api-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -43,17 +40,14 @@ jobs:
   ui-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -73,15 +67,14 @@ jobs:
   allure-report:
     needs: [api-tests, ui-tests]
     runs-on: ubuntu-latest
+    if: always()  
     steps:
-      - name: Download API results
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results-api
           path: allure-results/api
 
-      - name: Download UI results
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results-ui
           path: allure-results/ui
