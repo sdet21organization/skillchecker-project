@@ -133,6 +133,19 @@ public class TestsPage {
         Assertions.assertTrue(error.isVisible(), "Сообщение об ошибке для пустого имени теста не отображается");
     }
 
+
+    @Step("Открыть тест по названию: {testName}")
+    public void openTestByName(String testName) {
+
+        Locator rowByText = context.page.locator("tr:has-text(\"" + testName + "\")");
+        rowByText.waitFor(new Locator.WaitForOptions()
+                .setTimeout(7000)
+                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
+
+        rowByText.locator("a, button, td, div").first().scrollIntoViewIfNeeded();
+        rowByText.locator("a, button, td, div").first().click();
+    }
+
     // ===== Юлины методы =====
     @Step("Find test 'Тест Прохождение тестов с одной опцией'")
     public TestsPage findTestPassingTestWithOneOption() {
