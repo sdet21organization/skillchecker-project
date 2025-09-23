@@ -14,7 +14,7 @@ public class QuestionsApiTests extends BaseTest {
 
     @Test
     @DisplayName("Создание вопроса: 201 + схема")
-    void createQuestion_success() throws com.fasterxml.jackson.core.JsonProcessingException {
+    void createQuestion_success() throws JsonProcessingException {
 
         Response createTestResp = wrappers.ManageTests.createTest(cookie, "API Test", "for questions");
         int testId = createTestResp.jsonPath().getInt("id");
