@@ -22,6 +22,7 @@ public class PassingTestPage {
 
     @Step("Verify that Passing Test page opens correctly")
     public void verifyThatPassingTestPageOpensCorrectly() {
+        context.page.waitForTimeout(1500);
         String actualTitle = title.textContent();
         String actualStartButton = startTestButton.textContent();
         Assertions.assertEquals("Тест Прохождение тестов с одной опцией", actualTitle, "Title does not match");
