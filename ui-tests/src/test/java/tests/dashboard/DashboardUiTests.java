@@ -33,7 +33,6 @@ public class DashboardUiTests extends BaseTest {
         return p.waitUntilReady();
     }
 
-    // === Тест №1 ===
     @Test
     @DisplayName("should display correct numbers in all analytics widgets")
     void analyticsWidgets_showNonNegativeNumbers_andStableAfterIdle() {
@@ -65,7 +64,6 @@ public class DashboardUiTests extends BaseTest {
         assertEquals(completed,  p.asInt(p.completedSessionsCounter),"Completed changed unexpectedly");
     }
 
-    // === Тест №2 === (обновлён)
     @Test
     @DisplayName("should open the \"Create Test\" modal upon clicking the quick action button")
     void createTest_quickAction_opensModal() {
@@ -75,7 +73,6 @@ public class DashboardUiTests extends BaseTest {
                 "Create Test modal's name input should be visible");
     }
 
-    // === Тест №3 === (обновлён)
     @Test
     @DisplayName("should open the \"Add Candidate\" modal upon clicking the quick action button")
     void addCandidate_quickAction_opensModal() {
@@ -85,7 +82,6 @@ public class DashboardUiTests extends BaseTest {
                 "Add Candidate modal's name input should be visible");
     }
 
-    // === Тест №4 ===
     @Test
     @DisplayName("should display the list of recent activities")
     void recentActivity_list_isVisible_andHasItems() {
