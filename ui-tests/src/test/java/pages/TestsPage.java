@@ -133,6 +133,7 @@ public class TestsPage {
         Assertions.assertTrue(error.isVisible(), "Сообщение об ошибке для пустого имени теста не отображается");
     }
 
+
     // ===== Юлины методы =====
     @Step("Find test 'Тест Прохождение тестов с одной опцией'")
     public TestsPage findTestPassingTestWithOneOption() {
