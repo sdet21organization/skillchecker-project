@@ -33,7 +33,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
+        context.page.waitForTimeout(1000);
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();
@@ -61,7 +61,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
+        context.page.waitForTimeout(1000);
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();

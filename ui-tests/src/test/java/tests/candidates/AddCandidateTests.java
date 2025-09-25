@@ -55,7 +55,7 @@ public class AddCandidateTests extends BaseTest {
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
         context.page.waitForTimeout(1000);
         candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
+        context.page.waitForTimeout(1000);
         assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об ошибке не показан");
     }
 
