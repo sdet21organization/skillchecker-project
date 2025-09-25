@@ -181,12 +181,12 @@ jobs:
                  "fields": [
                    {
                     "name": "📁 ",
-                    "value": "$repo",
+                    "value": $repo,
                     "inline": true
                    },
                   {
                    "name": "🌿 ",
-                   "value": "$branch",
+                   "value": $branch,
                    "inline": true
                   },
                   {
@@ -196,27 +196,27 @@ jobs:
                   },
                   {
                    "name": "✅ Passed",
-                   "value": "$passed",
+                   "value": $passed,
                    "inline": true
                   },
                   {
                    "name": "⚠️ Broken",
-                   "value": "$broken",
+                   "value": $broken,
                    "inline": true
                   },
                   {
                     "name": "❌ Failed",
-                    "value": "$failed",
+                    "value": $failed,
                     "inline": true
                     },
                    {
                     "name": "⏭️ Skipped",
-                    "value": "$skipped",
+                    "value": $skipped,
                     "inline": true
                     },
                    {
                     "name": "📊 Total",
-                    "value": "$total",
+                    "value": $total,
                     "inline": true
                     }
                   ]
