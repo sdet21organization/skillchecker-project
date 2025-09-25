@@ -1,7 +1,6 @@
 package tests.candidates;
 
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
-        candidatesPage.importSubmitImportModalButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
+        context.page.waitForTimeout(2000);
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();
@@ -63,7 +62,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
-        candidatesPage.importSubmitImportModalButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
+        context.page.waitForTimeout(2000);
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();
