@@ -1,6 +1,7 @@
 package tests.candidates;
 
-import com.microsoft.playwright.options.LoadState;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatePage;
@@ -25,7 +26,7 @@ public class BulkTestAssigningTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().checkCndidate(1).checkCndidate(2).checkCndidate(3);
-        assertEquals("3", candidatesPage.getBulkAssignButtonCounter());
+        assertEquals("3", candidatesPage.getBulkAssignButtonCounter(), "Счетчик на кнопке ʼНазначить тестʼ не равен ʼ3ʼ");
 
         List<String> candidatesListOnCandidatesPage = new ArrayList<>();
         candidatesListOnCandidatesPage.add(candidatesPage.getCndidateName(1));
@@ -33,39 +34,41 @@ public class BulkTestAssigningTests extends BaseTest {
         candidatesListOnCandidatesPage.add(candidatesPage.getCndidateName(3));
 
         candidatesPage.clickBulkAssignButton();
-        assertEquals("3", candidatesPage.getBulkAssignModalCounterValue());
-        assertEquals(candidatesListOnCandidatesPage, candidatesPage.getCandidatesListOnBulkAssignModal());
-        assertTrue(candidatesPage.bulkAssignModalSubmitButton.isDisabled());
-        assertTrue(candidatesPage.testInfo.isHidden());
+        assertEquals("3", candidatesPage.getBulkAssignModalCounterValue(), "Счетчик в окне ʼНазначить тестʼ не равен ʼ3ʼ");
+        assertEquals(candidatesListOnCandidatesPage, candidatesPage.getCandidatesListOnBulkAssignModal(), "Список кандидатов в окне ʼНазначить тестʼ не совпадает с выбранным списком");
+        assertTrue(candidatesPage.bulkAssignModalSubmitButton.isDisabled(), "Кнопка ʼНазначить тестʼ в окне активна");
+        assertTrue(candidatesPage.testInfo.isHidden(), "Блок информации о тесте показан до выбора теста");
 
         candidatesPage.chooseTestOnBulkAssignModal(testInfo.name);
-        assertEquals(testInfo.description, candidatesPage.getTestDescriptionOnBulkModal());
-        assertEquals(testInfo.executiontime, candidatesPage.getTestExecutionTimeOnBulkModal());
-        assertEquals(testInfo.passingscore, candidatesPage.getTestPassingScoreOnBulkModal());
-        assertTrue(candidatesPage.bulkAssignModalSubmitButton.isEnabled());
+        assertEquals(testInfo.description, candidatesPage.getTestDescriptionOnBulkModal(), "Описание теста в окне не совпадает с ожидаемым описанием теста");
+        assertEquals(testInfo.executiontime, candidatesPage.getTestExecutionTimeOnBulkModal(), "Продолжительность теста в окне не совпадает с ожидаемой продолжительностью теста");
+        assertEquals(testInfo.passingscore, candidatesPage.getTestPassingScoreOnBulkModal(), "Проходной бал теста в окне не совпадает с ожидаемым проходным балом теста");
+        assertTrue(candidatesPage.bulkAssignModalSubmitButton.isEnabled(), "Кнопка ʼНазначить тестʼ в окне не активна");
 
         candidatesPage.choosePeriodOnBulkAssignModal("14 дней").clickSubmitBulkAssignModalButton();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
-        assertTrue(candidatesPage.toast.isVisible());
-        assertTrue(candidatesPage.bulkAssignModalSubmitButton.isHidden());
-        assertTrue(candidatesPage.testInfo.isHidden());
+        assertTrue(candidatesPage.bulkAssignModalSubmitButton.isHidden(), "Кнока ʼНазначить тестʼ все еще отображется в окне");
+
+        candidatesPage.toast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(3000));
+
+        assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об успешном назначении тестов не показан");
+        assertTrue(candidatesPage.testInfo.isHidden(), "Информация о тесте все еще отображется в окне");
 
         candidatesPage.clickCloseBulkAssignModalButton();
-        assertTrue(candidatesPage.bulkAssigningModal.isHidden());
+        assertTrue(candidatesPage.bulkAssigningModal.isHidden(), "Модальное окно ʼНазначить тестʼ не закрыто");
 
         CandidatePage candidatePage = new CandidatePage(context);
 
         candidatePage.open(1);
         List<String> actualListOfTests = candidatePage.getListOfTests();
-        assertTrue(actualListOfTests.contains(BulkTestAssigningValidation.TESTINFO1.name));
+        assertTrue(actualListOfTests.contains(BulkTestAssigningValidation.TESTINFO1.name), "На странице {id}го кандидата не найдено назначенный тест");
 
         candidatePage.open(2);
         actualListOfTests = candidatePage.getListOfTests();
-        assertTrue(actualListOfTests.contains(BulkTestAssigningValidation.TESTINFO1.name));
+        assertTrue(actualListOfTests.contains(BulkTestAssigningValidation.TESTINFO1.name), "На странице {id}го кандидата не найдено назначенный тест");
 
         candidatePage.open(3);
         actualListOfTests = candidatePage.getListOfTests();
-        assertTrue(actualListOfTests.contains(BulkTestAssigningValidation.TESTINFO1.name));
+        assertTrue(actualListOfTests.contains(BulkTestAssigningValidation.TESTINFO1.name), "На странице {id}го кандидата не найдено назначенный тест");
     }
 
     @Test
@@ -76,7 +79,9 @@ public class BulkTestAssigningTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().sellectAllCandidates().clickBulkAssignButton().chooseTestOnBulkAssignModal(testInfo.name).clickSubmitBulkAssignModalButton();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
-        assertTrue(candidatesPage.toast.textContent().contains("Ошибка"));
+
+        candidatesPage.toast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(3000));
+
+        assertTrue(candidatesPage.toast.textContent().contains("Ошибка"), "Тоаст с описанием ошибки не показн");
     }
 }

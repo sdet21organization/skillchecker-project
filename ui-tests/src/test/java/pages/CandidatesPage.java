@@ -1,7 +1,6 @@
 package pages;
 
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.LoadState;
 import context.TestContext;
 import io.qameta.allure.Step;
 import utils.ConfigurationReader;
@@ -25,11 +24,19 @@ public class CandidatesPage {
     private final Locator candidatesTableChcekboxes;
     private final Locator sellectAllCheckbox;
     public final Locator candidatesTableNames;
+
+    private final Locator importButton;
+    public final Locator importInfoStatus;
+    public final Locator importSubmitImportModalButton;
+    public final Locator fileUploadImportModalButton;
+    private final Locator importCancelImportModalButton;
+
+
     public final Locator addCandidateModalTitle;
     private final Locator nameModalField;
     private final Locator emailModalField;
     private final Locator positionModalField;
-    private final Locator addCandidateModalButton;
+    public final Locator addCandidateModalButton;
     private final Locator cancelModalButton;
     private final Locator modalErrorMessage;
     public final Locator bulkAssigningModal;
@@ -40,7 +47,6 @@ public class CandidatesPage {
     private final Locator bulkAssignModalChoosePeriodDropdown;
     public final Locator testInfo;
     public final Locator bulkAssignModalSubmitButton;
-    private final Locator bulkAssignModalCancelButton;
     private final Locator bulkAssignModalCloseButton;
     public final Locator toast;
 
@@ -54,6 +60,13 @@ public class CandidatesPage {
         this.candidatesTableChcekboxes = context.page.locator("[data-testid^='candidate-checkbox-']");
         this.sellectAllCheckbox = context.page.locator("[data-testid='select-all-checkbox']");
         this.candidatesTableNames = context.page.locator("[data-testid^='candidate-link-']");
+
+        this.importButton = context.page.locator("button[class*='inline-flex'] span:has(svg.lucide-download)");
+        this.importInfoStatus = context.page.locator("div[role*=\"dialog\"] div.space-y-1");
+        this.importSubmitImportModalButton = context.page.locator("[data-testid='import-submit-button']");
+        this.fileUploadImportModalButton = context.page.locator("[data-testid='file-upload-input']");
+        this.importCancelImportModalButton = context.page.locator("[data-testid='import-cancel-button']");
+
         this.addCandidateModalTitle = context.page.locator("h2.text-lg");
         this.nameModalField = context.page.locator("input[name='name']");
         this.emailModalField = context.page.locator("input[name='email']");
@@ -69,7 +82,6 @@ public class CandidatesPage {
         this.bulkAssignModalChoosePeriodDropdown = context.page.locator("div[role='dialog'] [aria-controls='radix-:rn:']");
         this.testInfo = context.page.locator("[role='dialog'] div.p-3 div");
         this.bulkAssignModalSubmitButton = context.page.locator("[data-testid='bulk-assign-submit-button']");
-        this.bulkAssignModalCancelButton = context.page.locator("[data-testid='bulk-assign-cancel-button']");
         this.bulkAssignModalCloseButton = context.page.locator("[data-testid='bulk-assign-close-button']");
         this.toast = context.page.locator("div.gap-1");
     }
@@ -167,8 +179,7 @@ public class CandidatesPage {
     @Step("Получить список кандидатов, который отображен на модалке ʼНазначить тестʼ")
     public List<String> getCandidatesListOnBulkAssignModal() {
         String candidates = bulkAssignModalCandidatesList.textContent();
-        List<String> candidateList = Arrays.stream(candidates.split(", ")).toList();
-        return candidateList;
+        return  Arrays.stream(candidates.split(", ")).toList();
     }
 
     @Step("Выбрать тест {test} из списка ʼВыберите тестʼ")
@@ -206,15 +217,27 @@ public class CandidatesPage {
         return this;
     }
 
-    @Step("Нажать кнопку ʼОтменаʼ в окне ʼНазначить тестʼ")
-    public CandidatesPage clickCancelBulkAssignModalButton() {
-        bulkAssignModalCancelButton.click();
-        return this;
-    }
-
     @Step("Нажать кнопку ʼЗакрытьʼ в окне ʼНазначить тестʼ")
     public CandidatesPage clickCloseBulkAssignModalButton() {
         bulkAssignModalCloseButton.click();
+        return this;
+    }
+
+    @Step("Нажать кнопку ʼИмпортʼ")
+    public CandidatesPage clickImportButton() {
+        importButton.click();
+        return this;
+    }
+
+    @Step("Нажать кнопку ʼИмпортироватьʼ в окне ʼИмпорт кандидатовʼ")
+    public CandidatesPage clickSubmitImportButton() {
+        importSubmitImportModalButton.click();
+        return this;
+    }
+
+    @Step("Нажать кнопку ʼЗакрытьʼ в окне ʼИмпорт кандидатовʼ")
+    public CandidatesPage clickImportCancelButton() {
+        importCancelImportModalButton.click();
         return this;
     }
 }

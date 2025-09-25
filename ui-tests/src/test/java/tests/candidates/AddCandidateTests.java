@@ -1,7 +1,6 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
-import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +27,7 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).fillPosition(position).clickModalButtonAddCandidate().searchCandidateBy(email);
-        assertEquals(name, candidatesPage.candidatesTableNames.textContent());
+        assertEquals(name, candidatesPage.candidatesTableNames.textContent(), "Кандидат не найден на страниу");
     }
 
 
@@ -41,7 +40,7 @@ public class AddCandidateTests extends BaseTest {
         candidatesPage.open().clickAddCandidateButton().fillName(addCandidateValidation.getName()).fillEmail(addCandidateValidation.getEmail()).clickModalButtonAddCandidate();
 
         String actualError = candidatesPage.getModalErrorMessageText();
-        assertEquals(addCandidateValidation.getExpectedError(), actualError);
+        assertEquals(addCandidateValidation.getExpectedError(), actualError, "Валидационное сообщение об ошибке в модальном окне не совпадает с ожидаемым результатом");
     }
 
     @Test
@@ -53,22 +52,17 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
+        context.page.waitForTimeout(1500);
+
         candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
-        assertTrue(candidatesPage.toast.isVisible());
+        assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об ошибке не показан");
     }
 
     @Test
     @DisplayName("Проверка закрытия модалки 'Добавить кандидата'")
     public void closeAddCandidateModal() {
-
-        String name = fakerData.name().lastName();
-        String email = fakerData.internet().safeEmailAddress(name);
-
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage.open().clickAddCandidateButton().fillName(name).clickCancelModalButton();
-        assertTrue(candidatesPage.addCandidateModalTitle.isHidden());
+        candidatesPage.open().clickAddCandidateButton().clickCancelModalButton();
+        assertTrue(candidatesPage.addCandidateModalTitle.isHidden(), "Модалка ʼДобавить кандидатаʼ не закрыта");
     }
-
 }
