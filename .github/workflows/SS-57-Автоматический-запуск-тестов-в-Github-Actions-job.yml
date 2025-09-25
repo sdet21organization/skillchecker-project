@@ -163,9 +163,9 @@ jobs:
           color=3066993
 
           payload=$(jq -n \
-            --arg status "$status" \
             --arg passed "$passed" \
             --arg failed "$failed" \
+            --arg broken "$broken" \
             --arg skipped "$skipped" \
             --arg total "$total" \
             --arg url "$report_url" \
@@ -176,7 +176,7 @@ jobs:
               "embeds": [
                 {
                  "title": "Allure Report",
-                 "url": "$url",
+                 "url": $url,
                  "color": $color,
                  "fields": [
                    {
@@ -186,7 +186,12 @@ jobs:
                     },
                     {
                      "name": "Test Statistics",
-                     "value": "✅ Passed: $passed\n⚠️ Broken: $broken\n❌ Failed: $failed\n⏭️ Skipped: $skipped\n📊 Total: $total",
+                     "value":
+                       "✅ Passed: " + $passed + "\n" +
+                       "⚠️ Broken: " + $broken + "\n" +
+                       "❌ Failed: " + $failed + "\n" +
+                       "⏭️ Skipped: " + $skipped + "\n" +
+                       "📊 Total: " + $total,
                      "inline": false
                     }
                   ]
