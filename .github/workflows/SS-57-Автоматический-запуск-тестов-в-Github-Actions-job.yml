@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # чтобы подтянуть ветку gh-pages тоже
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -42,9 +42,11 @@ jobs:
   ui-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -71,9 +73,9 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # чтобы подтянуть ветку gh-pages тоже
+          fetch-depth: 0
 
       - name: Download Allure Results (API)
         uses: actions/download-artifact@v4
@@ -96,12 +98,12 @@ jobs:
       - name: Restore Allure History
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
-          safe_branch="${branch//\//-}"   # заменяем '/' на '-' для совместимости с файлами
+          safe_branch="${branch//\//-}"
           mkdir -p allure-history
           git fetch origin gh-pages || true
           git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
           if [ -d "${safe_branch}/history" ]; then
-            mv "${safe_branch}/history"/* allure-history/ || true
+            mv "${safe_branch}/history" allure-history/ || true
           fi
 
       - name: Generate Allure Report
@@ -109,14 +111,14 @@ jobs:
         with:
           allure_results: merged-allure-results
           allure_report: allure-report
-          allure_history: allure-history
+          allure_history: allure-history/history
 
       - name: Save Allure History for this branch
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
           safe_branch="${branch//\//-}"
-          mkdir -p "allure-report/history"
-          cp -r allure-report/history/* "allure-report/history/${safe_branch}/" || true
+          mkdir -p "${safe_branch}/history"
+          cp -r allure-report/history/* "${safe_branch}/history/" || true
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -141,3 +143,57 @@ jobs:
               repo: repoName,
               body: `✅ Allure Report доступен по ссылке: [открыть отчёт](${reportUrl})`
             });
+
+      - name: Send Discord Notification
+        if: always()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          branch="${{ github.head_ref || github.ref_name }}"
+          report_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${branch}/"
+
+          passed=$(jq '.statistic.passed' allure-report/widgets/summary.json)
+          failed=$(jq '.statistic.failed' allure-report/widgets/summary.json)
+          skipped=$(jq '.statistic.skipped' allure-report/widgets/summary.json)
+          total=$(jq '.statistic.total' allure-report/widgets/summary.json)
+
+          if [ "${{ job.status }}" == "success" ]; then
+            status="✅ Success"
+            color=3066993
+          else
+            status="❌ Failed"
+            color=15158332
+          fi
+
+          payload=$(jq -n \
+            --arg status "$status" \
+            --arg passed "$passed" \
+            --arg failed "$failed" \
+            --arg skipped "$skipped" \
+            --arg total "$total" \
+            --arg url "$report_url" \
+            --arg branch "$branch" \
+            --arg repo "${{ github.repository }}" \
+            --argjson color "$color" \
+            '{
+              "embeds": [
+                {
+                  "title": "Allure Report",
+                  "url": $url,
+                  "color": $color,
+                  "fields": [
+                    {"name": "Repository", "value": $repo, "inline": true},
+                    {"name": "Branch", "value": $branch, "inline": true},
+                    {"name": "Build Result", "value": $status, "inline": false},
+                    {"name": "Passed", "value": $passed, "inline": true},
+                    {"name": "Failed", "value": $failed, "inline": true},
+                    {"name": "Skipped", "value": $skipped, "inline": true},
+                    {"name": "Total", "value": $total, "inline": true}
+                  ]
+                }
+              ]
+            }')
+
+          curl -H "Content-Type: application/json" \
+               -d "$payload" \
+               "$DISCORD_WEBHOOK_URL"
