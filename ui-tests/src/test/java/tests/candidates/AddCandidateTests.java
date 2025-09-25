@@ -1,24 +1,24 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.EnumSources;
 import pages.CandidatesPage;
 import testdata.AddCandidateValidation;
 import tests.BaseTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Candidates tests")
 public class AddCandidateTests extends BaseTest {
 
     Faker fakerData = new Faker();
 
-
     @Test
-    @DisplayName("Check successful Candidate adding")
+    @DisplayName("Проверка успешного добавления Кандидата")
     public void addNewCandidate() {
 
         String name = fakerData.name().lastName();
@@ -26,73 +26,45 @@ public class AddCandidateTests extends BaseTest {
         String position = fakerData.job().position();
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage
-                .open()
-                .clickAddCandidateButton()
-                .fillName(name)
-                .fillEmail(email)
-                .fillPosition(position)
-                .clickModalButtonAddCandidate()
-                .searchCandidateBy(email);
-
-        Assertions.assertEquals(name, candidatesPage.candidateEntryName.textContent());
+        candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).fillPosition(position).clickModalButtonAddCandidate().searchCandidateBy(email);
+        assertEquals(name, candidatesPage.candidatesTableNames.textContent());
     }
 
 
     @ParameterizedTest
-    @DisplayName("Check Modal's validation errors when adding Candidate")
+    @DisplayName("Проверка валидационных сообщений об ошибке на модалке ʼДобавить кандидатаʼ")
     @EnumSource(AddCandidateValidation.class)
     public void addNewCandidateValidationErrors(AddCandidateValidation addCandidateValidation) {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage
-                .open()
-                .clickAddCandidateButton()
-                .fillName(addCandidateValidation.getName())
-                .fillEmail(addCandidateValidation.getEmail())
-                .clickModalButtonAddCandidate();
+        candidatesPage.open().clickAddCandidateButton().fillName(addCandidateValidation.getName()).fillEmail(addCandidateValidation.getEmail()).clickModalButtonAddCandidate();
 
         String actualError = candidatesPage.getModalErrorMessageText();
-        Assertions.assertEquals(addCandidateValidation.getExpectedError(),actualError );
+        assertEquals(addCandidateValidation.getExpectedError(), actualError);
     }
 
     @Test
-    @DisplayName("Check error notification while adding candidate that was already added")
+    @DisplayName("Проверка невозможности добавления кандидата с уже существующим емейлом")
     public void addExistingCandidateError() {
 
         String name = fakerData.name().lastName();
         String email = fakerData.internet().safeEmailAddress(name);
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage
-                .open()
-                .clickAddCandidateButton()
-                .fillName(name)
-                .fillEmail(email)
-                .clickModalButtonAddCandidate()
-                .clickAddCandidateButton()
-                .fillName(name)
-                .fillEmail(email)
-                .clickModalButtonAddCandidate();
-
-        Assertions.assertTrue(candidatesPage.errorToast.isVisible());
+        candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        assertTrue(candidatesPage.toast.isVisible());
     }
 
     @Test
-    @DisplayName("Check closing modal 'Добавить кандидата'")
+    @DisplayName("Проверка закрытия модалки 'Добавить кандидата'")
     public void closeAddCandidateModal() {
 
         String name = fakerData.name().lastName();
         String email = fakerData.internet().safeEmailAddress(name);
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage
-                .open()
-                .clickAddCandidateButton()
-                .fillName(name)
-                .clickCancelModalButton();
-
-        Assertions.assertTrue(candidatesPage.addCandidateModalTitle.isHidden());
+        candidatesPage.open().clickAddCandidateButton().fillName(name).clickCancelModalButton();
+        assertTrue(candidatesPage.addCandidateModalTitle.isHidden());
     }
 
 }
