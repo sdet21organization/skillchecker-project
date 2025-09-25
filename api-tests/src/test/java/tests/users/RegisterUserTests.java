@@ -1,8 +1,8 @@
 package tests.users;
 
-import helpers.ConfigurationReader;
-import io.restassured.response.Response;
+import dto.users.RegisterUserRequest;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
@@ -10,56 +10,35 @@ import wrappers.Users;
 
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
-import static wrappers.Users.deleteByEmailIfExists;
 
 public class RegisterUserTests extends BaseTest {
 
-    @Test
-    @DisplayName("Users: register")
-    void registerUser_fromConfig_returns201() {
-        String fullName = ConfigurationReader.get("test.user.fullName");
-        String email = ConfigurationReader.get("test.user.email");
-        String password = ConfigurationReader.get("test.user.password");
-        String role = ConfigurationReader.get("test.user.role");
-
-        deleteByEmailIfExists(cookie, email);
-
-        Response resp = Users.registerUser(cookie, email, fullName, password, role, true);
-
-        assertEquals(201, resp.statusCode(),
-                "Expected 201 on register, body=" + resp.asString());
-        assertEquals(email, resp.jsonPath().getString("email"), "email mismatch");
-        assertEquals(role, resp.jsonPath().getString("role"), "role mismatch");
-        assertTrue(resp.jsonPath().getBoolean("active"), "active should be true");
-        assertNotNull(resp.jsonPath().getString("id"), "id should be present");
+    @BeforeEach
+    void ensureAbsent() {
+        Users.deleteByEmailIfExists(cookie, get("test.user.email"));
     }
 
     @Test
-    @DisplayName("Users: register duplicate - negative")
-    void registerDuplicate_returns400() {
-        String fullName = ConfigurationReader.get("test.user.fullName");
-        String email = ConfigurationReader.get("test.user.email");
-        String password = ConfigurationReader.get("test.user.password");
-        String role = ConfigurationReader.get("test.user.role");
+    @DisplayName("Users: register")
+    void registerUser_returns201() {
+        RegisterUserRequest req = new RegisterUserRequest();
+        req.setEmail(get("test.user.email"));
+        req.setFullName(get("test.user.fullName"));
+        req.setPassword(get("test.user.password"));
+        req.setRole(get("test.user.role"));
+        req.setActive(true);
 
-        String id = Users.findUserIdByEmail(cookie, email);
-        if (id == null) {
-            Response create = Users.registerUser(cookie, email, fullName, password, role, true);
-            assertEquals(201, create.statusCode(), "Precondition failed: body=" + create.asString());
-        }
+        var resp = Users.registerUser(cookie, req);
 
-        Response dup = Users.registerUser(cookie, email, fullName, password, role, true);
-        assertEquals(400, dup.statusCode(), "Expected 400, body=" + dup.asString());
-        String msg = dup.jsonPath().getString("message");
-        assertNotNull(msg, "error message should be present");
-        assertFalse(msg.isBlank(), "error message should not be blank");
+        assertEquals(201, resp.statusCode(), "Expected 201, body=" + resp.asString());
+        assertEquals(req.getEmail(), resp.jsonPath().getString("email"));
+        assertEquals(req.getRole(), resp.jsonPath().getString("role"));
+        assertTrue(resp.jsonPath().getBoolean("active"));
+        assertNotNull(resp.jsonPath().getString("id"));
     }
 
     @AfterEach
-    void cleanupUser() {
-        try {
-            deleteByEmailIfExists(cookie, get("test.user.email"));
-        } catch (Exception ignore) {
-        }
+    void cleanup() {
+        Users.deleteByEmailIfExists(cookie, get("test.user.email"));
     }
 }

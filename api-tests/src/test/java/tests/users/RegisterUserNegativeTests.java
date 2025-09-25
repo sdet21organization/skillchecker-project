@@ -10,13 +10,11 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UpdateUserActiveTests extends BaseTest {
-
-    private String id;
+public class RegisterUserNegativeTests extends BaseTest {
 
     @BeforeEach
     void ensurePresent() {
-        id = Users.ensureUserExists(
+        Users.ensureUserExists(
                 cookie,
                 get("test.user.email"),
                 get("test.user.fullName"),
@@ -26,15 +24,20 @@ public class UpdateUserActiveTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Users: block & unblock")
-    void block_then_unblock_returns200() {
-        var block = Users.updateUserActive(cookie, id, false);
-        assertEquals(200, block.statusCode(), "Expected 200, body=" + block.asString());
-        assertFalse(block.jsonPath().getBoolean("active"));
-
-        var unb = Users.updateUserActive(cookie, id, true);
-        assertEquals(200, unb.statusCode(), "Expected 200, body=" + unb.asString());
-        assertTrue(unb.jsonPath().getBoolean("active"));
+    @DisplayName("Users: register duplicate -> 400")
+    void registerDuplicate_returns400() {
+        var resp = Users.registerUser(
+                cookie,
+                get("test.user.email"),
+                get("test.user.fullName"),
+                get("test.user.password"),
+                get("test.user.role"),
+                true
+        );
+        assertEquals(400, resp.statusCode(), "Expected 400, body=" + resp.asString());
+        String msg = resp.jsonPath().getString("message");
+        assertNotNull(msg);
+        assertFalse(msg.isBlank());
     }
 
     @AfterEach
