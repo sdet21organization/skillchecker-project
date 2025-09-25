@@ -19,6 +19,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 
+@DisplayName("Назначение теста кандидату через API")
 public class SessionsApiTests extends BaseTest {
 
     @Test

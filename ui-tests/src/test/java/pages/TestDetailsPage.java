@@ -12,22 +12,23 @@ import org.junit.jupiter.api.DisplayName;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+@DisplayName("Страница деталей теста- вопросы")
 public class TestDetailsPage {
     private final TestContext context;
-
     private final Locator modal;
     private final Locator questionText;
     private final Locator points;
     private final Locator option1;
     private final Locator option2;
     public final Locator saveBtn;
-
     private final Locator questionsHeader;
     private final Locator addQuestionBtn;
     private final Locator actionsBarAnyAddBtn;
     private final Locator questionsTable;
     private final Locator emptyPlaceholder;
     private final Locator tableRows;
+    private final Locator generateQuestionsButton;
+    private final Locator generateQuestionsModal;
 
 
     public TestDetailsPage(TestContext context) {
@@ -39,7 +40,6 @@ public class TestDetailsPage {
         this.option1 = modal.getByPlaceholder("Option 1");
         this.option2 = modal.getByPlaceholder("Option 2");
         this.saveBtn = modal.getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName("Save"));
-
         this.questionsHeader = context.page
                 .locator("div.text-2xl.font-semibold.leading-none.tracking-tight:has-text('Вопросы')")
                 .first();
@@ -52,7 +52,8 @@ public class TestDetailsPage {
         this.emptyPlaceholder = context.page.getByText("No questions in this test yet.");
         this.tableRows = context.page
                 .locator("[data-testid='questions-table'] tr, table tr");
-
+        this.generateQuestionsButton = context.page.locator("button:has-text(\"Генерировать вопросы\")");
+        this.generateQuestionsModal = context.page.locator("text=Генерация вопросов");
     }
 
     @Step("Проверить заголовок теста: {expected}")
@@ -116,6 +117,42 @@ public class TestDetailsPage {
         option1.fill(opt1);
         option2.fill(opt2);
     }
+
+    @Step("Кликнуть по кнопке 'Генерировать вопросы'")
+    public void clickGenerateQuestions() {
+        generateQuestionsButton.click();
+    }
+
+    @Step("Проверить, что модалка генерации вопросов видима")
+    public void verifyGenerateQuestionsModalIsVisible() {
+        assertThat(generateQuestionsModal).isVisible();
+    }
+
+    @Step("Выбрать в модалке генерации количество вопросов: {count}")
+    public void selectGenerateCount(int count) {
+        context.page.locator("label:has-text(\"Count\")").locator("..").locator("[role='combobox']").click();
+        context.page.locator("[role='option']:has-text(\"" + count + " questions\")").click();
+    }
+
+    @Step("Выбрать в модалке генерации тип вопросов: {typeText}")
+    public void selectGenerateType(String typeText) {
+        context.page.locator("label:has-text(\"Type\")").locator("..").locator("[role='combobox']").click();
+        context.page.locator("[role='option']:has-text(\"" + typeText + "\")").click();
+    }
+
+    @Step("Подтвердить генерацию вопросов")
+    public void confirmGenerateQuestions() {
+        context.page.locator("button:has-text(\"Generate\")").click();
+    }
+
+    @Step("Дождаться закрытия модалки генерации вопросов")
+    public void waitGenerateModalClosed() {
+        Locator dialog = context.page
+                .getByRole(AriaRole.DIALOG)
+                .filter(new Locator.FilterOptions().setHasText("Generate Questions"));
+        assertThat(dialog).not().isVisible();
+    }
+
 
 }
 
