@@ -35,7 +35,7 @@ public class ManageTests {
                 .contentType(ContentType.JSON)
 
                 .body(io.restassured.module.jsv.JsonSchemaValidator
-                        .matchesJsonSchemaInClasspath("schemas.manage/CreateTestSuccessResponse.json"));
+                        .matchesJsonSchemaInClasspath("schemas/manage/CreateTestSuccessResponse.json"));
     }
 
 
@@ -64,7 +64,7 @@ public class ManageTests {
                     .statusCode(200)
                     .contentType(ContentType.JSON)
                     .body(io.restassured.module.jsv.JsonSchemaValidator
-                            .matchesJsonSchemaInClasspath("schemas.manage/UpdateTestSuccessResponse.json"));
+                            .matchesJsonSchemaInClasspath("schemas/manage/UpdateTestSuccessResponse.json"));
         } else {
 
             response.then().statusCode(org.hamcrest.Matchers.anyOf(

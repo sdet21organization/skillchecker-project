@@ -25,5 +25,17 @@ public class Questions {
                 .extract().response();
     }
 
+    public static Response generateQuestions(String cookie, Map<String, Object> body) throws JsonProcessingException {
+        return given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Cookie", cookie)
+                .body(objectMapper.writeValueAsString(body))
+                .when()
+                .post("/generate-questions")
+                .then()
+                .extract().response();
+    }
+
 
 }
