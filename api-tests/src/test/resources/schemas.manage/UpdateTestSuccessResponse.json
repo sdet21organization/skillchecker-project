@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Update Test Success Response",
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "createdBy": { "type": "integer" },
+    "timeLimit": { "type": ["integer", "null"] },
+    "isActive": { "type": "boolean" },
+    "passingScore": { "type": "integer" }
+  },
+  "required": ["id", "name", "description"],
+  "additionalProperties": true
+}
