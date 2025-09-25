@@ -78,7 +78,7 @@ public class CandidatesPage {
     public CandidatesPage open() {
         context.page.navigate(ConfigurationReader.get("URL") + "dashboard/candidates");
         loadingState.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
-        context.page.waitForLoadState(LoadState.DOMCONTENTLOADED);
+        context.page.waitForTimeout(1500);
         return this;
     }
 
