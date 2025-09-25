@@ -45,7 +45,6 @@ public class BulkTestAssigningTests extends BaseTest {
         assertTrue(candidatesPage.bulkAssignModalSubmitButton.isEnabled(), "Кнопка ʼНазначить тестʼ в окне не активна");
 
         candidatesPage.choosePeriodOnBulkAssignModal("14 дней").clickSubmitBulkAssignModalButton();
-        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об успешном назначении тестов не показан");
         assertTrue(candidatesPage.bulkAssignModalSubmitButton.isHidden(), "Кнока ʼНазначить тестʼ все еще отображется в окне");
         assertTrue(candidatesPage.testInfo.isHidden(), "Информация о тесте все еще отображется в окне");

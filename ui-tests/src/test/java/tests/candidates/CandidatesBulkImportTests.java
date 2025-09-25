@@ -1,5 +1,6 @@
 package tests.candidates;
 
+import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatesPage;
@@ -32,6 +33,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();
@@ -59,6 +61,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();
