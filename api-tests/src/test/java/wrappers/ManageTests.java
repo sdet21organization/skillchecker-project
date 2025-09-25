@@ -36,8 +36,8 @@ public class ManageTests {
         response.then()
                 .statusCode(201)
                 .contentType(ContentType.JSON)
-
                 .body(matchesJsonSchemaInClasspath("schemas.manage/CreateTestSuccessResponse.json"));
+
     }
 
 
@@ -65,7 +65,9 @@ public class ManageTests {
             response.then()
                     .statusCode(200)
                     .contentType(ContentType.JSON)
+
                     .body(matchesJsonSchemaInClasspath("schemas.manage/UpdateTestSuccessResponse.json"));
+
         } else {
 
             response.then().statusCode(Matchers.anyOf(

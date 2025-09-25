@@ -1,0 +1,27 @@
+{
+  "type": "array",
+  "minItems": 3,
+  "maxItems": 3,
+  "items": {
+    "type": "object",
+    "required": ["id", "testId", "content", "type", "options", "correctAnswer", "points"],
+    "properties": {
+      "id":            { "type": "integer" },
+      "organizationId":{ "type": ["integer", "null"] },
+      "testId":        { "type": "integer" },
+      "content":       { "type": "string" },
+      "type":          { "type": "string", "enum": ["single_choice"] },
+      "options": {
+        "type": "array",
+        "minItems": 2,
+        "items": { "type": "string" }
+      },
+      "correctAnswer": { "type": "integer" },
+      "points":        { "type": "integer" },
+      "order":         { "type": ["integer", "null"] },
+      "imageUrl":      { "type": ["string", "null"] },
+      "codeSnippet":   { "type": ["string", "null"] },
+      "codeLanguage":  { "type": ["string", "null"] }
+    }
+  }
+}

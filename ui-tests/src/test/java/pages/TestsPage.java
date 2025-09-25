@@ -134,6 +134,19 @@ public class TestsPage {
     }
 
 
+    @Step("Открыть тест по названию: {testName}")
+    public void openTestByName(String testName) {
+
+        Locator rowByText = context.page.locator("tr:has-text(\"" + testName + "\")");
+        rowByText.waitFor(new Locator.WaitForOptions()
+                .setTimeout(7000)
+                .setState(WaitForSelectorState.VISIBLE));
+
+        rowByText.locator("a, button, td, div").first().scrollIntoViewIfNeeded();
+        rowByText.locator("a, button, td, div").first().click();
+    }
+
+
     // ===== Юлины методы =====
     @Step("Find test 'Тест Прохождение тестов с одной опцией'")
     public TestsPage findTestPassingTestWithOneOption() {

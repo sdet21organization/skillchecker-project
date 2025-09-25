@@ -13,7 +13,8 @@ public class QuestionsApiTests extends BaseTest {
 
 
     @Test
-    @DisplayName("Создание вопроса: 201 + схема")
+     @DisplayName("Создание вопроса:проверка статуса 201 + схемы")
+
     void createQuestion_success() throws JsonProcessingException {
 
         Response createTestResp = wrappers.ManageTests.createTest(cookie, "API Test", "for questions");
@@ -32,8 +33,10 @@ public class QuestionsApiTests extends BaseTest {
         body.put("codeLanguage", "javascript");
 
         Response resp = wrappers.Questions.createQuestion(cookie, body);
-
-        resp.then().statusCode(201).body(matchesJsonSchemaInClasspath("schemas.questions/CreateQuestionSuccessResponse.json"));
+        resp.then()
+                .statusCode(201)
+                .body(matchesJsonSchemaInClasspath("schemas/questions/CreateQuestionSuccessResponse.json"));
+ 
     }
 
     @Test
