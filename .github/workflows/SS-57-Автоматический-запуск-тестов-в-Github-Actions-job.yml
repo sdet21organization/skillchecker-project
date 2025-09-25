@@ -157,6 +157,8 @@ jobs:
           skipped=$(jq '.statistic.skipped' allure-report/widgets/summary.json)
           broken=$(jq '.statistic.broken' allure-report/widgets/summary.json)
           total=$(jq '.statistic.total' allure-report/widgets/summary.json)
+          
+          color=3066993
 
           payload=$(jq -n \
             --arg status "$status" \
