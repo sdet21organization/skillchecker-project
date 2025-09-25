@@ -10,7 +10,6 @@ import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @DisplayName("Страница деталей теста- вопросы")
@@ -30,7 +29,16 @@ public class TestDetailsPage {
     private final Locator tableRows;
     private final Locator generateQuestionsButton;
     private final Locator generateQuestionsModal;
-
+    private final Locator dialog;
+    private final Locator countCombobox;
+    private final Locator typeCombobox;
+    private final Locator generateButton;
+    private Locator countOption(int count) {
+        return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
+    }
+    private Locator typeOption(String typeText) {
+        return context.page.locator("[role='option']:has-text(\"" + typeText + "\")");
+    }
 
     public TestDetailsPage(TestContext context) {
         this.context = context;
@@ -55,7 +63,14 @@ public class TestDetailsPage {
                 .locator("[data-testid='questions-table'] tr, table tr");
         this.generateQuestionsButton = context.page.locator("button:has-text(\"Генерировать вопросы\")");
         this.generateQuestionsModal = context.page.locator("text=Генерация вопросов");
+        this.dialog = context.page.locator("div[role='dialog']").filter(
+                new Locator.FilterOptions().setHasText("Generate Questions"));
+        this.countCombobox = context.page.locator("label:has-text(\"Count\")").locator("..").locator("[role='combobox']");
+        this.typeCombobox = context.page.locator("label:has-text(\"Type\")").locator("..").locator("[role='combobox']");
+        this.generateButton = context.page.locator("button:has-text(\"Generate\")");
     }
+
+
 
     @Step("Проверить заголовок теста: {expected}")
     public void verifyTestTitle(String expected) {
@@ -131,29 +146,25 @@ public class TestDetailsPage {
 
     @Step("Выбрать в модалке генерации количество вопросов: {count}")
     public void selectGenerateCount(int count) {
-        context.page.locator("label:has-text(\"Count\")").locator("..").locator("[role='combobox']").click();
-        context.page.locator("[role='option']:has-text(\"" + count + " questions\")").click();
+        countCombobox.click();
+        countOption(count).click();
     }
 
     @Step("Выбрать в модалке генерации тип вопросов: {typeText}")
     public void selectGenerateType(String typeText) {
-        context.page.locator("label:has-text(\"Type\")").locator("..").locator("[role='combobox']").click();
-        context.page.locator("[role='option']:has-text(\"" + typeText + "\")").click();
+        typeCombobox.click();
+        typeOption(typeText).click();
     }
 
     @Step("Подтвердить генерацию вопросов")
     public void confirmGenerateQuestions() {
-        context.page.locator("button:has-text(\"Generate\")").click();
+        generateButton.click();
     }
 
 
     @Step("Дождаться закрытия модалки генерации вопросов")
     public void waitGenerateModalClosed() {
-        Locator dialog = context.page.locator("div[role='dialog']").filter(
-                new Locator.FilterOptions().setHasText("Generate Questions")
-        );
-
-        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(dialog)
+       assertThat(dialog)
                 .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000)); // 10 сек
     }
 
