@@ -20,6 +20,7 @@ public class CandidatePage {
     @Step("Открыть страницу кандидата с id {id}")
     public CandidatePage open(int id) {
         context.page.navigate(ConfigurationReader.get("URL") + "dashboard/candidates/" + id);
+        context.page.waitForTimeout(1500);
         return this;
     }
 
