@@ -155,15 +155,8 @@ jobs:
           passed=$(jq '.statistic.passed' allure-report/widgets/summary.json)
           failed=$(jq '.statistic.failed' allure-report/widgets/summary.json)
           skipped=$(jq '.statistic.skipped' allure-report/widgets/summary.json)
+          broken=$(jq '.statistic.broken' allure-report/widgets/summary.json)
           total=$(jq '.statistic.total' allure-report/widgets/summary.json)
-
-          if [ "${{ job.status }}" == "success" ]; then
-            status="✅ Success"
-            color=3066993
-          else
-            status="❌ Failed"
-            color=15158332
-          fi
 
           payload=$(jq -n \
             --arg status "$status" \
@@ -184,7 +177,6 @@ jobs:
                   "fields": [
                     {"name": "Repository", "value": $repo, "inline": true},
                     {"name": "Branch", "value": $branch, "inline": true},
-                    {"name": "Build Result", "value": $status, "inline": false},
                     {"name": "Passed", "value": $passed, "inline": true},
                     {"name": "Failed", "value": $failed, "inline": true},
                     {"name": "Skipped", "value": $skipped, "inline": true},
