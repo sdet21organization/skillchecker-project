@@ -1,9 +1,6 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.LoadState;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,7 +52,7 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
-        context.page.waitForTimeout(2000);
+        context.page.waitForTimeout(1500);
 
         candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
         assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об ошибке не показан");
