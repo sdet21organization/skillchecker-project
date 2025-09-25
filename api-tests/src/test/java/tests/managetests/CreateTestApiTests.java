@@ -9,6 +9,9 @@ import wrappers.ManageTests;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class CreateTestApiTests extends BaseTest {
 
     @Test
@@ -48,9 +51,7 @@ public class CreateTestApiTests extends BaseTest {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
 
-        Response updateResponse = ManageTests.updateTest(cookie, testId, Map.of(
-                "name", "Updated Test Name"
-        ));
+        Response updateResponse = ManageTests.updateTest(cookie, testId, Map.of("name", "Updated Test Name"));
 
         ManageTests.verifyUpdateTest(updateResponse);
     }
@@ -61,9 +62,7 @@ public class CreateTestApiTests extends BaseTest {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
 
-        Response updateResponse = ManageTests.updateTest(cookie, testId, Map.of(
-                "description", "Updated Description"
-        ));
+        Response updateResponse = ManageTests.updateTest(cookie, testId, Map.of("description", "Updated Description"));
 
         ManageTests.verifyUpdateTest(updateResponse);
     }
@@ -74,10 +73,7 @@ public class CreateTestApiTests extends BaseTest {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
 
-        Response updateResponse = ManageTests.updateTest(cookie, testId, Map.of(
-                "name", "Updated Test Name",
-                "description", "Updated Description"
-        ));
+        Response updateResponse = ManageTests.updateTest(cookie, testId, Map.of("name", "Updated Test Name", "description", "Updated Description"));
 
         ManageTests.verifyUpdateTest(updateResponse);
     }
@@ -89,16 +85,10 @@ public class CreateTestApiTests extends BaseTest {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
 
-        Response updateResponse = ManageTests.updateTest(
-                cookie,
-                testId,
-                java.util.Map.of("timeLimit", 30)
-        );
+        Response updateResponse = ManageTests.updateTest(cookie, testId, java.util.Map.of("timeLimit", 30));
 
         ManageTests.verifyUpdateTest(updateResponse);
-
-        org.junit.jupiter.api.Assertions.assertEquals(30, updateResponse.jsonPath().getInt("timeLimit"),
-                "timeLimit должен обновиться до 30");
+        assertEquals(30, updateResponse.jsonPath().getInt("timeLimit"), "timeLimit должен обновиться до 30");
     }
 
     @Test
@@ -108,19 +98,11 @@ public class CreateTestApiTests extends BaseTest {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
 
-        Response updateResponse = ManageTests.updateTest(
-                cookie,
-                testId,
-                java.util.Map.of("passingScore", 85)
-        );
+        Response updateResponse = ManageTests.updateTest(cookie, testId, java.util.Map.of("passingScore", 85));
 
         ManageTests.verifyUpdateTest(updateResponse);
 
-        org.junit.jupiter.api.Assertions.assertEquals(
-                85,
-                updateResponse.jsonPath().getInt("passingScore"),
-                "passingScore должен обновиться до 85"
-        );
+        assertEquals(85, updateResponse.jsonPath().getInt("passingScore"), "passingScore должен обновиться до 85");
     }
 
     @Test
@@ -130,17 +112,10 @@ public class CreateTestApiTests extends BaseTest {
         Response createResponse = ManageTests.createTest(cookie, "Inactive Test", "With flag");
         String testId = createResponse.jsonPath().getString("id");
 
-        Response updateResponse = ManageTests.updateTest(
-                cookie,
-                testId,
-                java.util.Map.of("isActive", true)
-        );
+        Response updateResponse = ManageTests.updateTest(cookie, testId, java.util.Map.of("isActive", true));
 
         ManageTests.verifyUpdateTest(updateResponse);
 
-        org.junit.jupiter.api.Assertions.assertTrue(
-                updateResponse.jsonPath().getBoolean("isActive"),
-                "Поле isActive должно быть true"
-        );
+        assertTrue(updateResponse.jsonPath().getBoolean("isActive"), "Поле isActive должно быть true");
     }
 }
