@@ -25,6 +25,14 @@ public class CandidatesPage {
     private final Locator candidatesTableChcekboxes;
     private final Locator sellectAllCheckbox;
     public final Locator candidatesTableNames;
+
+    private final Locator importButton;
+    public final Locator importInfoStatus;
+    private final Locator importSubmitImportModalButton;
+    public final Locator fileUploadImportModalButton;
+    private final Locator importCancelImportModalButton;
+
+
     public final Locator addCandidateModalTitle;
     private final Locator nameModalField;
     private final Locator emailModalField;
@@ -54,6 +62,13 @@ public class CandidatesPage {
         this.candidatesTableChcekboxes = context.page.locator("[data-testid^='candidate-checkbox-']");
         this.sellectAllCheckbox = context.page.locator("[data-testid='select-all-checkbox']");
         this.candidatesTableNames = context.page.locator("[data-testid^='candidate-link-']");
+
+        this.importButton = context.page.locator("button[class*='inline-flex'] span:has(svg.lucide-download)");
+        this.importInfoStatus = context.page.locator("div[role*=\"dialog\"] div.space-y-1");
+        this.importSubmitImportModalButton = context.page.locator("[data-testid='import-submit-button']");
+        this.fileUploadImportModalButton = context.page.locator("[data-testid='file-upload-input']");
+        this.importCancelImportModalButton = context.page.locator("[data-testid='import-cancel-button']");
+
         this.addCandidateModalTitle = context.page.locator("h2.text-lg");
         this.nameModalField = context.page.locator("input[name='name']");
         this.emailModalField = context.page.locator("input[name='email']");
@@ -215,6 +230,24 @@ public class CandidatesPage {
     @Step("Нажать кнопку ʼЗакрытьʼ в окне ʼНазначить тестʼ")
     public CandidatesPage clickCloseBulkAssignModalButton() {
         bulkAssignModalCloseButton.click();
+        return this;
+    }
+
+    @Step("Нажать кнопку ʼИмпортʼ")
+    public CandidatesPage clickImportButton() {
+        importButton.click();
+        return this;
+    }
+
+    @Step("Нажать кнопку ʼИмпортироватьʼ в окне ʼИмпорт кандидатовʼ")
+    public CandidatesPage clickSubmitImportButton() {
+        importSubmitImportModalButton.click();
+        return this;
+    }
+
+    @Step("Нажать кнопку ʼЗакрытьʼ в окне ʼИмпорт кандидатовʼ")
+    public CandidatesPage clickImportCancelButton() {
+        importCancelImportModalButton.click();
         return this;
     }
 }
