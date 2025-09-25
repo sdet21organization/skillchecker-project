@@ -76,6 +76,7 @@ public class BulkTestAssigningTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().sellectAllCandidates().clickBulkAssignButton().chooseTestOnBulkAssignModal(testInfo.name).clickSubmitBulkAssignModalButton();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertTrue(candidatesPage.toast.textContent().contains("Ошибка"));
     }
 }
