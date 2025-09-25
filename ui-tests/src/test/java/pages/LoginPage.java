@@ -1,5 +1,6 @@
 package pages;
 
+import com.microsoft.playwright.options.LoadState;
 import context.TestContext;
 import com.microsoft.playwright.Locator;
 import io.qameta.allure.Step;
@@ -11,14 +12,16 @@ public class LoginPage {
     public Locator usernameInput;
     public Locator passwordInput;
     public Locator loginButton;
+    public Locator emailError;
+    public Locator passwordError;
 
     public LoginPage(TestContext context) {
         this.context = context;
-
-        // Стабильные CSS-селекторы
         this.usernameInput = context.page.locator("input[name='email']");
         this.passwordInput = context.page.locator("input[name='password']");
         this.loginButton   = context.page.locator("button[type='submit']");
+        this.emailError    = context.page.locator("text=Некорректная электронная почта");
+        this.passwordError = context.page.locator("text=Пароль обязателен");
     }
 
     @Step("Login with {email} / {password}")
@@ -26,6 +29,7 @@ public class LoginPage {
         usernameInput.fill(email);
         passwordInput.fill(password);
         loginButton.click();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         return this;
     }
 
