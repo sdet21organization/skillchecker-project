@@ -10,6 +10,7 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("Reset user password (Settings(API)")
 public class ResetUserPasswordTests extends BaseTest {
 
     private String id;

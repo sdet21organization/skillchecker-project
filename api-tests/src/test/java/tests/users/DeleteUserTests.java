@@ -11,6 +11,7 @@ import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@DisplayName("Delete user (Settings(API))")
 public class DeleteUserTests extends BaseTest {
 
     private String id;

@@ -10,6 +10,7 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Block & unblock user (Settings(API)")
 public class UpdateUserActiveTests extends BaseTest {
 
     private String id;

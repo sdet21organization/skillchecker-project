@@ -10,6 +10,7 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("Update user role (Settings(API)")
 public class UpdateUserRoleTests extends BaseTest {
 
     private String id;

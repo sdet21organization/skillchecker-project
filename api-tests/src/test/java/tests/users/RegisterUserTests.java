@@ -11,6 +11,7 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Register user (Settings(API)")
 public class RegisterUserTests extends BaseTest {
 
     @BeforeEach

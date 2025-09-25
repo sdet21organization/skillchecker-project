@@ -10,6 +10,7 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Register duplicate user (Settings(API)")
 public class RegisterUserNegativeTests extends BaseTest {
 
     @BeforeEach
