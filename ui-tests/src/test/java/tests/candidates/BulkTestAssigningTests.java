@@ -1,6 +1,7 @@
 package tests.candidates;
 
-import com.microsoft.playwright.options.LoadState;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatePage;
@@ -46,7 +47,9 @@ public class BulkTestAssigningTests extends BaseTest {
 
         candidatesPage.choosePeriodOnBulkAssignModal("14 дней").clickSubmitBulkAssignModalButton();
         assertTrue(candidatesPage.bulkAssignModalSubmitButton.isHidden(), "Кнока ʼНазначить тестʼ все еще отображется в окне");
-        context.page.waitForTimeout(1500);
+
+        candidatesPage.toast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(3000));
+
         assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об успешном назначении тестов не показан");
         assertTrue(candidatesPage.testInfo.isHidden(), "Информация о тесте все еще отображется в окне");
 
@@ -76,7 +79,9 @@ public class BulkTestAssigningTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().sellectAllCandidates().clickBulkAssignButton().chooseTestOnBulkAssignModal(testInfo.name).clickSubmitBulkAssignModalButton();
-        context.page.waitForTimeout(1500);
+
+        candidatesPage.toast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(3000));
+
         assertTrue(candidatesPage.toast.textContent().contains("Ошибка"), "Тоаст с описанием ошибки не показн");
     }
 }
