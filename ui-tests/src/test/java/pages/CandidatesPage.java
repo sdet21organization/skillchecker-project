@@ -27,7 +27,7 @@ public class CandidatesPage {
 
     private final Locator importButton;
     public final Locator importInfoStatus;
-    private final Locator importSubmitImportModalButton;
+    public final Locator importSubmitImportModalButton;
     public final Locator fileUploadImportModalButton;
     private final Locator importCancelImportModalButton;
 
@@ -36,7 +36,7 @@ public class CandidatesPage {
     private final Locator nameModalField;
     private final Locator emailModalField;
     private final Locator positionModalField;
-    private final Locator addCandidateModalButton;
+    public final Locator addCandidateModalButton;
     private final Locator cancelModalButton;
     private final Locator modalErrorMessage;
     public final Locator bulkAssigningModal;
