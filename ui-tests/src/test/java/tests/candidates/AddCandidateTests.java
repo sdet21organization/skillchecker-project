@@ -13,7 +13,7 @@ import tests.BaseTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Candidates tests")
+@DisplayName("Добавление нового кандидата")
 public class AddCandidateTests extends BaseTest {
 
     Faker fakerData = new Faker();
