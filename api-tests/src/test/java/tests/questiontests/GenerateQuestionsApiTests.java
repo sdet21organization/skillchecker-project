@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.ManageTests;
 import wrappers.Questions;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@DisplayName("Генерация вопросов через API")
 public class GenerateQuestionsApiTests extends BaseTest {
 
     @Test

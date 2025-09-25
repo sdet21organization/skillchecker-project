@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.is;
 
+@DisplayName("Добавление вопросов через API")
 public class QuestionsApiTests extends BaseTest {
-
 
     @Test
      @DisplayName("Создание вопроса:проверка статуса 201 + схемы")
@@ -57,6 +58,6 @@ public class QuestionsApiTests extends BaseTest {
 
         Response resp = wrappers.Questions.createQuestion(cookie, body);
 
-        resp.then().statusCode(Matchers.anyOf(org.hamcrest.Matchers.is(400), org.hamcrest.Matchers.is(422)));
+        resp.then().statusCode(Matchers.anyOf(is(400), is(422)));
     }
 }

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-
+import org.junit.jupiter.api.DisplayName;
 import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 
+@DisplayName("Добавление вопросов через API")
 public class Questions {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
