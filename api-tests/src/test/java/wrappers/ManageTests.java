@@ -1,21 +1,24 @@
 package wrappers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.manage.CreateTestRequest;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 
 public class ManageTests {
 
     @Step("Создание теста через API")
     public static Response createTest(String cookie, String name, String description) {
-        String body = String.format("{\"name\":\"%s\",\"description\":\"%s\"}", name, description);
+        CreateTestRequest body = new CreateTestRequest(name, description);
 
         return given()
                 .contentType(ContentType.JSON)
@@ -33,15 +36,14 @@ public class ManageTests {
         response.then()
                 .statusCode(201)
                 .contentType(ContentType.JSON)
+                .body(matchesJsonSchemaInClasspath("schemas.manage/CreateTestSuccessResponse.json"));
 
-                .body(io.restassured.module.jsv.JsonSchemaValidator
-                        .matchesJsonSchemaInClasspath("schemas/manage/CreateTestSuccessResponse.json"));
     }
 
 
     @Step("Изменение теста через API")
     public static Response updateTest(String cookie, String testId, Map<String, Object> fields) throws JsonProcessingException {
-        String body = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(fields);
+        String body = new ObjectMapper().writeValueAsString(fields);
 
         return given()
                 .contentType("application/json")
@@ -63,13 +65,14 @@ public class ManageTests {
             response.then()
                     .statusCode(200)
                     .contentType(ContentType.JSON)
-                    .body(io.restassured.module.jsv.JsonSchemaValidator
-                            .matchesJsonSchemaInClasspath("schemas/manage/UpdateTestSuccessResponse.json"));
+
+                    .body(matchesJsonSchemaInClasspath("schemas.manage/UpdateTestSuccessResponse.json"));
+
         } else {
 
-            response.then().statusCode(org.hamcrest.Matchers.anyOf(
-                    org.hamcrest.Matchers.is(200),
-                    org.hamcrest.Matchers.is(204)
+            response.then().statusCode(Matchers.anyOf(
+                    Matchers.is(200),
+                    Matchers.is(204)
             ));
         }
     }

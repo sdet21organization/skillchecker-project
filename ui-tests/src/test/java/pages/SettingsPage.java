@@ -3,6 +3,7 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import context.TestContext;
 import io.qameta.allure.Step;
@@ -34,6 +35,7 @@ public class SettingsPage {
     @Step("Open Settings")
     public SettingsPage open() {
         context.page.navigate(ConfigurationReader.get("URL") + "dashboard/settings");
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         return this;
     }
 
@@ -169,6 +171,7 @@ public class SettingsPage {
         clickCreateUser();
         waitToast("Пользователь создан");
         clickCancelCreateUser();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         waitUserRowVisible(email);
     }
 
@@ -184,6 +187,7 @@ public class SettingsPage {
     @Step("Delete user if exists: {email}")
     public void deleteUserIfExists(String email) {
         if (rowByEmail(email).count() == 0) return;
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         rowDeleteButton(email).click();
         confirmDeleteInDialog();
         waitUserRowAbsent(email);

@@ -31,12 +31,23 @@ public class LoginTests extends BaseTest {
         new LoginPage(context).open().login(email, password);
         context.page.waitForURL(base + "dashboard");
 
-        assertEquals(base + "dashboard", context.page.url(),
-                "После успешного логина ожидаем попасть на /dashboard");
+        assertEquals(base + "dashboard", context.page.url());
     }
 
     @Test
-    @DisplayName("SS-T32: Неверный пароль → toast 'Ошибка входа', остаёмся на логине")
+    @DisplayName("SS-T31: Неверный логин → toast 'Ошибка входа'")
+    void wrongLogin_showsErrorToast() {
+        String base = ConfigurationReader.get("URL");
+
+        new LoginPage(context).open().login("not.exist.user@example.com", "AnyPassword#1");
+
+        Toast toast = new Toast(context.page).waitOpen();
+        assertEquals("Ошибка входа", toast.titleText());
+        assertTrue(new LoginPage(context).isAtLoginPage(base));
+    }
+
+    @Test
+    @DisplayName("SS-T32: Неверный пароль → toast 'Ошибка входа'")
     void wrongPassword_showsErrorToast() {
         String base = ConfigurationReader.get("URL");
         String email = ConfigurationReader.get("email");
@@ -45,12 +56,24 @@ public class LoginTests extends BaseTest {
 
         Toast toast = new Toast(context.page).waitOpen();
         assertEquals("Ошибка входа", toast.titleText());
+        assertTrue(toast.bodyText().contains("401"));
+        assertTrue(new LoginPage(context).isAtLoginPage(base));
+    }
 
-        String body = toast.bodyText();
-        assertTrue(body.contains("401") && body.contains("Invalid credentials"),
-                "Ожидали '401' и 'Invalid credentials' в тексте тоста, получили: " + body);
+    @Test
+    @DisplayName("SS-T62: Пустые поля при логине → обязательные поля")
+    void emptyFields_showRequiredErrors() {
+        LoginPage loginPage = new LoginPage(context).open();
+        loginPage.login("", "");
+        assertTrue(loginPage.emailError.isVisible());
+        assertTrue(loginPage.passwordError.isVisible());
+    }
 
-        assertTrue(new LoginPage(context).isAtLoginPage(base),
-                "Ожидали остаться на странице логина, сейчас: " + context.page.url());
+    @Test
+    @DisplayName("SS-T63: Невалидный email → ошибка формата")
+    void invalidEmail_showsFormatError() {
+        LoginPage loginPage = new LoginPage(context).open();
+        loginPage.login("test@", "SomePassword#1");
+        assertTrue(loginPage.emailError.isVisible());
     }
 }

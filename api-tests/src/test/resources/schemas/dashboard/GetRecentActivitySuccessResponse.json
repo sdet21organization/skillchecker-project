@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for Recent Activity Success Response",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "sessionId": {
+        "type": "integer"
+      },
+      "candidateId": {
+        "type": "integer"
+      },
+      "candidateName": {
+        "type": "string"
+      },
+      "testName": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "passed": {
+        "type": ["boolean", "null"]
+      },
+      "date": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "sessionId",
+      "candidateId",
+      "candidateName",
+      "testName",
+      "status",
+      "passed",
+      "date"
+    ]
+  }
+}

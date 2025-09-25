@@ -133,6 +133,7 @@ public class TestsPage {
         Assertions.assertTrue(error.isVisible(), "Сообщение об ошибке для пустого имени теста не отображается");
     }
 
+
     @Step("Открыть тест по названию: {testName}")
     public void openTestByName(String testName) {
 
@@ -144,6 +145,7 @@ public class TestsPage {
         rowByText.locator("a, button, td, div").first().scrollIntoViewIfNeeded();
         rowByText.locator("a, button, td, div").first().click();
     }
+
 
     // ===== Юлины методы =====
     @Step("Find test 'Тест Прохождение тестов с одной опцией'")
