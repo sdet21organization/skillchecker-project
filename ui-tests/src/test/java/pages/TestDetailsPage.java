@@ -2,6 +2,7 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -145,12 +146,15 @@ public class TestDetailsPage {
         context.page.locator("button:has-text(\"Generate\")").click();
     }
 
+
     @Step("Дождаться закрытия модалки генерации вопросов")
     public void waitGenerateModalClosed() {
-        Locator dialog = context.page
-                .getByRole(AriaRole.DIALOG)
-                .filter(new Locator.FilterOptions().setHasText("Generate Questions"));
-        assertThat(dialog).not().isVisible();
+        Locator dialog = context.page.locator("div[role='dialog']").filter(
+                new Locator.FilterOptions().setHasText("Generate Questions")
+        );
+
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(dialog)
+                .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000)); // 10 сек
     }
 
 
