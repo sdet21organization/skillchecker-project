@@ -1,6 +1,7 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
+import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -52,6 +53,7 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertTrue(candidatesPage.toast.isVisible());
     }
 

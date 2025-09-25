@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Candidates;
 
-@DisplayName("Get all candidates tests")
+@DisplayName("Проверка запросов GET /candidates")
 public class GetAllCandidatesTests extends BaseTest {
 
     @Test
