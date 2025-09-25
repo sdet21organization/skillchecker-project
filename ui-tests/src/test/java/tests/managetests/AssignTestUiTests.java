@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
 
+@DisplayName("Назначение теста кандидату через UI")
 public class AssignTestUiTests extends BaseTest {
 
     @Test

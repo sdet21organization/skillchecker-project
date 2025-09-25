@@ -8,6 +8,7 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 

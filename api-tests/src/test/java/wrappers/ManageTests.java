@@ -7,13 +7,14 @@ import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
-
+@DisplayName("Управление тестами через API")
 public class ManageTests {
 
     @Step("Создание теста через API")
@@ -36,7 +37,7 @@ public class ManageTests {
         response.then()
                 .statusCode(201)
                 .contentType(ContentType.JSON)
-                .body(matchesJsonSchemaInClasspath("schemas.manage/CreateTestSuccessResponse.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/manage/CreateTestSuccessResponse.json"));
 
     }
 
@@ -66,7 +67,7 @@ public class ManageTests {
                     .statusCode(200)
                     .contentType(ContentType.JSON)
 
-                    .body(matchesJsonSchemaInClasspath("schemas.manage/UpdateTestSuccessResponse.json"));
+                    .body(matchesJsonSchemaInClasspath("schemas/manage/UpdateTestSuccessResponse.json"));
 
         } else {
 

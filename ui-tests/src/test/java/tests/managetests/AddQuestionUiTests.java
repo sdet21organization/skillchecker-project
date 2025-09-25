@@ -9,6 +9,7 @@ import tests.BaseTest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@DisplayName("Добавление вопроса через UI")
 public class AddQuestionUiTests extends BaseTest {
 
     private String uniqueName(String prefix) {

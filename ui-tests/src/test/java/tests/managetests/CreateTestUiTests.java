@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
 
+@DisplayName("Создание теста через UI")
 public class CreateTestUiTests extends BaseTest {
 
     @Test

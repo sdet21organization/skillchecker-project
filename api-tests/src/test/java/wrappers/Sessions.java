@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 
+@DisplayName("Назначение теста кандидату через API")
 public class Sessions {
     private static final ObjectMapper om = new ObjectMapper();
 
