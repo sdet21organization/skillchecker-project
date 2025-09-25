@@ -1,7 +1,6 @@
 package pages;
 
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.LoadState;
 import context.TestContext;
 import io.qameta.allure.Step;
 import utils.ConfigurationReader;
@@ -182,8 +181,7 @@ public class CandidatesPage {
     @Step("Получить список кандидатов, который отображен на модалке ʼНазначить тестʼ")
     public List<String> getCandidatesListOnBulkAssignModal() {
         String candidates = bulkAssignModalCandidatesList.textContent();
-        List<String> candidateList = Arrays.stream(candidates.split(", ")).toList();
-        return candidateList;
+        return  Arrays.stream(candidates.split(", ")).toList();
     }
 
     @Step("Выбрать тест {test} из списка ʼВыберите тестʼ")
@@ -218,12 +216,6 @@ public class CandidatesPage {
     @Step("Нажать кнопку ʼНазначить тестʼ в окне ʼНазначить тестʼ")
     public CandidatesPage clickSubmitBulkAssignModalButton() {
         bulkAssignModalSubmitButton.click();
-        return this;
-    }
-
-    @Step("Нажать кнопку ʼОтменаʼ в окне ʼНазначить тестʼ")
-    public CandidatesPage clickCancelBulkAssignModalButton() {
-        bulkAssignModalCancelButton.click();
         return this;
     }
 
