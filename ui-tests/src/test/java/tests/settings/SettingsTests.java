@@ -8,6 +8,7 @@ import pages.SettingsPage;
 import tests.BaseTest;
 import utils.ConfigurationReader;
 
+@DisplayName("Settings tests UI")
 public class SettingsTests extends BaseTest {
 
     private final String email = ConfigurationReader.get("test.user.email");
