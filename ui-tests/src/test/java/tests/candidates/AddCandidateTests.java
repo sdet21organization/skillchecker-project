@@ -52,7 +52,9 @@ public class AddCandidateTests extends BaseTest {
         String email = fakerData.internet().safeEmailAddress(name);
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
+        candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
         context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertTrue(candidatesPage.toast.isVisible());
     }

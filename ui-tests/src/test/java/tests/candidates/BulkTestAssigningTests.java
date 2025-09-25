@@ -1,5 +1,6 @@
 package tests.candidates;
 
+import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatePage;
@@ -44,6 +45,7 @@ public class BulkTestAssigningTests extends BaseTest {
         assertTrue(candidatesPage.bulkAssignModalSubmitButton.isEnabled());
 
         candidatesPage.choosePeriodOnBulkAssignModal("14 дней").clickSubmitBulkAssignModalButton();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertTrue(candidatesPage.toast.isVisible());
         assertTrue(candidatesPage.bulkAssignModalSubmitButton.isHidden());
         assertTrue(candidatesPage.testInfo.isHidden());
@@ -74,6 +76,7 @@ public class BulkTestAssigningTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().sellectAllCandidates().clickBulkAssignButton().chooseTestOnBulkAssignModal(testInfo.name).clickSubmitBulkAssignModalButton();
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
         assertTrue(candidatesPage.toast.textContent().contains("Ошибка"));
     }
 }
