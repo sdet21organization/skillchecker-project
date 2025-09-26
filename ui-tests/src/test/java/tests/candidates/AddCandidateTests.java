@@ -54,7 +54,7 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
-        context.page.waitForTimeout(1000);
+        context.page.waitForTimeout(1500);
         candidatesPage.addCandidateModalTitle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
 
 
