@@ -31,7 +31,6 @@ public class CandidatesPage {
     public final Locator fileUploadImportModalButton;
     private final Locator importCancelImportModalButton;
 
-
     public final Locator addCandidateModalTitle;
     private final Locator nameModalField;
     private final Locator emailModalField;
@@ -47,6 +46,7 @@ public class CandidatesPage {
     private final Locator bulkAssignModalChoosePeriodDropdown;
     public final Locator testInfo;
     public final Locator bulkAssignModalSubmitButton;
+    public final Locator bulkAssignModalSubmitButtonIdle;
     private final Locator bulkAssignModalCloseButton;
     public final Locator toast;
 
@@ -82,6 +82,7 @@ public class CandidatesPage {
         this.bulkAssignModalChoosePeriodDropdown = context.page.locator("div[role='dialog'] [aria-controls='radix-:rn:']");
         this.testInfo = context.page.locator("[role='dialog'] div.p-3 div");
         this.bulkAssignModalSubmitButton = context.page.locator("[data-testid='bulk-assign-submit-button']");
+        this.bulkAssignModalSubmitButtonIdle = context.page.getByText("Назначение...");
         this.bulkAssignModalCloseButton = context.page.locator("[data-testid='bulk-assign-close-button']");
         this.toast = context.page.locator("div.gap-1");
     }
