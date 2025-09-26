@@ -141,3 +141,60 @@ jobs:
               repo: repoName,
               body: `✅ Allure Report доступен по ссылке: [открыть отчёт](${reportUrl})`
             });
+
+      - name: Send Discord Notification
+        if: always()
+        env:
+         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+            branch="${{ github.head_ref || github.ref_name }}"
+            report_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${branch}/"
+            
+            passed=$(jq '.statistic.passed' allure-report/widgets/summary.json)
+            failed=$(jq '.statistic.failed' allure-report/widgets/summary.json)
+            broken=$(jq '.statistic.broken' allure-report/widgets/summary.json)
+            skipped=$(jq '.statistic.skipped' allure-report/widgets/summary.json)
+            total=$(jq '.statistic.total' allure-report/widgets/summary.json)
+            
+            color=3066993
+            
+            payload=$(jq -n \
+              --arg passed "$passed" \
+              --arg failed "$failed" \
+              --arg broken "$broken" \
+              --arg skipped "$skipped" \
+              --arg total "$total" \
+              --arg url "$report_url" \
+              --arg branch "$branch" \
+              --arg repo "${{ github.repository }}" \
+              --argjson color "$color" \
+              '{
+                "embeds": [
+                  {
+                   "title": "Allure Report",
+                   "url": $url,
+                   "color": $color,
+                   "fields": [
+                     {
+                      "name": "📁 ",
+                      "value": $repo,
+                      "inline": true
+                     },
+                    {
+                     "name": "🌿 ",
+                     "value": $branch,
+                     "inline": true
+                    },
+                    {
+                      "name": "Test Results",
+                      "value": "✅ Passed \($passed) ⚠️ Broken \($broken) ❌ Failed \($failed) ⏭️ Skipped \($skipped) 📊 Total \($total)",
+                      "inline": false
+                     }
+                    ]
+                  }
+                ]
+               }')
+            
+            curl -H "Content-Type: application/json" \
+                -d "$payload" \
+                "$DISCORD_WEBHOOK_URL"

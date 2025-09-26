@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
 
+@DisplayName("Прохождение тестов")
 public class TestPassingTests extends BaseTest {
 
     @DisplayName("Verify successful assignment of the test 'Тест Прохождение тестов с одной опцией' to a candidate")
