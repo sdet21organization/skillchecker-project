@@ -14,7 +14,7 @@ import tests.BaseTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Добавление нового кандидата")
+@DisplayName("UI. Добавление нового кандидата")
 public class AddCandidateTests extends BaseTest {
 
     Faker fakerData = new Faker();
@@ -54,7 +54,9 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        context.page.waitForTimeout(1000);
         candidatesPage.addCandidateModalTitle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
+
 
 
         candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();

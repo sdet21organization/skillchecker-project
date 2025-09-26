@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Масовый импорт кандидатов")
+@DisplayName("UI. Масовый импорт кандидатов")
 public class CandidatesBulkImportTests extends BaseTest {
 
     @Test
@@ -35,6 +35,7 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
 
+        context.page.waitForTimeout(1000);
         candidatesPage.importSubmitImportModalButtonIdle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
 
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
@@ -64,10 +65,9 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
 
+        context.page.waitForTimeout(1000);
         candidatesPage.importSubmitImportModalButtonIdle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
 
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
-
-        candidatesPage.clickImportCancelButton();
     }
 }
