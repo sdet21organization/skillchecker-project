@@ -133,9 +133,9 @@ jobs:
             HISTORY_PATH="${{ steps.branch_vars.outputs.history_path }}" # Используем короткий ID
             mkdir -p allure-report/${HISTORY_PATH}/history 
           
-          if [ -d "allure-report/history" ]; then
+            if [ -d "allure-report/history" ]; then
               cp -r allure-report/history/. allure-report/${HISTORY_PATH}/history/
-          fi
+            fi
             cp allure-report/*-trend.json allure-report/${HISTORY_PATH}/history/ || true
       
 
