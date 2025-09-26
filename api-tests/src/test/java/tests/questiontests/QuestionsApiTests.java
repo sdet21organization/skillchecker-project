@@ -41,7 +41,7 @@ public class QuestionsApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание вопроса: 400 если отсутствует testId")
+    @DisplayName("Создание вопроса: проверка статуса 400, если отсутствует testId")
     void createQuestion_missingTestId_400() throws JsonProcessingException {
         wrappers.ManageTests.createTest(cookie, "API Negative", "missing testId");
 

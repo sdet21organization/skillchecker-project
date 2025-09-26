@@ -7,7 +7,9 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 
+@DisplayName("Страница 'Тесты'")
 public class TestsPage {
     TestContext context;
 
