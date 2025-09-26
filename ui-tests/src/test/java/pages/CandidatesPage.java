@@ -28,6 +28,7 @@ public class CandidatesPage {
     private final Locator importButton;
     public final Locator importInfoStatus;
     public final Locator importSubmitImportModalButton;
+    public final Locator importSubmitImportModalButtonIdle;
     public final Locator fileUploadImportModalButton;
     private final Locator importCancelImportModalButton;
 
@@ -64,8 +65,10 @@ public class CandidatesPage {
         this.importButton = context.page.locator("button[class*='inline-flex'] span:has(svg.lucide-download)");
         this.importInfoStatus = context.page.locator("div[role*=\"dialog\"] div.space-y-1");
         this.importSubmitImportModalButton = context.page.locator("[data-testid='import-submit-button']");
+        this.importSubmitImportModalButtonIdle = context.page.getByText("Импорт...");
         this.fileUploadImportModalButton = context.page.locator("[data-testid='file-upload-input']");
         this.importCancelImportModalButton = context.page.locator("[data-testid='import-cancel-button']");
+
 
         this.addCandidateModalTitle = context.page.locator("h2.text-lg");
         this.nameModalField = context.page.locator("input[name='name']");
