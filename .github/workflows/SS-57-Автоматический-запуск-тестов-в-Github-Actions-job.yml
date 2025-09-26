@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Download Allure Results (API)
         uses: actions/download-artifact@v4
         with:
@@ -121,7 +121,6 @@ jobs:
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
           safe_branch="${branch//\//-}"
-          # Копируем новую историю (history/ и trend-файлы) в папку для деплоя
           mkdir -p allure-report/${safe_branch}/history
           cp -r allure-report/history/. allure-report/${safe_branch}/history/
           cp allure-report/*-trend.json allure-report/${safe_branch}/history/ || true
@@ -202,7 +201,7 @@ jobs:
                   },
                   {
                     "name": "Test Results",
-                    "value": "✅ "Passed" \($passed) ⚠️ "Broken" \($broken) ❌ "Failed" \($failed) ⏭️ "Skipped" \($skipped) 📊 "Total" \($total)",
+                    "value": "✅ Passed \($passed) ⚠️ Broken \($broken) ❌ Failed \($failed) ⏭️ Skipped \($skipped) 📊 Total \($total)",
                     "inline": false
                    }
                   ]
