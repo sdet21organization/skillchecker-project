@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # чтобы подтянуть ветку gh-pages тоже
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -42,9 +42,11 @@ jobs:
   ui-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -67,13 +69,13 @@ jobs:
           path: ui-tests/target/allure-results
 
   allure-report:
-    needs: [api-tests, ui-tests]
+    needs: [ api-tests, ui-tests ]
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # чтобы подтянуть ветку gh-pages тоже
+          fetch-depth: 0
 
       - name: Download Allure Results (API)
         uses: actions/download-artifact@v4
@@ -93,15 +95,20 @@ jobs:
           cp -r allure-results/api/* merged-allure-results/ || true
           cp -r allure-results/ui/* merged-allure-results/ || true
 
-      - name: Restore Allure History
+      - name: Restore Allure History for Trends
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-branch
+
+      - name: Copy History
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
-          safe_branch="${branch//\//-}"   # заменяем '/' на '-' для совместимости с файлами
-          mkdir -p allure-history
-          git fetch origin gh-pages || true
-          git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
-          if [ -d "${safe_branch}/history" ]; then
-            mv "${safe_branch}/history"/* allure-history/ || true
+          safe_branch="${branch//\//-}"
+          mkdir -p allure-report/history
+          # Если история для этой ветки существует, копируем ее
+          if [ -d "gh-pages-branch/${safe_branch}/history" ]; then
+            cp -r gh-pages-branch/${safe_branch}/history/* allure-report/history/ || true
           fi
 
       - name: Generate Allure Report
@@ -109,14 +116,21 @@ jobs:
         with:
           allure_results: merged-allure-results
           allure_report: allure-report
-          allure_history: allure-history
 
-      - name: Save Allure History for this branch
+      - name: Update History for Next Run
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
           safe_branch="${branch//\//-}"
-          mkdir -p "allure-report/history"
-          cp -r allure-report/history/* "allure-report/history/${safe_branch}/" || true
+          mkdir -p allure-report/${safe_branch}/history
+          cp -r allure-report/history/. allure-report/${safe_branch}/history/
+          cp allure-report/*-trend.json allure-report/${safe_branch}/history/ || true
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: .
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -141,3 +155,60 @@ jobs:
               repo: repoName,
               body: `✅ Allure Report доступен по ссылке: [открыть отчёт](${reportUrl})`
             });
+
+      - name: Send Discord Notification
+        if: always()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          branch="${{ github.head_ref || github.ref_name }}"
+          report_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${branch}/"
+
+          passed=$(jq '.statistic.passed' allure-report/widgets/summary.json)
+          failed=$(jq '.statistic.failed' allure-report/widgets/summary.json)
+          broken=$(jq '.statistic.broken' allure-report/widgets/summary.json)
+          skipped=$(jq '.statistic.skipped' allure-report/widgets/summary.json)
+          total=$(jq '.statistic.total' allure-report/widgets/summary.json)
+          
+          color=3066993
+
+          payload=$(jq -n \
+            --arg passed "$passed" \
+            --arg failed "$failed" \
+            --arg broken "$broken" \
+            --arg skipped "$skipped" \
+            --arg total "$total" \
+            --arg url "$report_url" \
+            --arg branch "$branch" \
+            --arg repo "${{ github.repository }}" \
+            --argjson color "$color" \
+            '{
+              "embeds": [
+                {
+                 "title": "Allure Report",
+                 "url": $url,
+                 "color": $color,
+                 "fields": [
+                   {
+                    "name": "📁 ",
+                    "value": $repo,
+                    "inline": true
+                   },
+                  {
+                   "name": "🌿 ",
+                   "value": $branch,
+                   "inline": true
+                  },
+                  {
+                    "name": "Test Results",
+                    "value": "✅ Passed \($passed) ⚠️ Broken \($broken) ❌ Failed \($failed) ⏭️ Skipped \($skipped) 📊 Total \($total)",
+                    "inline": false
+                   }
+                  ]
+                }
+              ]
+             }')
+
+          curl -H "Content-Type: application/json" \
+              -d "$payload" \
+              "$DISCORD_WEBHOOK_URL"
