@@ -190,35 +190,10 @@ jobs:
                    "inline": true
                   },
                   {
-                   "name": "\u200b",
-                   "value": "\u200b",
-                   "inline": false
-                  },
-                  {
-                   "name": "✅ Passed",
-                   "value": $passed,
-                   "inline": true
-                  },
-                  {
-                   "name": "⚠️ Broken",
-                   "value": $broken,
-                   "inline": true
-                  },
-                  {
-                    "name": "❌ Failed",
-                    "value": $failed,
-                    "inline": true
-                    },
-                   {
-                    "name": "⏭️ Skipped",
-                    "value": $skipped,
-                    "inline": true
-                    },
-                   {
-                    "name": "📊 Total",
-                    "value": $total,
-                    "inline": true
-                    }
+                    "name": "Test Results",
+                    "value": "✅ \($passed) ⚠️ \($broken) ❌ \($failed) ⏭️ \($skipped) 📊 \($total)",
+                    "inline": false
+                   }
                   ]
                 }
               ]
