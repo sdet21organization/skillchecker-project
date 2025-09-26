@@ -42,11 +42,9 @@ jobs:
   ui-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # Обновлено до v4 для единообразия
-        with:
-          fetch-depth: 0 # Добавлено для единообразия и возможных будущих нужд
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-java@v4 # Обновлено до v4 для единообразия
+      - uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -68,105 +66,87 @@ jobs:
           name: allure-results-ui
           path: ui-tests/target/allure-results
 
-
   allure-report:
-   needs: [ api-tests, ui-tests ]
-   runs-on: ubuntu-latest
-   if: always()
-   steps:
-    - uses: actions/checkout@v4 # Обновлено до v4
-      with:
-        fetch-depth: 0
+    needs: [api-tests, ui-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # чтобы подтянуть ветку gh-pages тоже
 
-    - name: Download Allure Results (API)
-      uses: actions/download-artifact@v4
-      with:
-        name: allure-results-api
-        path: allure-results/api
+      - name: Download Allure Results (API)
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-api
+          path: allure-results/api
 
-    - name: Download Allure Results (UI)
-      uses: actions/download-artifact@v4
-      with:
-        name: allure-results-ui
-        path: allure-results/ui
+      - name: Download Allure Results (UI)
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-ui
+          path: allure-results/ui
 
-    - name: Merge Allure Results
-      run: |
-        mkdir -p merged-allure-results
-        # Использование find и xargs для копирования содержимого, исключая папки-артефакты,
-        # чтобы избежать проблем, если папка пуста
-        find allure-results/api -mindepth 1 -maxdepth 1 -exec cp -r {} merged-allure-results/ \; || true
-        find allure-results/ui -mindepth 1 -maxdepth 1 -exec cp -r {} merged-allure-results/ \; || true
+      - name: Merge Allure Results
+        run: |
+          mkdir -p merged-allure-results
+          cp -r allure-results/api/* merged-allure-results/ || true
+          cp -r allure-results/ui/* merged-allure-results/ || true
 
-    - name: Restore Allure History 💾
-      uses: actions/checkout@v4 # Используем action для восстановления истории
-      with:
-        repository: ${{ github.repository }}
-        ref: gh-pages
-        path: gh-pages-branch
-        fetch-depth: 0
+      - name: Restore Allure History
+        run: |
+          branch="${{ github.head_ref || github.ref_name }}"
+          safe_branch="${branch//\//-}"   # заменяем '/' на '-' для совместимости с файлами
+          mkdir -p allure-history
+          git fetch origin gh-pages || true
+          git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
+          if [ -d "${safe_branch}/history" ]; then
+            mv "${safe_branch}/history"/* allure-history/ || true
+          fi
 
-    - name: Copy Allure History
-      run: |
-        BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
-        # При пустом github.head_ref (для push в main) используем имя ветки
-        if [ -d "gh-pages-branch/${BRANCH_NAME}/history" ]; then
-          mkdir -p merged-allure-results/history
-          cp -r gh-pages-branch/${BRANCH_NAME}/history/* merged-allure-results/history/
-          echo "History restored from gh-pages/${BRANCH_NAME}/history"
-        else
-          echo "No existing history found for branch: ${BRANCH_NAME}"
-        fi
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          allure_results: merged-allure-results
+          allure_report: allure-report
+          allure_history: allure-history
 
-    - name: Generate Allure Report
-      uses: simple-elf/allure-report-action@v1.7
-      with:
-        allure_results: merged-allure-results
-        allure_report: allure-report
-        # allure_history больше не нужен, т.к. история уже скопирована в allure_results
+      - name: Save Allure History for this branch
+        run: |
+          branch="${{ github.head_ref || github.ref_name }}"
+          safe_branch="${branch//\//-}"
+          mkdir -p "allure-report/history"
+          cp -r allure-report/history/* "allure-report/history/${safe_branch}/" || true
 
-    - name: Save Allure History
-      run: |
-        BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
-        # Переносим сгенерированную историю в корень отчета для деплоя
-        mkdir -p allure-report/history
-        cp -r merged-allure-results/history/* allure-report/history/ || true
-        # Копируем новую историю для текущей ветки
-        mkdir -p allure-report/${BRANCH_NAME}/history
-        cp -r allure-report/history/* allure-report/${BRANCH_NAME}/history/
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: ${{ github.head_ref || github.ref_name }}
 
-    - name: Deploy Allure Report to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: allure-report
-        # Публикуем отчет в корень для main и в подпапки для feature-веток
-        destination_dir: ${{ github.head_ref || github.ref_name }}
-        # force_orphan: true # Опционально, чтобы не загрязнять gh-pages лишними файлами
+      - name: Comment PR with Allure Report Link
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = context.payload.pull_request.head.ref;
+            const repoName = context.repo.repo;
+            const owner = context.repo.owner;
+            const reportUrl = `https://${owner}.github.io/${repoName}/${branchName}/`;
 
-    - name: Comment PR with Allure Report Link
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const branchName = context.payload.pull_request.head.ref;
-          const repoName = context.repo.repo;
-          const owner = context.repo.owner;
-          // Убедитесь, что отчет доступен по ссылке: https://owner.github.io/repo/branch-name/
-          const reportUrl = `https://${owner}.github.io/${repoName}/${branchName}/`;
-          
-          await github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner,
-            repo: repoName,
-            body: `✅ **Allure Report** доступен по ссылке: [открыть отчёт](${reportUrl})`
-          });
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner,
+              repo: repoName,
+              body: `✅ Allure Report доступен по ссылке: [открыть отчёт](${reportUrl})`
+            });
 
-    - name: Send Discord Notification
-      if: always()
-      env:
-       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: |
+      - name: Send Discord Notification
+        if: always()
+        env:
+         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
             branch="${{ github.head_ref || github.ref_name }}"
             report_url="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${branch}/"
             
