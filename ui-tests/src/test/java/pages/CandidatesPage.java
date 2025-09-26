@@ -37,6 +37,7 @@ public class CandidatesPage {
     private final Locator emailModalField;
     private final Locator positionModalField;
     public final Locator addCandidateModalButton;
+    public final Locator addCandidateModalButtonIdle;
     private final Locator cancelModalButton;
     private final Locator modalErrorMessage;
     public final Locator bulkAssigningModal;
@@ -75,6 +76,7 @@ public class CandidatesPage {
         this.emailModalField = context.page.locator("input[name='email']");
         this.positionModalField = context.page.locator("input[name='position']");
         this.addCandidateModalButton = context.page.locator("button[type='submit']");
+        this.addCandidateModalButtonIdle = context.page.getByText("Adding...");
         this.cancelModalButton = context.page.locator("[data-testid='candidate-modal-cancel-button']");
         this.modalErrorMessage = context.page.locator("p.text-destructive");
         this.bulkAssigningModal = context.page.locator("[role='dialog']");
