@@ -118,9 +118,9 @@ jobs:
             branch="${{ github.head_ref || github.ref_name }}"
             safe_branch="${branch//\//-}"
             mkdir -p allure-report/history
-          if [ -d "allure-report/history" ] && [ "$(ls -A allure-report/history)" ]; then
-           cp -r allure-report/history/. "${safe_branch}/history/"
-          fi
+            if [ -d "allure-report/history" ] && [ "$(ls -A allure-report/history)" ]; then
+               cp -r allure-report/history/. "${safe_branch}/history/"
+            fi
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
