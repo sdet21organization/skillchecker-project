@@ -103,7 +103,7 @@ jobs:
           git fetch origin gh-pages || true
           git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
           if [ -d "${safe_branch}/history" ]; then
-            cp -r "${safe_branch}/history/"* allure-history/
+            cp -r "${safe_branch}/history/"* allure-report/history || true
           fi
 
       - name: Generate Allure Report
@@ -111,15 +111,15 @@ jobs:
         with:
           allure_results: merged-allure-results
           allure_report: allure-report
-          allure_history: allure-history
+          allure_history: allure-report/history
 
-      - name: Save Allure History for this branch
+      - name: Save Allure History
         run: |
-          branch="${{ github.head_ref || github.ref_name }}"
-          safe_branch="${branch//\//-}"
-          mkdir -p "${safe_branch}/history"
+            branch="${{ github.head_ref || github.ref_name }}"
+            safe_branch="${branch//\//-}"
+            mkdir -p allure-report/history
           if [ -d "allure-report/history" ] && [ "$(ls -A allure-report/history)" ]; then
-          cp -r allure-report/history/* "${safe_branch}/history/"
+           cp -r allure-report/history/. "${safe_branch}/history/"
           fi
 
       - name: Deploy Allure Report to GitHub Pages
@@ -191,7 +191,7 @@ jobs:
                   },
                   {
                     "name": "Test Results",
-                    "value": "✅ \($passed) ⚠️ \($broken) ❌ \($failed) ⏭️ \($skipped) 📊 \($total)",
+                    "value": "✅ "Passed" \($passed) ⚠️ "Broken" \($broken) ❌ "Failed" \($failed) ⏭️ "Skipped" \($skipped) 📊 "Total" \($total)",
                     "inline": false
                    }
                   ]
