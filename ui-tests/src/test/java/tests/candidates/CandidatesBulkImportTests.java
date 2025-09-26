@@ -1,5 +1,7 @@
 package tests.candidates;
 
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatesPage;
@@ -13,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Масовый импорт кандидатов")
+@DisplayName("UI. Масовый импорт кандидатов")
 public class CandidatesBulkImportTests extends BaseTest {
 
     @Test
@@ -32,11 +34,13 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
-        context.page.waitForTimeout(2000);
+
+        context.page.waitForTimeout(1000);
+        candidatesPage.importSubmitImportModalButtonIdle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
+
         assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
         candidatesPage.clickImportCancelButton();
-
         candidatesPage.searchCandidateBy(name1);
         assertEquals(name1, candidatesPage.candidatesTableNames.textContent(), "Не найдено импортированого из файла кандидата");
 
@@ -60,9 +64,10 @@ public class CandidatesBulkImportTests extends BaseTest {
         candidatesPage.open().clickImportButton();
         candidatesPage.fileUploadImportModalButton.setInputFiles(Paths.get(filePath));
         candidatesPage.clickSubmitImportButton();
-        context.page.waitForTimeout(1500);
-        assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
 
-        candidatesPage.clickImportCancelButton();
+        context.page.waitForTimeout(1000);
+        candidatesPage.importSubmitImportModalButtonIdle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
+
+        assertEquals(expectedImportInfoStatus, candidatesPage.importInfoStatus.textContent(), "Сообщение о статусе импорта не совпадает с ожидаемым");
     }
 }

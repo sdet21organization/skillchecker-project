@@ -1,6 +1,8 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +14,7 @@ import tests.BaseTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Добавление нового кандидата")
+@DisplayName("UI. Добавление нового кандидата")
 public class AddCandidateTests extends BaseTest {
 
     Faker fakerData = new Faker();
@@ -52,7 +54,7 @@ public class AddCandidateTests extends BaseTest {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
-        context.page.waitForTimeout(1500);
+        candidatesPage.addCandidateModalButtonIdle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
 
         candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
         assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об ошибке не показан");

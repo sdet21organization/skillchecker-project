@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Candidates;
 
-@DisplayName("Проверка запросов POST /candidates")
+@DisplayName("API. Проверка запросов POST /candidates")
 public class CreateNewCandidateTests extends BaseTest {
 
     @Test

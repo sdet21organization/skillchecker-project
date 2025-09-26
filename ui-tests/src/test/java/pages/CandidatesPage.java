@@ -28,6 +28,7 @@ public class CandidatesPage {
     private final Locator importButton;
     public final Locator importInfoStatus;
     public final Locator importSubmitImportModalButton;
+    public final Locator importSubmitImportModalButtonIdle;
     public final Locator fileUploadImportModalButton;
     private final Locator importCancelImportModalButton;
 
@@ -36,6 +37,7 @@ public class CandidatesPage {
     private final Locator emailModalField;
     private final Locator positionModalField;
     public final Locator addCandidateModalButton;
+    public final Locator addCandidateModalButtonIdle;
     private final Locator cancelModalButton;
     private final Locator modalErrorMessage;
     public final Locator bulkAssigningModal;
@@ -64,14 +66,17 @@ public class CandidatesPage {
         this.importButton = context.page.locator("button[class*='inline-flex'] span:has(svg.lucide-download)");
         this.importInfoStatus = context.page.locator("div[role*=\"dialog\"] div.space-y-1");
         this.importSubmitImportModalButton = context.page.locator("[data-testid='import-submit-button']");
+        this.importSubmitImportModalButtonIdle = context.page.getByText("Импорт...");
         this.fileUploadImportModalButton = context.page.locator("[data-testid='file-upload-input']");
         this.importCancelImportModalButton = context.page.locator("[data-testid='import-cancel-button']");
+
 
         this.addCandidateModalTitle = context.page.locator("h2.text-lg");
         this.nameModalField = context.page.locator("input[name='name']");
         this.emailModalField = context.page.locator("input[name='email']");
         this.positionModalField = context.page.locator("input[name='position']");
         this.addCandidateModalButton = context.page.locator("button[type='submit']");
+        this.addCandidateModalButtonIdle = context.page.getByText("Adding...");
         this.cancelModalButton = context.page.locator("[data-testid='candidate-modal-cancel-button']");
         this.modalErrorMessage = context.page.locator("p.text-destructive");
         this.bulkAssigningModal = context.page.locator("[role='dialog']");

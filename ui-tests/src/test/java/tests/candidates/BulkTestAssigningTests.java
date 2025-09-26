@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Масовое назначение тестов кандидатам")
+@DisplayName("UI. Масовое назначение тестов кандидатам")
 public class BulkTestAssigningTests extends BaseTest {
 
     @Test
