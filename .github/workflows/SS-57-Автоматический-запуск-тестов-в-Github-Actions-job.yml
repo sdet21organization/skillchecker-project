@@ -107,23 +107,21 @@ jobs:
           allure_history: allure-history
 
       - name: Comment PR with Allure Report Link
-        # Запускаем только при Pull Request
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
-          script: |
-            const branchName = process.env.BRANCH_NAME;
-            const repoName = context.repo.repo;
-            const owner = context.repo.owner;
-            // Формируем URL: https://<owner>.github.io/<repo>/<branch-name>/
-            const reportUrl = `https://${owner}.github.io/${repoName}/${branchName}/`;
-
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner,
-              repo: repoName,
-              body: `✅ **Отчёт Allure с историей и трендами доступен:** [открыть отчёт](${reportUrl})\n\n*(Отчёт опубликован на ветку \`gh-pages\` в папку \`${branchName}/\`)*`
-            });
+            script: |
+              const branchName = context.payload.pull_request.head.ref;
+              const repoName = context.repo.repo;
+              const owner = context.repo.owner;
+              const reportUrl = `https://${owner}.github.io/${repoName}/${branchName}/`;
+              
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner,
+                repo: repoName,
+                body: `✅ Allure Report доступен по ссылке: [открыть отчёт](${reportUrl})`
+              });
 
       - name: Send Discord Notification
         if: github.ref == 'refs/heads/main'
