@@ -93,24 +93,30 @@ jobs:
           cp -r allure-results/api/* merged-allure-results/ || true
           cp -r allure-results/ui/* merged-allure-results/ || true
 
-      - name: Define branch variable
-        run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      - name: Set branch variable
+        run: |
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+            else
+            echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+            fi
 
-      - name: Allure Report with History
+      - name: Generate Allure Report with History
         uses: simple-elf/allure-report-action@master
         with:
-            allure_results: ./${{ env.BRANCH_NAME }}/data
-            allure_history: ./${{ env.BRANCH_NAME }}/history
-            allure_report: ./${{ env.BRANCH_NAME }}/export/allure-report
-            keep_reports: 20
+          allure_results: ./${{ env.BRANCH_NAME }}/data
+          allure_history: ./${{ env.BRANCH_NAME }}/history
+          allure_report: ./${{ env.BRANCH_NAME }}/allure-report
+          keep_reports: 20
 
       - name: Deploy to GitHub Pages
+        if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./${{ env.BRANCH_NAME }}/history
-          destination_dir: ${{ github.ref_name }}
+          publish_dir: ./${{ env.BRANCH_NAME }}/allure-report
+          destination_dir: ${{ env.BRANCH_NAME }}
 
       - name: Comment PR with Allure Report Link
         if: github.event_name == 'pull_request'
