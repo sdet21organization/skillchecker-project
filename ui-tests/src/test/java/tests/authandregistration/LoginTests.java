@@ -11,11 +11,11 @@ import tests.BaseTest;
 import utils.ConfigurationReader;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@Disabled("Временно отключаем все тесты класса")
 @Epic("Auth")
 @Feature("Login")
 @DisplayName("Login tests")
-@Disabled("Временно отключаем все тесты класса")
+
 public class LoginTests extends BaseTest {
 
     @Override
