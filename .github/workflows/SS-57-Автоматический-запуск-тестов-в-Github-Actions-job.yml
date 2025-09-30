@@ -93,49 +93,33 @@ jobs:
           cp -r allure-results/api/* merged-allure-results/ || true
           cp -r allure-results/ui/* merged-allure-results/ || true
 
-      - name: Restore Allure History
+      - name: Download history from gh-pages
         run: |
-            branch="${{ github.head_ref || github.ref_name }}"
-            safe_branch="${branch//\//-}"
-            
-            # Извлекаем историю из gh-pages, если она есть
-            git fetch origin gh-pages --depth=1
-            
-            mkdir -p allure-history
-            
-            # Проверяем, существует ли история и извлекаем ее в корень
-            if git checkout origin/gh-pages -- "${safe_branch}/history"; then
-              echo "History found for branch ${safe_branch}. Copying files."
-              cp -r "${safe_branch}/history"/* allure-history/
-              rm -rf "${safe_branch}" # Очищаем временную папку
-            else
-              echo "No previous Allure history found for branch ${safe_branch}."
-            fi
+          git fetch origin gh-pages:gh-pages
+          mkdir -p ./allure-results/history
+          if [ -d "./allure-history" ]; then rm -rf ./allure-history; fi
+          mkdir -p ./allure-history
+
+          # имя папки = название текущей ветки
+          BRANCH_NAME="${GITHUB_REF##*/}"
+
+          git checkout gh-pages
+          if [ -d "./$BRANCH_NAME/history" ]; then
+            cp -r "./$BRANCH_NAME/history" ./allure-results/
+          fi
+          git checkout -
 
       - name: Generate Allure Report
-        uses: simple-elf/allure-report-action@v1.7
-        with:
-          allure_results: merged-allure-results
-          allure_report: allure-report
-          allure_history: allure-history
-
-      - name: Save Allure History
         run: |
-            branch="${{ github.head_ref || github.ref_name }}"
-            safe_branch="${branch//\//-}"
-            
-            # Создаем целевую папку ${branch}/history в рабочем каталоге
-            mkdir -p "${safe_branch}/history"
-            # Сохраняем новую историю
-            cp -r allure-report/history/* "${safe_branch}/history/"
+          allure generate ./allure-results -o ./allure-report --clean
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          destination_dir: ${{ github.head_ref || github.ref_name }}
-          force_orphan: true
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+          destination_dir: ${{ github.ref_name }}
 
       - name: Comment PR with Allure Report Link
         if: github.event_name == 'pull_request'
