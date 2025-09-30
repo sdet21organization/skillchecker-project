@@ -95,14 +95,16 @@ jobs:
 
       - name: Restore Allure History
         run: |
-          branch="${{ github.head_ref || github.ref_name }}"
-          safe_branch="${branch//\//-}"   # заменяем '/' на '-' для совместимости с файлами
-          mkdir -p allure-history
-          git fetch origin gh-pages || true
-          git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
-          if [ -d "${safe_branch}/history" ]; then
-            mv "${safe_branch}/history"/* allure-history/ || true
-          fi
+            branch="${{ github.head_ref || github.ref_name }}"
+            safe_branch="${branch//\//-}"   # заменяем '/' на '-' для имени папки
+            
+            git fetch origin gh-pages || true
+            git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
+            
+            mkdir -p allure-history
+            if [ -d "${safe_branch}/history" ]; then
+              cp -r "${safe_branch}/history"/* allure-history/ || true
+            fi
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.7
@@ -111,12 +113,13 @@ jobs:
           allure_report: allure-report
           allure_history: allure-history
 
-      - name: Save Allure History for this branch
+      - name: Save Allure History
         run: |
-          branch="${{ github.head_ref || github.ref_name }}"
-          safe_branch="${branch//\//-}"
-          mkdir -p "allure-report/history"
-          cp -r allure-report/history/* "allure-report/history/${safe_branch}/" || true
+            branch="${{ github.head_ref || github.ref_name }}"
+            safe_branch="${branch//\//-}"
+            
+            mkdir -p "${safe_branch}/history"
+            cp -r allure-report/history/* "${safe_branch}/history/" || true
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -143,7 +146,7 @@ jobs:
             });
 
       - name: Send Discord Notification
-        if: always()
+        if: github.ref == 'refs/heads/main'
         env:
          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
