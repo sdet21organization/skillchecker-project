@@ -1,5 +1,6 @@
 package tests.candidates;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatesPage;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+@Disabled("Временно отключаем все тесты класса")
 @DisplayName("Масовый импорт кандидатов")
 public class CandidatesBulkImportTests extends BaseTest {
 

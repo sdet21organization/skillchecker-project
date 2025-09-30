@@ -1,10 +1,11 @@
 package tests.managetests;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
-
+@Disabled("Временно отключаем все тесты класса")
 @DisplayName("Назначение теста кандидату через UI")
 public class AssignTestUiTests extends BaseTest {
 

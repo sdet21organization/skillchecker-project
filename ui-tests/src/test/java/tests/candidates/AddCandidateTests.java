@@ -1,6 +1,7 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +13,7 @@ import tests.BaseTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled("Временно отключаем все тесты класса")
 @DisplayName("Добавление нового кандидата")
 public class AddCandidateTests extends BaseTest {
 

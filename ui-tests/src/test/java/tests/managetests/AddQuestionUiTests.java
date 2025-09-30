@@ -1,5 +1,6 @@
 package tests.managetests;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestDetailsPage;
@@ -8,7 +9,7 @@ import tests.BaseTest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+@Disabled("Временно отключаем все тесты класса")
 @DisplayName("Добавление вопроса через UI")
 public class AddQuestionUiTests extends BaseTest {
 

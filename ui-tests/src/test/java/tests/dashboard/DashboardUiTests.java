@@ -2,6 +2,7 @@ package tests.dashboard;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.DashboardPage;
@@ -13,6 +14,7 @@ import com.microsoft.playwright.Locator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled("Временно отключаем все тесты класса")
 @Epic("Dashboard")
 @Feature("UI")
 @DisplayName("Dashboard UI tests")

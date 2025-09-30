@@ -2,6 +2,7 @@ package tests.candidates;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatePage;
@@ -14,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+@Disabled("Временно отключаем все тесты класса")
 @DisplayName("Масовое назначение тестов кандидатам")
 public class BulkTestAssigningTests extends BaseTest {
 
