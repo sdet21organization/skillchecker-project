@@ -103,7 +103,8 @@ jobs:
           
           mkdir -p allure-history
           if [ -d "${safe_branch}/history" ]; then
-            cp -r "${safe_branch}/history"/* allure-history/ || true
+            find "${safe_branch}/history" -type f -name "*.json" -exec cp {} allure-history/ \; 
+            # cp -r "${safe_branch}/history/"* allure-history/ || true
           else
             echo "No history directory found for branch ${safe_branch}"
           fi
@@ -138,8 +139,12 @@ jobs:
           safe_branch="${branch//\//-}"
 
           timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-          mkdir -p "${safe_branch}/history/$timestamp"
-          cp -r allure-report/history/* "${safe_branch}/history/$timestamp/" || true
+          mkdir -p "${safe_branch}/history"
+  
+          for f in allure-report/history/*.json; do
+            base=$(basename "$f")
+            cp "$f" "${safe_branch}/history/${timestamp}-${base}"
+          done
 
           ls -R allure-report # для отладки
 
