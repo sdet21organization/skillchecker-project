@@ -128,6 +128,7 @@ jobs:
           allure generate merged-allure-results --clean -o allure-report
           mkdir -p allure-report/history
           cp -r allure-history/* allure-report/history/ || true
+          ls -R allure-report/history # для отладки
 
       - name: Save Allure History
         run: |
@@ -151,6 +152,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./allure-report
           destination_dir: ${{ github.head_ref || github.ref_name }}
+          keep_files: true
 
       - name: Comment PR with Allure Report Link
         if: github.event_name == 'pull_request'
