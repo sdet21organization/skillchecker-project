@@ -95,18 +95,15 @@ jobs:
 
       - name: Restore Allure History
         run: |
-          branch="${{ github.head_ref || github.ref_name }}"
-          safe_branch="${branch//\//-}"   # заменяем '/' на '-' для имени папки
-          
-          git fetch origin gh-pages || true
-          git checkout origin/gh-pages -- "${safe_branch}/history" || echo "No history yet"
-          
+          branch="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          safe_branch="${branch//\//-}"
+
+          git fetch origin gh-pages:gh-pages || true
+          git checkout gh-pages -- "${safe_branch}/history" || true
+
           mkdir -p allure-history
           if [ -d "${safe_branch}/history" ]; then
-            find "${safe_branch}/history" -type f -name "*.json" -exec cp {} allure-history/ \; 
-            # cp -r "${safe_branch}/history/"* allure-history/ || true
-          else
-            echo "No history directory found for branch ${safe_branch}"
+            cp -r "${safe_branch}/history/"* allure-history/ || true
           fi
 
       - name: Cache Allure CLI
@@ -129,22 +126,22 @@ jobs:
       - name: Generate Allure Report
         run: |
           allure generate merged-allure-results --clean -o allure-report
-          # 👇 кладём старую историю в отчёт
           mkdir -p allure-report/history
           cp -r allure-history/* allure-report/history/ || true
 
       - name: Save Allure History
         run: |
-          branch="${{ github.head_ref || github.ref_name }}"
+          branch="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
           safe_branch="${branch//\//-}"
 
-          timestamp=$(date +%Y-%m-%d_%H-%M-%S)
           mkdir -p "${safe_branch}/history"
-  
-          for f in allure-report/history/*.json; do
-            base=$(basename "$f")
-            cp "$f" "${safe_branch}/history/${timestamp}-${base}"
-          done
+          cp -r allure-report/history/* "${safe_branch}/history/" || true
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add "${safe_branch}/history"
+          git commit -m "Update Allure history for ${safe_branch}" || true
+          git push origin gh-pages
 
           ls -R allure-report # для отладки
 
