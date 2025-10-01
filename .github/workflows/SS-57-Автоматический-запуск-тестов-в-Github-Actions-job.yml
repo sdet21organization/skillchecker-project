@@ -112,6 +112,10 @@ jobs:
           allure_results: merged-allure-results
           allure_report: allure-report
           allure_history: allure-history
+          keep_reports: 0
+
+      - name: Fix permissions  # 🔹 новый шаг
+        run: sudo chown -R $USER:$USER allure-report
 
       - name: Copy History into Report  # 🔹 исправлено: переносим историю в allure-report
         run: |
