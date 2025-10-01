@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("Auth")
 @Owner("Ko.Herasymets")
 @Tag("ui")
+@DisplayName("Auth UI Tests — Login & Logout scenarios")
 public class LoginTests extends BaseTest {
     @Override
     protected boolean needAuthCookie() { return false; }
@@ -26,8 +27,9 @@ public class LoginTests extends BaseTest {
 
     @Test
     @TmsLink("SS-T30")
-    @Story("SS-T30 Успешный вход")
-    @DisplayName("[SS-T30] Login: успешная авторизация валидными данными")
+    @Story("Успешный вход")
+    @Severity(SeverityLevel.CRITICAL)
+    @DisplayName("[SS-T30] Auth / Login — успешная авторизация валидными данными")
     void shouldLoginSuccessfully_SS_T30() {
         String email = ConfigurationReader.get("email");
         String password = ConfigurationReader.get("password");
@@ -44,8 +46,9 @@ public class LoginTests extends BaseTest {
 
     @Test
     @TmsLink("SS-T31")
-    @Story("SS-T31 Неверный логин")
-    @DisplayName("[SS-T31] Login: неверный email → ошибка авторизации")
+    @Story("Неверный email")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("[SS-T31] Auth / Login — неверный email → ошибка авторизации")
     void shouldShowErrorOnWrongEmail_SS_T31() {
         String wrongEmail = "not-exists+" + System.currentTimeMillis() + "@example.com";
         String password = ConfigurationReader.get("password");
@@ -54,8 +57,9 @@ public class LoginTests extends BaseTest {
 
     @Test
     @TmsLink("SS-T32")
-    @Story("SS-T32 Неверный пароль")
-    @DisplayName("[SS-T32] Login: неверный пароль → ошибка авторизации")
+    @Story("Неверный пароль")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("[SS-T32] Auth / Login — неверный пароль → ошибка авторизации")
     void shouldShowErrorOnWrongPassword_SS_T32() {
         String email = ConfigurationReader.get("email");
         String wrongPassword = "wrongPass!" + System.currentTimeMillis();
@@ -64,8 +68,9 @@ public class LoginTests extends BaseTest {
 
     @Test
     @TmsLink("SS-T62")
-    @Story("SS-T62 Валидации пустых полей")
-    @DisplayName("[SS-T62] Login: ошибки валидации при пустых/частично заполненных полях")
+    @Story("Ошибки валидации при пустых/частично заполненных полях")
+    @Severity(SeverityLevel.MINOR)
+    @DisplayName("[SS-T62] Auth / Validation — ошибки при пустых/частично заполненных полях")
     void shouldShowValidationErrorsOnEmptyFields_SS_T62() {
         LoginPage login = new LoginPage(context).open();
 
@@ -84,8 +89,9 @@ public class LoginTests extends BaseTest {
 
     @Test
     @TmsLink("SS-T66")
-    @Story("SS-T66 Доступ к защищённой странице без авторизации")
-    @DisplayName("[SS-T66] Access: переход на /dashboard без логина ведёт на /login")
+    @Story("Доступ к /dashboard без авторизации")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("[SS-T66] Auth / Access — переход на /dashboard без логина ведёт на /login")
     void shouldRedirectToLoginWhenOpenDashboardWithoutAuth_SS_T66() {
         context.page.navigate(baseUrl() + "dashboard");
         context.page.waitForLoadState(LoadState.NETWORKIDLE);
@@ -94,8 +100,9 @@ public class LoginTests extends BaseTest {
 
     @Test
     @TmsLink("SS-T69")
-    @Story("SS-T69 Logout и защита после выхода")
-    @DisplayName("[SS-T69] Logout: после выхода /dashboard недоступен (редирект на /login)")
+    @Story("Logout: защита после выхода")
+    @Severity(SeverityLevel.CRITICAL)
+    @DisplayName("[SS-T69] Auth / Logout — после выхода /dashboard недоступен (редирект на /login)")
     void shouldDenyDashboardAfterLogout_SS_T69() {
         new LoginPage(context).open().login(ConfigurationReader.get("email"), ConfigurationReader.get("password"));
         new DashboardPage(context).waitUntilReady().logout();
