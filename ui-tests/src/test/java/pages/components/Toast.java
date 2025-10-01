@@ -3,40 +3,48 @@ package pages.components;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import java.util.List;
+
 public class Toast {
     private final Page page;
 
-    // Локаторы вынесены в поля
-    private final Locator rootOpen;
-    private final Locator title;
-    private final Locator body;
-    private final Locator closeBtn;
-
     public Toast(Page page) {
         this.page = page;
-        this.rootOpen = page.locator("li[role='status'][data-state='open']").first();
-        this.title    = rootOpen.locator(".text-sm.font-semibold").first();
-        this.body     = rootOpen.locator(".text-sm.opacity-90").first();
-        this.closeBtn = rootOpen.locator("button[toast-close]").first();
     }
 
-    /** Ждём открытый toast */
-    public Toast waitOpen() {
-        page.waitForSelector("li[role='status'][data-state='open']");
+    private Locator lastToast() {
+        return page.locator("li[role='status']").last();
+    }
+
+    public Toast waitAppear(int timeoutMs) {
+        lastToast().waitFor(new Locator.WaitForOptions().setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE).setTimeout(timeoutMs));
         return this;
     }
 
     public String titleText() {
-        return title.innerText().trim();
+        Locator title = lastToast().locator("div.text-sm.font-semibold").first();
+        if (title.count() > 0) return title.innerText().trim();
+        return "";
     }
 
     public String bodyText() {
-        return body.innerText().trim();
+        List<String> texts = lastToast().locator("div.text-sm").allInnerTexts();
+        StringBuilder body = new StringBuilder();
+        for (String t : texts) {
+            String s = t.trim();
+            if (s.isEmpty()) continue;
+            if ("Ошибка входа".equalsIgnoreCase(s) || "Ошибка регистрации".equalsIgnoreCase(s) || "Код отправлен".equalsIgnoreCase(s)) {
+                continue;
+            }
+            if (body.length() > 0) body.append(" ");
+            body.append(s);
+        }
+        return body.toString().trim();
     }
 
-    public void closeIfPresent() {
-        if (closeBtn.isVisible()) {
-            closeBtn.click();
-        }
+    public boolean containsAny(String... needles) {
+        String t = (titleText() + " " + bodyText()).toLowerCase();
+        for (String n : needles) if (t.contains(n.toLowerCase())) return true;
+        return false;
     }
 }
