@@ -1,5 +1,6 @@
 package tests.managetests;
 
+import io.qameta.allure.Epic;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestDetailsPage;
@@ -9,6 +10,7 @@ import tests.BaseTest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Epic("UI Tests")
 @DisplayName("Добавление вопроса через UI")
 public class AddQuestionUiTests extends BaseTest {
 
@@ -19,22 +21,11 @@ public class AddQuestionUiTests extends BaseTest {
     @Test
     @DisplayName("Добавление вопроса: валидные данные → вопрос создаётся")
     void addQuestion_success() {
-
-        final String testName = uniqueName("ui-test");
-        final String description = "created by UI autotest";
-
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
         testsPage.verifyTestsPageIsOpened();
 
-        testsPage.verifyCreateTestButtonIsVisible();
-        testsPage.clickCreateTestButton();
-        testsPage.verifyCreateTestModalIsVisible();
-
-        testsPage.enterTestName(testName);
-        testsPage.enterTestDescription(description);
-        testsPage.submitCreateTest();
-        testsPage.waitTestCreatedAndHeaderIs(testName);
+        String testName = testsPage.createTestFullyWithUniqueData();
 
         TestDetailsPage details = new TestDetailsPage(context);
         details.verifyTestTitle(testName);

@@ -1,6 +1,7 @@
 package tests.questiontests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.qameta.allure.Epic;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import tests.BaseTest;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.is;
 
+@Epic("API Tests")
 @DisplayName("Добавление вопросов через API")
 public class QuestionsApiTests extends BaseTest {
 

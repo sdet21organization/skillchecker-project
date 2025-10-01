@@ -13,26 +13,25 @@ import org.junit.jupiter.api.DisplayName;
 public class TestsPage {
     TestContext context;
 
-    // ==== Юлины локаторы ====
     private final Locator searchInput;
-    private final Locator testsButton;
+    //    private final Locator testsButton;
     private final Locator assignTestButton;
     private final Locator candidateNameSelect;
     private final Locator assignTestButtonInModal;
     private final Locator copyLinkButton;
     private final Locator testAssignedNotification;
-
-    // ==== мои локаторы ====
     private final Locator createTestButton;
     private final Locator testNameInput;
     private final Locator testDescriptionInput;
     private final Locator createTestConfirmButton;
 
+    public String uniqueName(String prefix) {
+        return prefix + "-" + System.currentTimeMillis();
+    }
+
     public TestsPage(TestContext context) {
         this.context = context;
-
-        // --- Юлины ---
-        this.testsButton = context.page.getByText("Тесты");
+//        this.testsButton = context.page.getByText("Тесты");
         this.searchInput = context.page.locator("input[placeholder='Найти...']");
         this.assignTestButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Назначить тест"));
@@ -52,15 +51,11 @@ public class TestsPage {
         this.createTestConfirmButton = context.page.locator("//button[@type='submit']");
     }
 
-    // ===== Юлины методы =====
-
     @Step("Open Tests page")
     public TestsPage openTestsPage() {
         context.page.navigate("https://skillchecker.tech/dashboard/tests");
         return this;
     }
-
-    // ===== Мои методы =====
 
     @Step("Проверить, что страница 'Тесты' открыта")
     public void verifyTestsPageIsOpened() {
@@ -128,6 +123,24 @@ public class TestsPage {
         );
     }
 
+    @Step("Создать тест полностью (уникальные имя и описание)")
+    public String createTestFullyWithUniqueData() {
+        final String name = uniqueName("ui-test");
+        final String description = uniqueName("desc");
+
+        if (context.page.locator("input#name, input[name='name']").count() == 0) {
+            clickCreateTestButton();
+            verifyCreateTestModalIsVisible();
+        }
+
+        enterTestName(name);
+        enterTestDescription(description);
+        submitCreateTest();
+        waitTestCreatedAndHeaderIs(name);
+
+        return name;
+    }
+
 
     @Step("Проверить сообщение об ошибке для пустого названия теста")
     public void verifyEmptyNameErrorVisible() {
@@ -148,8 +161,6 @@ public class TestsPage {
         rowByText.locator("a, button, td, div").first().click();
     }
 
-
-    // ===== Юлины методы =====
     @Step("Find test 'Тест Прохождение тестов с одной опцией'")
     public TestsPage findTestPassingTestWithOneOption() {
         searchInput.fill("Тест Прохождение тестов с одной опцией");
