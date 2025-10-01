@@ -2,6 +2,7 @@ package tests.sessiontests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dto.candidates.CandidatesRequest;
+import io.qameta.allure.Epic;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 
+@Epic("API Tests")
 @DisplayName("Назначение теста кандидату через API")
 public class SessionsApiTests extends BaseTest {
 

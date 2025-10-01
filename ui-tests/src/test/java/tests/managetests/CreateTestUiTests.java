@@ -1,10 +1,12 @@
 package tests.managetests;
 
+import io.qameta.allure.Epic;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
 
+@Epic("UI Tests")
 @DisplayName("Создание теста через UI")
 public class CreateTestUiTests extends BaseTest {
 
@@ -38,15 +40,10 @@ public class CreateTestUiTests extends BaseTest {
     @DisplayName("Успешное создание теста с уникальным именем")
     void createTest() {
         TestsPage testsPage = new TestsPage(context);
-        testsPage.clickCreateTestButton();
-        testsPage.verifyCreateTestModalIsVisible();
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
 
-        String testName = "Autotest_" + System.currentTimeMillis();
-
-        testsPage.enterTestName(testName);
-        testsPage.enterTestDescription("description");
-        testsPage.submitCreateTest();
-
+        String testName = testsPage.createTestFullyWithUniqueData();
         testsPage.waitTestCreatedAndHeaderIs(testName);
     }
 
@@ -54,15 +51,25 @@ public class CreateTestUiTests extends BaseTest {
     @DisplayName("Создание теста с пустым именем показывает ошибку")
     void createTestWithEmptyName() {
         TestsPage testsPage = new TestsPage(context);
-
         testsPage.openTestsPage();
         testsPage.verifyTestsPageIsOpened();
+
         testsPage.clickCreateTestButton();
         testsPage.verifyCreateTestModalIsVisible();
-
         testsPage.enterTestName("");
         testsPage.enterTestDescription("description");
         testsPage.submitCreateTest();
         testsPage.verifyEmptyNameErrorVisible();
+    }
+
+    @Test
+    @DisplayName("Создать новый тест полностью (уникальные данные)")
+    void createNewTest() {
+        TestsPage testsPage = new TestsPage(context);
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        testsPage.waitTestCreatedAndHeaderIs(testName);
     }
 }

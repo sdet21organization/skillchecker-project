@@ -1,6 +1,7 @@
 package tests.managetests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.qameta.allure.Epic;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Epic("API Tests")
 @DisplayName("Создание теста через API")
 public class CreateTestApiTests extends BaseTest {
 
