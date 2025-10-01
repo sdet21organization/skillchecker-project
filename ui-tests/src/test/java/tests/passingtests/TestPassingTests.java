@@ -1,10 +1,12 @@
 package tests.passingtests;
 
+import io.qameta.allure.Epic;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
 
+@Epic("UI Tests")
 @DisplayName("Прохождение тестов")
 public class TestPassingTests extends BaseTest {
 
