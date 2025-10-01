@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Epic("UI Tests")
-@DisplayName("Добавление вопроса через UI")
+@DisplayName("Add Question via UI")
 public class AddQuestionUiTests extends BaseTest {
 
     private String uniqueName(String prefix) {
@@ -19,7 +19,7 @@ public class AddQuestionUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Добавление вопроса: валидные данные → вопрос создаётся")
+    @DisplayName("Add Question: successful addition of a question to a test")
     void addQuestion_success() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();

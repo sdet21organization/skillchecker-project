@@ -16,11 +16,11 @@ import static org.hamcrest.Matchers.*;
 
 
 @Epic("API Tests")
-@DisplayName("Генерация вопросов через API")
+@DisplayName("Generate Questions via API")
 public class GenerateQuestionsApiTests extends BaseTest {
 
     @Test
-    @DisplayName("Генерация 3 single_choice вопросов: проверка статуса 200 + схемы")
+    @DisplayName("Positive scenario: generate questions with valid data")
     void generateQuestions_success() throws JsonProcessingException {
 
         Response createTestResp = ManageTests.createTest(cookie, "API Test for Generation", "generate questions");

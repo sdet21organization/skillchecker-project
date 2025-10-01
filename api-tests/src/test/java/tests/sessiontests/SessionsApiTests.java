@@ -21,11 +21,11 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 
 @Epic("API Tests")
-@DisplayName("Назначение теста кандидату через API")
+@DisplayName("Managing sessions via API")
 public class SessionsApiTests extends BaseTest {
 
     @Test
-    @DisplayName("Назначить тест кандидату: 201 + схема ответа")
+    @DisplayName("Assign test to candidate: successful session creation")
     void createSession_success() throws JsonProcessingException {
 
         int testId = ManageTests.createTest(cookie, "API Session Test", "assign")

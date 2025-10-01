@@ -7,11 +7,11 @@ import pages.TestsPage;
 import tests.BaseTest;
 
 @Epic("UI Tests")
-@DisplayName("Создание теста через UI")
+@DisplayName("Create Test UI Tests")
 public class CreateTestUiTests extends BaseTest {
 
     @Test
-    @DisplayName("Открытие страницы 'Тесты'")
+    @DisplayName("Open Tests Page")
     void openTestsPage() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
@@ -19,7 +19,7 @@ public class CreateTestUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Кнопка 'Создать тест' отображается")
+    @DisplayName("Open Tests Page and check 'Create Test' button is visible")
     void createTestButtonIsVisible() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
@@ -27,7 +27,7 @@ public class CreateTestUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Модальное окно 'Создать тест' открывается после клика")
+    @DisplayName("'Create Test' modal appears after clicking the button")
     void createTestModalAppearsAfterClick() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
@@ -37,7 +37,7 @@ public class CreateTestUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Успешное создание теста с уникальным именем")
+    @DisplayName("Create Test: positive scenario → test is created successfully")
     void createTest() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
@@ -48,7 +48,7 @@ public class CreateTestUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание теста с пустым именем показывает ошибку")
+    @DisplayName("Create Test with empty name: negative scenario → error message appears")
     void createTestWithEmptyName() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
@@ -63,7 +63,7 @@ public class CreateTestUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создать новый тест полностью (уникальные данные)")
+    @DisplayName("Create Test with only name: positive scenario → test is created successfully")
     void createNewTest() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
