@@ -14,10 +14,10 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
-@DisplayName("Управление тестами через API")
+@DisplayName("Manage Tests API Wrapper")
 public class ManageTests {
 
-    @Step("Создание теста через API")
+    @Step("Creation of a new test via API")
     public static Response createTest(String cookie, String name, String description) {
         CreateTestRequest body = new CreateTestRequest(name, description);
 
@@ -32,7 +32,7 @@ public class ManageTests {
                 .extract().response();
     }
 
-    @Step("Проверка JSon и статуса при создании теста")
+    @Step("Verification of JSON schema and status code upon test creation")
     public static void verifyCreateTest(Response response) {
         response.then()
                 .statusCode(201)
@@ -42,7 +42,7 @@ public class ManageTests {
     }
 
 
-    @Step("Изменение теста через API")
+    @Step("Updating an existing test via API")
     public static Response updateTest(String cookie, String testId, Map<String, Object> fields) throws JsonProcessingException {
         String body = new ObjectMapper().writeValueAsString(fields);
 
@@ -59,7 +59,7 @@ public class ManageTests {
     }
 
 
-    @Step("Проверка JSon и статуса при обновлении теста")
+    @Step("Verification of JSON schema and status code upon test update")
     public static void verifyUpdateTest(Response response) {
         int sc = response.statusCode();
         if (sc == 200) {

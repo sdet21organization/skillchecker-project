@@ -9,7 +9,7 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 
-@DisplayName("Страница 'Тесты'")
+@DisplayName("Page: Tests")
 public class TestsPage {
     TestContext context;
 
@@ -57,50 +57,49 @@ public class TestsPage {
         return this;
     }
 
-    @Step("Проверить, что страница 'Тесты' открыта")
+    @Step("Verify Tests page is opened")
     public void verifyTestsPageIsOpened() {
         Assertions.assertTrue(context.page.url().contains("/dashboard/tests"),
                 "URL страницы Tests некорректный");
     }
 
 
-    @Step("Проверить, что кнопка 'Создать тест' видна")
+    @Step("Verify 'Create Test' button is visible")
     public void verifyCreateTestButtonIsVisible() {
         createTestButton.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         Assertions.assertTrue(createTestButton.isVisible(), "Кнопка 'Создать тест' не отображается");
     }
 
-    @Step("Кликнуть по кнопке 'Создать тест'")
+    @Step("Click 'Create Test' button")
     public void clickCreateTestButton() {
         createTestButton.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         createTestButton.click();
     }
 
-    @Step("Проверить, что модальное окно 'Создать тест' отображается")
+    @Step("Verify 'Create Test' modal is visible")
     public void verifyCreateTestModalIsVisible() {
         testNameInput.waitFor(new Locator.WaitForOptions().setTimeout(5000));
         Assertions.assertTrue(testNameInput.isVisible(), "Модальное окно 'Создать тест' не отображается");
     }
 
-    @Step("Ввести название теста: {testName}")
+    @Step("Enter test name: {testName}")
     public void enterTestName(String testName) {
         testNameInput.fill(testName);
     }
 
-    @Step("Ввести описание теста: {description}")
+    @Step("Enter test description: {description}")
     public void enterTestDescription(String description) {
         testDescriptionInput.fill(description);
     }
 
-
-    @Step("Отправить форму создания теста")
+    @Step("Submit create test form")
     public void submitCreateTest() {
         createTestConfirmButton.scrollIntoViewIfNeeded();
         createTestConfirmButton.click();
 
     }
 
-    @Step("Дождаться, что тест создан и заголовок равен '{expectedName}'")
+    @Step("Wait for test to be created and header to be: {expectedName}")
     public void waitTestCreatedAndHeaderIs(String expectedName) {
 
         context.page.waitForURL("**/dashboard/tests/**", new Page.WaitForURLOptions().setTimeout(15000));
@@ -123,7 +122,7 @@ public class TestsPage {
         );
     }
 
-    @Step("Создать тест полностью (уникальные имя и описание)")
+    @Step("Create test with unique name and description")
     public String createTestFullyWithUniqueData() {
         final String name = uniqueName("ui-test");
         final String description = uniqueName("desc");
@@ -142,14 +141,14 @@ public class TestsPage {
     }
 
 
-    @Step("Проверить сообщение об ошибке для пустого названия теста")
+    @Step("Verify empty name error is visible")
     public void verifyEmptyNameErrorVisible() {
         Locator error = context.page.getByText("Test name must be at least 3 characters");
         Assertions.assertTrue(error.isVisible(), "Сообщение об ошибке для пустого имени теста не отображается");
     }
 
 
-    @Step("Открыть тест по названию: {testName}")
+    @Step("Open test by name: {testName}")
     public void openTestByName(String testName) {
 
         Locator rowByText = context.page.locator("tr:has-text(\"" + testName + "\")");

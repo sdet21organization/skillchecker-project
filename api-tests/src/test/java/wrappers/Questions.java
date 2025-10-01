@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.Map;
 import static io.restassured.RestAssured.given;
 
-@DisplayName("Добавление вопросов через API")
+@DisplayName("Questions API Wrapper")
 public class Questions {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();

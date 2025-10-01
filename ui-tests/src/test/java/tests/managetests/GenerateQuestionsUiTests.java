@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Epic("UI Tests")
-@DisplayName("Генерация вопросов через UI")
+@DisplayName("Generate Questions UI Tests")
 public class GenerateQuestionsUiTests extends BaseTest {
 
     private String uniqueName(String prefix) {
@@ -19,7 +19,7 @@ public class GenerateQuestionsUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Генерация вопросов: позитивный сценарий → модалка открывается")
+    @DisplayName("Generate Questions: positive scenario → questions are generated and appear in the list")
     void generateQuestions_success() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();

@@ -12,11 +12,11 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.hamcrest.Matchers.is;
 
 @Epic("API Tests")
-@DisplayName("Добавление вопросов через API")
+@DisplayName("Questions API Tests")
 public class QuestionsApiTests extends BaseTest {
 
     @Test
-     @DisplayName("Создание вопроса:проверка статуса 201 + схемы")
+     @DisplayName("Create Question: successful creation with valid data")
 
     void createQuestion_success() throws JsonProcessingException {
 
@@ -43,7 +43,7 @@ public class QuestionsApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание вопроса: проверка статуса 400, если отсутствует testId")
+    @DisplayName("Create Question: missing testId results in 400 or 422")
     void createQuestion_missingTestId_400() throws JsonProcessingException {
         wrappers.ManageTests.createTest(cookie, "API Negative", "missing testId");
 

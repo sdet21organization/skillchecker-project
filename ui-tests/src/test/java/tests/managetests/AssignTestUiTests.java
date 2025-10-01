@@ -7,11 +7,11 @@ import pages.TestsPage;
 import tests.BaseTest;
 
 @Epic("UI Tests")
-@DisplayName("Назначение теста кандидату через UI")
+@DisplayName("Assign Test UI Tests")
 public class AssignTestUiTests extends BaseTest {
 
     @Test
-    @DisplayName("Назначение теста кандидату")
+    @DisplayName("Assign Test to Candidate: positive scenario → test is assigned to candidate and appears in the list")
     void assignTestToCandidate() {
         TestsPage testsPage = new TestsPage(context);
 

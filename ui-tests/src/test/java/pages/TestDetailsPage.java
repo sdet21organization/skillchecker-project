@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-@DisplayName("Страница деталей теста- вопросы")
+@DisplayName("Page: Test Details")
 public class TestDetailsPage {
     private final TestContext context;
     private final Locator modal;
@@ -33,6 +33,10 @@ public class TestDetailsPage {
     private final Locator countCombobox;
     private final Locator typeCombobox;
     private final Locator generateButton;
+
+    private final Locator editTestButton;
+    private final Locator editContainer;
+    private final Locator editNameInput;
     private Locator countOption(int count) {
         return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
     }
@@ -68,11 +72,21 @@ public class TestDetailsPage {
         this.countCombobox = context.page.locator("label:has-text(\"Count\")").locator("..").locator("[role='combobox']");
         this.typeCombobox = context.page.locator("label:has-text(\"Type\")").locator("..").locator("[role='combobox']");
         this.generateButton = context.page.locator("button:has-text(\"Generate\")");
+        this.editTestButton = context.page.locator(
+                "button:has-text('Редакт'), button:has-text('Edit')"
+        ).first();
+        this.editContainer = context.page.locator(
+                "div[role='dialog']:has(input[name='name']), " +
+                        ".ant-modal:has(input[name='name']), " +
+                        "form:has(button:has-text('Сохранить')), form:has(button:has-text('Save'))"
+        ).first();
+        this.editNameInput = context.page.locator("input#name, input[name='name']").first();
     }
 
 
 
-    @Step("Проверить заголовок теста: {expected}")
+
+    @Step("Verify test title is: '{expected}'")
     public void verifyTestTitle(String expected) {
         Locator title = context.page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName(expected));
         if (!title.isVisible()) {
@@ -83,7 +97,7 @@ public class TestDetailsPage {
         Assertions.assertTrue(title.isVisible(), "Ожидали заголовок теста: " + expected);
     }
 
-    @Step("Открыть секцию 'Вопросы'")
+    @Step("Open Questions section")
     public void openQuestionsSection() {
         if (questionsHeader.isVisible()) {
             questionsHeader.scrollIntoViewIfNeeded();
@@ -101,14 +115,14 @@ public class TestDetailsPage {
         Assertions.assertTrue(ok, "Не нашли ни таблицу вопросов, ни плейсхолдер пустого списка.");
     }
 
-    @Step("Открыть модалку добавления вопроса")
+    @Step("Open 'Add Question' modal")
     public void openAddQuestionModal() {
         addQuestionBtn.scrollIntoViewIfNeeded();
         addQuestionBtn.click();
         assertThat(modal).isVisible();
     }
 
-    @Step("Сохранить вопрос и проверить, что он появился в списке")
+    @Step("Save question and verify it appeared in the list")
     public void saveQuestionAndVerifyAppeared() {
         saveBtn.click();
         modal.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
@@ -126,7 +140,7 @@ public class TestDetailsPage {
         Assertions.assertTrue(tableRows.count() > 0, "После сохранения вопрос не появился в списке.");
     }
 
-    @Step("Заполнить вопрос: текст='{text}', опции: '{opt1}', '{opt2}', баллы={pts}")
+    @Step("Fill question with minimal data: text='{text}', opt1='{opt1}', opt2='{opt2}', pts={pts}")
     public void fillQuestionMinimal(String text, String opt1, String opt2, int pts) {
         questionText.fill(text);
         points.fill(String.valueOf(pts));
@@ -134,40 +148,56 @@ public class TestDetailsPage {
         option2.fill(opt2);
     }
 
-    @Step("Кликнуть по кнопке 'Генерировать вопросы'")
+    @Step("Click 'Generate Questions' button")
     public void clickGenerateQuestions() {
         generateQuestionsButton.click();
     }
 
-    @Step("Проверить, что модалка генерации вопросов видима")
+    @Step("Verify 'Generate Questions' modal is visible")
     public void verifyGenerateQuestionsModalIsVisible() {
         assertThat(generateQuestionsModal).isVisible();
     }
 
-    @Step("Выбрать в модалке генерации количество вопросов: {count}")
+    @Step("Fill in the modal the number of questions to generate: {count}")
     public void selectGenerateCount(int count) {
         countCombobox.click();
         countOption(count).click();
     }
 
-    @Step("Выбрать в модалке генерации тип вопросов: {typeText}")
+    @Step("Fill in the modal the type of questions to generate: {typeText}")
     public void selectGenerateType(String typeText) {
         typeCombobox.click();
         typeOption(typeText).click();
     }
 
-    @Step("Подтвердить генерацию вопросов")
+    @Step("Confirm generation of questions")
     public void confirmGenerateQuestions() {
         generateButton.click();
     }
 
 
-    @Step("Дождаться закрытия модалки генерации вопросов")
+    @Step("Wait until 'Generate Questions' modal is closed")
     public void waitGenerateModalClosed() {
        assertThat(dialog)
                 .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000)); // 10 сек
     }
 
+    @Step("Verify 'Edit' button is present on test details page")
+    public void verifyEditButtonPresent() {
+        assertThat(editTestButton).isVisible();
+    }
+
+    @Step("Click 'Edit' button to open edit mode")
+    public void openEditMode() {
+        editTestButton.click();
+        assertThat(editNameInput).isVisible();
+    }
+
+    @Step("Verify edit form (modal) is visible")
+    public void verifyEditFormVisible() {
+        assertThat(editContainer).isVisible();
+        assertThat(editNameInput).isVisible();
+    }
 
 }
 
