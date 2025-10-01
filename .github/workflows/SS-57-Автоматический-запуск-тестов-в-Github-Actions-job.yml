@@ -135,12 +135,16 @@ jobs:
           branch="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
           safe_branch="${branch//\//-}"
 
+          # Полностью очистим историю в gh-pages для этой ветки
+          rm -rf "${safe_branch}/history"
           mkdir -p "${safe_branch}/history"
+
+          # Копируем новые файлы из allure-report/history
           cp -r allure-report/history/* "${safe_branch}/history/" || true
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add "${safe_branch}/history"
+          git add -A
           git commit -m "Update Allure history for ${safe_branch}" || true
           git push origin gh-pages
 
