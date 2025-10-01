@@ -104,6 +104,8 @@ jobs:
           mkdir -p allure-history
           if [ -d "${safe_branch}/history" ]; then
             cp -r "${safe_branch}/history"/* allure-history/ || true
+          else
+            echo "No history directory found for branch ${safe_branch}"
           fi
 
       - name: Cache Allure CLI
@@ -134,9 +136,11 @@ jobs:
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
           safe_branch="${branch//\//-}"
-                
-          mkdir -p "${safe_branch}/history"
-          cp -r allure-report/history/* "${safe_branch}/history/" || true
+
+          timestamp=$(date +%Y-%m-%d_%H-%M-%S)
+          mkdir -p "${safe_branch}/history/$timestamp"
+          cp -r allure-report/history/* "${safe_branch}/history/$timestamp/" || true
+
           ls -R allure-report # для отладки
 
       - name: Deploy Allure Report to GitHub Pages
