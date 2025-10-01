@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
 
+@Epic("UI Tests")
 @DisplayName("Прохождение тестов")
 public class TestPassingTests extends BaseTest {
 
-    @Epic("UI Tests")
     @DisplayName("Verify successful assignment of the test 'Тест Прохождение тестов с одной опцией' to a candidate")
     @Test
     public void assignTestViaTests() {
@@ -21,7 +21,6 @@ public class TestPassingTests extends BaseTest {
                 .verifyThatTestIsSuccessfullyAssigned();
     }
 
-    @Epic("UI Tests")
     @DisplayName("Get link to the test 'Тест Прохождение тестов с одной опцией'")
     @Test
     public void getLinkToTest () {
@@ -33,7 +32,6 @@ public class TestPassingTests extends BaseTest {
                 .verifyThatLinkIsCopiedToClipboard();
     }
 
-    @Epic("UI Tests")
     @DisplayName("Verify that passing test page opens correctly")
     @Test
     public void openPassingTestPage () {
