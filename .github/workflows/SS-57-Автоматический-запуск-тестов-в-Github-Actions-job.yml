@@ -123,6 +123,21 @@ jobs:
       - name: Add Allure CLI to PATH
         run: echo "/opt/allure/bin" >> $GITHUB_PATH
 
+      - name: Add Allure Executor Info
+        run: |
+          cat > merged-allure-results/executor.json <<EOL
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "buildOrder": ${{ github.run_number }},
+            "buildName": "$(date '+%Y-%m-%d %H:%M')",
+            "reportName": "Test Report",
+            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/",
+            "startTime": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          }
+          EOL
+
       - name: Generate Allure Report
         run: |
           # Подготовим старую историю в merged-allure-results
