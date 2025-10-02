@@ -10,6 +10,7 @@ import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @DisplayName("Page: Test Details")
@@ -33,13 +34,15 @@ public class TestDetailsPage {
     private final Locator countCombobox;
     private final Locator typeCombobox;
     private final Locator generateButton;
-
     private final Locator editTestButton;
     private final Locator editContainer;
     private final Locator editNameInput;
+    private final Locator editSaveButton;
+
     private Locator countOption(int count) {
         return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
     }
+
     private Locator typeOption(String typeText) {
         return context.page.locator("[role='option']:has-text(\"" + typeText + "\")");
     }
@@ -53,9 +56,7 @@ public class TestDetailsPage {
         this.option1 = modal.getByPlaceholder("Option 1");
         this.option2 = modal.getByPlaceholder("Option 2");
         this.saveBtn = modal.getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName("Save"));
-        this.questionsHeader = context.page
-                .locator("div.text-2xl.font-semibold.leading-none.tracking-tight:has-text('Вопросы')")
-                .first();
+        this.questionsHeader = context.page.locator("text=Вопросы").first();
         this.addQuestionBtn = context.page
                 .locator("button:has-text('Add Question'), button:has-text('Добавить вопрос')")
                 .first();
@@ -75,15 +76,12 @@ public class TestDetailsPage {
         this.editTestButton = context.page.locator(
                 "button:has-text('Редакт'), button:has-text('Edit')"
         ).first();
-        this.editContainer = context.page.locator(
-                "div[role='dialog']:has(input[name='name']), " +
-                        ".ant-modal:has(input[name='name']), " +
-                        "form:has(button:has-text('Сохранить')), form:has(button:has-text('Save'))"
-        ).first();
+        this.editContainer = context.page.locator("form:has(input[name='name'])").first();
         this.editNameInput = context.page.locator("input#name, input[name='name']").first();
+        this.editSaveButton = editContainer.locator(
+                "button:has-text('Сохранить'), button:has-text('Save')"
+        ).first();
     }
-
-
 
 
     @Step("Verify test title is: '{expected}'")
@@ -178,7 +176,7 @@ public class TestDetailsPage {
 
     @Step("Wait until 'Generate Questions' modal is closed")
     public void waitGenerateModalClosed() {
-       assertThat(dialog)
+        assertThat(dialog)
                 .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000)); // 10 сек
     }
 
@@ -198,6 +196,53 @@ public class TestDetailsPage {
         assertThat(editContainer).isVisible();
         assertThat(editNameInput).isVisible();
     }
+
+    @Step("Set new test name: {newName}")
+    public void setEditName(String newName) {
+        editNameInput.fill("");
+        editNameInput.type(newName);
+    }
+
+    @Step("Save changes in edit modal")
+    public void saveEdit() {
+        editSaveButton.scrollIntoViewIfNeeded();
+        editSaveButton.click();
+    }
+
+    @Step("Wait for edit modal to close")
+    public void waitEditClosed() {
+        assertThat(editContainer)
+                .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000));
+    }
+
+
+    @Step("Update name to '{newName}' and verify header")
+    public void updateNameAndVerify(String newName) {
+        openEditMode();
+        setEditName(newName);
+        saveEdit();
+        waitEditClosed();
+        verifyTestTitle(newName);
+    }
+
+    @Step("Verify that validation message mentions minLength={min}")
+    public void verifyValidationErrorShown(int min) {
+        questionText.focus();
+        context.page.keyboard().press("Tab");
+
+        String actual = (String) questionText.evaluate("el => el.validationMessage");
+        Assertions.assertTrue(
+                actual.contains(String.valueOf(min)),
+                "Expected validation message to mention minLength=" + min + ", but was: " + actual
+        );
+    }
+
+    @Step("Add an invalid question '{question}' with answers '{answer1}', '{answer2}' and correct index {correctIndex}")
+    public void addInvalidQuestion(String question, String answer1, String answer2, int correctIndex) {
+        openAddQuestionModal();
+        fillQuestionMinimal(question, answer1, answer2, correctIndex);
+    }
+
 
 }
 

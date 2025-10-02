@@ -7,16 +7,9 @@ import pages.TestDetailsPage;
 import pages.TestsPage;
 import tests.BaseTest;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Epic("UI Tests")
 @DisplayName("Generate Questions UI Tests")
 public class GenerateQuestionsUiTests extends BaseTest {
-
-    private String uniqueName(String prefix) {
-        return prefix + "-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"));
-    }
 
     @Test
     @DisplayName("Generate Questions: positive scenario → questions are generated and appear in the list")
