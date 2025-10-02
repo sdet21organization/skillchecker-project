@@ -1,1 +1,1 @@
-[{"data":{"failed":2,"broken":2,"skipped":0,"passed":60,"unknown":0,"total":64}},{"data":{"failed":4,"broken":0,"skipped":0,"passed":60,"unknown":0,"total":64}}]
+[{"buildOrder":106,"reportUrl":"https://sdet21organization.github.io/skillchecker-project/","reportName":"Test Report","data":{"failed":3,"broken":1,"skipped":0,"passed":62,"unknown":0,"total":66}},{"data":{"failed":2,"broken":2,"skipped":0,"passed":60,"unknown":0,"total":64}},{"data":{"failed":4,"broken":0,"skipped":0,"passed":60,"unknown":0,"total":64}}]
