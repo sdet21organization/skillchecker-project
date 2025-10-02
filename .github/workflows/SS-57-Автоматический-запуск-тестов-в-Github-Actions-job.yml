@@ -32,6 +32,22 @@ jobs:
       - name: Run API Tests
         run: mvn clean test -f api-tests/pom.xml -Dmaven.test.failure.ignore=true
 
+      - name: Upload JUnit results to Zephyr Scale (API)
+        if: always()
+        env:
+          JIRA_USER: ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          JIRA_URL: ${{ secrets.JIRA_URL }}
+        run: |
+          for file in api-tests/target/surefire-reports/TEST-*.xml; do
+            echo "Uploading $file to Zephyr Scale..."
+            curl -u $JIRA_USER:$JIRA_TOKEN \
+              -X POST \
+              -H "Content-Type: multipart/form-data" \
+              -F "file=@$file" \
+              "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=PROJ"
+          done
+
       - name: Upload Allure Results (API)
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,6 +74,22 @@ jobs:
 
       - name: Run UI Tests
         run: mvn clean test -f ui-tests/pom.xml -Dmaven.test.failure.ignore=true
+
+      - name: Upload JUnit results to Zephyr Scale (UI)
+        if: always()
+        env:
+          JIRA_USER: ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          JIRA_URL: ${{ secrets.JIRA_URL }}
+        run: |
+          for file in ui-tests/target/surefire-reports/TEST-*.xml; do
+            echo "Uploading $file to Zephyr Scale..."
+            curl -u $JIRA_USER:$JIRA_TOKEN \
+              -X POST \
+              -H "Content-Type: multipart/form-data" \
+              -F "file=@$file" \
+              "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=PROJ"
+          done
 
       - name: Upload Allure Results (UI)
         if: always()
