@@ -106,8 +106,6 @@
                             <value>com.smartbear.zephyrscale.junit.internal.SurefireListener</value>
                         </property>
                     </properties>
-                    <statelessTestsetInfoReporter
-                            implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30SurefireReporter" />
                 </configuration>
             </plugin>
             <plugin>
