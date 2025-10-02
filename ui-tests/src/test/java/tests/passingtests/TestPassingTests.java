@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
+import com.smartbear.zephyrscale.junit.annotation.TestCase;
 
 @Epic("UI Tests")
 @DisplayName("Прохождение тестов")
@@ -36,6 +37,7 @@ public class TestPassingTests extends BaseTest {
     }
 
     @DisplayName("Verify that passing test page opens correctly")
+    @TestCase(key = "SS-T18")
     @Test
     public void SS_T18_openPassingTestPage () {
 

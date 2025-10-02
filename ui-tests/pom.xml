@@ -12,6 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <junit.version>5.13.4</junit.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <allure.version>2.28.1</allure.version>
         <playwright.version>1.54.0</playwright.version>
         <aspectj.version>1.9.24</aspectj.version>
@@ -32,6 +33,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.smartbear</groupId>
+                <artifactId>zephyrscale-junit-integration</artifactId>
+                <version>2.0.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -39,6 +45,17 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.smartbear</groupId>
+            <artifactId>zephyrscale-junit-integration</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -89,6 +106,12 @@
                         -Dfile.encoding=${project.build.sourceEncoding}
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>com.smartbear.zephyrscale.junit.ExecutionListener</value>
+                        </property>
+                    </properties>
                 </configuration>
             </plugin>
             <plugin>
