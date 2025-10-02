@@ -123,21 +123,6 @@ jobs:
       - name: Add Allure CLI to PATH
         run: echo "/opt/allure/bin" >> $GITHUB_PATH
 
-      - name: Add Allure Executor Info
-        run: |
-          cat > merged-allure-results/executor.json <<EOL
-          {
-            "name": "GitHub Actions",
-            "type": "github",
-            "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "buildOrder": ${{ github.run_number }},
-            "buildName": "$(date '+%Y-%m-%d %H:%M')",
-            "reportName": "Test Report",
-            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/",
-            "startTime": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          }
-          EOL
-
       - name: Generate Allure Report
         run: |
           # Подготовим старую историю в merged-allure-results
@@ -150,6 +135,28 @@ jobs:
           allure generate merged-allure-results -o allure-report
           
           ls -R allure-report/history # для отладки
+
+      - name: Patch Allure History with Date
+        run: |
+          LOCAL_DATE=$(TZ="Europe/Berlin" date +"%Y-%m-%d")
+
+          if [ -f allure-report/history/history-trend.json ]; then
+            jq --arg date "$LOCAL_DATE" 'map(.buildName = $date)' \
+              allure-report/history/history-trend.json > tmp.json \
+              && mv tmp.json allure-report/history/history-trend.json
+          fi
+
+          if [ -f allure-report/history/categories-trend.json ]; then
+            jq --arg date "$LOCAL_DATE" 'map(.buildName = $date)' \
+              allure-report/history/categories-trend.json > tmp.json \
+              && mv tmp.json allure-report/history/categories-trend.json
+          fi
+
+          if [ -f allure-report/history/retries-trend.json ]; then
+            jq --arg date "$LOCAL_DATE" 'map(.buildName = $date)' \
+              allure-report/history/retries-trend.json > tmp.json \
+              && mv tmp.json allure-report/history/retries-trend.json
+          fi
 
       - name: Save Allure History
         run: |
