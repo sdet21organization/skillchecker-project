@@ -35,10 +35,9 @@ public class TestPassingTests extends BaseTest {
                 .verifyThatLinkIsCopiedToClipboard();
     }
 
-    @Tag("SS-T18")
-    @DisplayName("Verify that passing test page opens correctly")
+    @DisplayName("SS-T18: Verify that passing test page opens correctly")
     @Test
-    public void openPassingTestPage_SS_T18 () {
+    public void openPassingTestPage () {
 
         new TestsPage(context)
                 .openTestsPage()

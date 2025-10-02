@@ -98,6 +98,13 @@ jobs:
           name: allure-results-ui
           path: ui-tests/target/allure-results
 
+      - name: Upload JUnit XML (UI)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-xml-ui
+          path: ui-tests/target/surefire-reports/TEST-*.xml
+
   allure-report:
     needs: [api-tests, ui-tests]
     runs-on: ubuntu-latest
