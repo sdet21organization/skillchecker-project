@@ -77,9 +77,10 @@ jobs:
 
       - name: Debug reports
         run: |
+          echo "All files in target:"
           ls -lah ui-tests/target/
-          ls -lah ui-tests/target/zephyrscale-reports || echo "no zephyrscale-reports"
-          ls -lah ui-tests/target/surefire-reports || echo "no surefire-reports"
+          echo "All XML files under target:"
+          find ui-tests/target/ -name "*.xml"
 
       - name: Upload JUnit results to Zephyr Scale (UI)
         if: always()
