@@ -33,11 +33,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.smartbear</groupId>
-                <artifactId>zephyrscale-junit-integration</artifactId>
-                <version>2.0.2</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -50,6 +45,7 @@
         <dependency>
             <groupId>com.smartbear</groupId>
             <artifactId>zephyrscale-junit-integration</artifactId>
+            <version>2.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -103,7 +99,7 @@
                     <properties>
                         <property>
                             <name>listeners</name>
-                            <value>com.smartbear.zephyrscale.junit.internal.SurefireListener</value>
+                            <value>com.smartbear.zephyrscale.junit.internal.ZephyrScaleSurefireListener</value>
                         </property>
                     </properties>
                 </configuration>
