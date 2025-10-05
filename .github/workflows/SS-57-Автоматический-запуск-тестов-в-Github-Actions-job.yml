@@ -89,14 +89,18 @@ jobs:
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
           JIRA_URL: ${{ secrets.JIRA_URL }}
         run: |
-          for file in ui-tests/target/zephyrscale-reports/*.xml; do
-            echo "Uploading $file to Zephyr Scale..."
-            curl -u $JIRA_USER:$JIRA_TOKEN \
-              -X POST \
-              -H "Content-Type: multipart/form-data" \
-              -F "file=@$file" \
-              "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=PROJ"
-          done
+          if compgen -G "ui-tests/target/zephyrscale-reports/*.xml" > /dev/null; then
+            for file in ui-tests/target/zephyrscale-reports/*.xml; do
+              echo "Uploading $file to Zephyr Scale..."
+              curl -u $JIRA_USER:$JIRA_TOKEN \
+                -X POST \
+                -H "Content-Type: multipart/form-data" \
+                -F "file=@$file" \
+                "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=PROJ"
+            done
+          else
+            echo "No Zephyr XML files found, skipping upload."
+          fi
 
       - name: Upload Allure Results (UI)
         if: always()

@@ -91,6 +91,7 @@
                     <systemPropertyVariables>
                         <allure.results.directory>${project.basedir}/target/allure-results</allure.results.directory>
                     </systemPropertyVariables>
+                    <!-- НЕ выключаем сборку на падение тестов -->
                     <testFailureIgnore>false</testFailureIgnore>
                     <argLine>
                         -Dfile.encoding=${project.build.sourceEncoding}
@@ -98,7 +99,7 @@
                     </argLine>
                     <properties>
                         <property>
-                            <name>listeners</name>
+                            <name>listener</name>
                             <value>com.smartbear.zephyrscale.junit.internal.ZephyrScaleSurefireListener</value>
                         </property>
                     </properties>
