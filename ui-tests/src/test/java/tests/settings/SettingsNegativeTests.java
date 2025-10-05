@@ -6,9 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.SettingsPage;
+import pages.components.Toast;
 import tests.BaseTest;
 import utils.ConfigurationReader;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("UI Tests")
@@ -73,5 +75,44 @@ public class SettingsNegativeTests extends BaseTest {
                 p.rowDeleteButton(ownEmail).isDisabled(),
                 "Delete button for own user must be disabled"
         );
+    }
+
+    @Test
+    @DisplayName("Invalid password when resetting own password (error toast)")
+    void invalidPasswordOnOwnReset_ShowsErrorToast() {
+        SettingsPage p = new SettingsPage(context).open();
+
+        String ownEmail = ConfigurationReader.get("email");
+        String invalid  = ConfigurationReader.get("test.user.invalidPassword");
+
+        p.resetPasswordFor(ownEmail, invalid);
+        Toast toast = new Toast(context.page).waitAppear(4000);
+        assertTrue(toast.bodyText().contains("Password must be at least 8 characters"));
+    }
+
+    @Test
+    @DisplayName("Cannot change own role (error toast)")
+    void cannotChangeOwnRole_ShowsErrorToast() {
+        SettingsPage p = new SettingsPage(context).open();
+
+        String ownEmail = ConfigurationReader.get("email");
+        p.waitUserRowVisible(ownEmail);
+        p.selectRowRole(ownEmail, "interviewer");
+
+        Toast toast = new Toast(context.page).waitAppear(4000);
+        assertTrue(toast.bodyText().contains("Cannot update your own account"));
+    }
+
+    @Test
+    @DisplayName("Cannot block own user (error toast)")
+    void cannotBlockOwnUser_ShowsErrorToast() {
+        SettingsPage p = new SettingsPage(context).open();
+
+        String ownEmail = ConfigurationReader.get("email");
+        p.waitUserRowVisible(ownEmail);
+        p.rowToggleStatusButton(ownEmail).click();
+
+        Toast toast = new Toast(context.page).waitAppear(4000);
+        assertTrue(toast.bodyText().contains("Cannot update your own account"));
     }
 }
