@@ -27,7 +27,7 @@ public class TestPassingTests extends BaseTest {
     @Tag("SS-T13")
     @DisplayName("Get link to the test 'Тест Прохождение тестов с одной опцией'")
     @Test
-    public void getLinkToTest () {
+    public void SS_T13_getLinkToTest () {
 
         new TestsPage(context)
                 .openTestsPage()
@@ -39,7 +39,7 @@ public class TestPassingTests extends BaseTest {
     @DisplayName("Verify that passing test page opens correctly")
     @TestCase(key = "SS-T18")
     @Test
-    public void SS_T18_openPassingTestPage () {
+    public void openPassingTestPage () {
 
         new TestsPage(context)
                 .openTestsPage()

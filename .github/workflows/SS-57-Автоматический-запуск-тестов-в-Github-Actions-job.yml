@@ -39,7 +39,7 @@ jobs:
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
           JIRA_URL: ${{ secrets.JIRA_URL }}
         run: |
-          for file in api-tests/target/surefire-reports/TEST-*.xml; do
+          for file in api-tests/target/zephyrscale-reports/*.xml; do
             echo "Uploading $file to Zephyr Scale..."
             curl -u $JIRA_USER:$JIRA_TOKEN \
               -X POST \
@@ -82,7 +82,7 @@ jobs:
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
           JIRA_URL: ${{ secrets.JIRA_URL }}
         run: |
-          for file in ui-tests/target/surefire-reports/TEST-*.xml; do
+          for file in ui-tests/target/zephyrscale-reports/*.xml; do
             echo "Uploading $file to Zephyr Scale..."
             curl -u $JIRA_USER:$JIRA_TOKEN \
               -X POST \
