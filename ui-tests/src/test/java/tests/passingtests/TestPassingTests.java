@@ -7,16 +7,17 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
-import com.smartbear.zephyrscale.junit.annotation.TestCase;
+import com.smartbear.zephyrscale.junit.annotation.*;
 
 @Epic("UI Tests")
 @Feature("Tests Passing")
 @DisplayName("Tests Passing - UI Tests")
 public class TestPassingTests extends BaseTest {
 
-    @Tag("SS-T53")
+
     @DisplayName("Verify successful assignment of the test 'Тест Прохождение тестов с одной опцией' to a candidate")
     @Test
+    @TestCase(name = "Назначение теста через раздел Тесты")
     public void assignTestViaTests() {
 
         new TestsPage(context)
@@ -39,8 +40,8 @@ public class TestPassingTests extends BaseTest {
     }
 
     @DisplayName("Verify that passing test page opens correctly")
-    @TestCase(key = "SS-T18")
     @Test
+    @TestCase(key="SS-T18")
     public void openPassingTestPage () {
 
         new TestsPage(context)

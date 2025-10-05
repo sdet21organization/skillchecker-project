@@ -97,12 +97,6 @@
                         -Dfile.encoding=${project.build.sourceEncoding}
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>com.smartbear.zephyrscale.junit.internal.ZephyrScaleSurefireListener</value>
-                        </property>
-                    </properties>
                 </configuration>
             </plugin>
             <plugin>

@@ -39,14 +39,30 @@ jobs:
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
           JIRA_URL: ${{ secrets.JIRA_URL }}
         run: |
-          for file in api-tests/target/zephyrscale-reports/*.xml; do
-            echo "Uploading $file to Zephyr Scale..."
+          JSON_FILE="ui-tests/target/zephyrscale_result.json"
+          
+          if [ -f "$JSON_FILE" ]; then
+            echo "Uploading JSON report: $JSON_FILE to Zephyr Scale (using projectKey=SS)"
+            # Используем JSON Endpoint и правильный ключ проекта SS
             curl -u $JIRA_USER:$JIRA_TOKEN \
               -X POST \
               -H "Content-Type: multipart/form-data" \
-              -F "file=@$file" \
-              "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=PROJ"
-          done
+              -F "file=@$JSON_FILE" \
+              "$JIRA_URL/rest/atm/1.0/automation/execution/json?projectKey=SS" \
+              --fail
+          else
+            echo "Zephyr Scale JSON report not found. Fallback to standard JUnit XML (may create new tests or fail)."
+            # Загрузка XML (если JSON не найден), также с projectKey=SS
+            for file in ui-tests/target/surefire-reports/TEST-*.xml; do
+              echo "Uploading standard JUnit XML: $file"
+              curl -u $JIRA_USER:$JIRA_TOKEN \
+                -X POST \
+                -H "Content-Type: multipart/form-data" \
+                -F "file=@$file" \
+                "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=SS" \
+                --fail
+            done
+          fi
 
       - name: Upload Allure Results (API)
         if: always()
@@ -96,7 +112,7 @@ jobs:
                 -X POST \
                 -H "Content-Type: multipart/form-data" \
                 -F "file=@$file" \
-                "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=PROJ"
+                "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=SS"
             done
           else
             echo "No Zephyr XML files found, skipping upload."
