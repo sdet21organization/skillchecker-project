@@ -89,8 +89,8 @@ jobs:
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
           JIRA_URL: ${{ secrets.JIRA_URL }}
         run: |
-          if compgen -G "ui-tests/target/zephyrscale-reports/*.xml" > /dev/null; then
-            for file in ui-tests/target/zephyrscale-reports/*.xml; do
+          if compgen -G "ui-tests/target/surefire-reports/TEST-*.xml" > /dev/null; then
+            for file in ui-tests/target/surefire-reports/TEST-*.xml; do
               echo "Uploading $file to Zephyr Scale..."
               curl -u $JIRA_USER:$JIRA_TOKEN \
                 -X POST \
