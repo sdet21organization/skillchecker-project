@@ -12,4 +12,10 @@ public class ResponseVerifier {
                 .statusCode(expectedStatusCode)
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath(pathToSchema));
     }
+
+    @Step("Verify  status code is {expectedStatusCode}")
+    public static void verifyResponse(Response response, int expectedStatusCode) {
+        response.then().assertThat()
+                .statusCode(expectedStatusCode);
+    }
 }

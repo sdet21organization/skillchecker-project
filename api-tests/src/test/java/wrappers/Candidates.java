@@ -24,4 +24,9 @@ public class Candidates {
     public static Response importCandidates(String cookie, ImportCandidatesRequest payload) {
         return given().contentType("application/json").header("Cookie", cookie).body(payload).when().post("candidates/import").then().assertThat().contentType(ContentType.JSON).extract().response();
     }
+
+    @Step("Export candidates data to Excel")
+    public static Response exportCandidates(String cookie) {
+        return  given().contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").header("Cookie", cookie).when().get("candidates/export").then().assertThat().contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").extract().response();
+    }
 }
