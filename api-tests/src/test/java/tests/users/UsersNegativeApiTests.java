@@ -70,4 +70,43 @@ public class UsersNegativeApiTests extends BaseTest {
         assertEquals(400, r.statusCode());
         assertTrue(r.asString().contains("Cannot update your own account"));
     }
+
+    @Test
+    @DisplayName("Register: empty email returns 400")
+    void registerEmptyEmail() {
+        String fullName = ConfigurationReader.get("test.user.fullName");
+        String password = ConfigurationReader.get("test.user.password");
+        String role = ConfigurationReader.get("test.user.role");
+
+        Response r = Users.registerUser(cookie, "", fullName, password, role, true);
+
+        assertEquals(400, r.statusCode());
+        assertEquals("Invalid request body", r.jsonPath().getString("message"));
+    }
+
+    @Test
+    @DisplayName("Register: empty fullName returns 400")
+    void registerEmptyFullName() {
+        String email = ConfigurationReader.get("test.user.email");
+        String password = ConfigurationReader.get("test.user.password");
+        String role = ConfigurationReader.get("test.user.role");
+
+        Response r = Users.registerUser(cookie, email, "", password, role, true);
+
+        assertEquals(400, r.statusCode());
+        assertEquals("Invalid request body", r.jsonPath().getString("message"));
+    }
+
+    @Test
+    @DisplayName("Register: empty password returns 400")
+    void registerEmptyPassword() {
+        String email = ConfigurationReader.get("test.user.email");
+        String fullName = ConfigurationReader.get("test.user.fullName");
+        String role = ConfigurationReader.get("test.user.role");
+
+        Response r = Users.registerUser(cookie, email, fullName, "", role, true);
+
+        assertEquals(400, r.statusCode());
+        assertEquals("Invalid request body", r.jsonPath().getString("message"));
+    }
 }
