@@ -10,7 +10,6 @@ import pages.components.Toast;
 import tests.BaseTest;
 import utils.ConfigurationReader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("UI Tests")
