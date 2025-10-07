@@ -75,5 +75,19 @@ public class EditTestUiTests extends BaseTest {
         detailsPage.updateTimeLimitAndVerify(32);
     }
 
+    @Test
+    @DisplayName("Edit test passing score: value is updated and success message is shown")
+    void editTestPassingScore_success() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.updatePassingScoreAndVerify(80);
+    }
 
 }
