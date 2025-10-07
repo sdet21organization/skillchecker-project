@@ -28,6 +28,4 @@ trace.zip
 **/playwright/.cache/
 playwright/.cache/
 **/playwright/.local-browsers/
-ui-tests/src/test/resources/config.properties
-**/src/test/resources/config.properties
 Reports/
