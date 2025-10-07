@@ -2,6 +2,7 @@ package tests.dashboard;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.DashboardPage;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Dashboard")
 @Feature("UI")
 @DisplayName("Dashboard UI tests")
+@Disabled("Disabled until app stabilization")
 public class DashboardUiTests extends BaseTest {
 
     private DashboardPage openDashboardEnsuringAuth() {

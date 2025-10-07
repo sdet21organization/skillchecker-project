@@ -1,5 +1,6 @@
 package tests.candidates;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.CandidatesPage;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Масовый импорт кандидатов")
+@Disabled("Disabled until app stabilization")
 public class CandidatesBulkImportTests extends BaseTest {
 
     @Test

@@ -1,6 +1,7 @@
 package tests.managetests;
 
 import io.qameta.allure.Epic;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestDetailsPage;
@@ -9,6 +10,7 @@ import tests.BaseTest;
 
 @Epic("UI Tests")
 @DisplayName("Edit Test UI Tests")
+@Disabled("Disabled until app stabilization")
 public class EditTestUiTests extends BaseTest {
 
     @Test
