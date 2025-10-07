@@ -40,6 +40,7 @@ public class TestDetailsPage {
     private final Locator editSaveButton;
     private final Locator timeLimitInput;
     private final Locator successToast;
+    private final Locator passingScoreInput;
 
     private Locator countOption(int count) {
         return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
@@ -89,6 +90,7 @@ public class TestDetailsPage {
         this.successToast = context.page.locator(
                 "[role='status']:has-text('Успех'), [role='alert']:has-text('Успех')"
         ).first();
+        this.passingScoreInput = context.page.locator("[data-testid='passing-score-input'], input[name='passingScore']").first();
     }
 
 
@@ -245,6 +247,19 @@ public class TestDetailsPage {
         );
     }
 
+    @Step("Check that an error message is shown for empty question name")
+    public void verifyEmptyNameError() {
+        questionText.focus();
+        context.page.keyboard().press("Tab");
+
+        String actual = (String) questionText.evaluate("el => el.validationMessage");
+
+        Assertions.assertTrue(
+                actual != null && !actual.isBlank(),
+                "Ожидали, что появится сообщение об обязательности поля, но оно отсутствует"
+        );
+    }
+
     @Step("Add an invalid question '{question}' with answers '{answer1}', '{answer2}' and correct index {correctIndex}")
     public void addInvalidQuestion(String question, String answer1, String answer2, int correctIndex) {
         openAddQuestionModal();
@@ -286,6 +301,34 @@ public class TestDetailsPage {
             current = Integer.parseInt(timeLimitInput.inputValue());
         }
         timeLimitInput.press("Tab");
+
+        saveEdit();
+        waitEditClosed();
+
+        successToast.waitFor(new Locator.WaitForOptions()
+                .setTimeout(15000)
+                .setState(WaitForSelectorState.ATTACHED));
+
+        assertThat(successToast)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(15000));
+        assertThat(successToast).containsText("Успех");
+    }
+
+    @Step("Update passing score to {score} and verify")
+    public void updatePassingScoreAndVerify(int score) {
+        openEditMode();
+
+        assertThat(passingScoreInput).isVisible();
+        assertThat(passingScoreInput).isEnabled();
+
+        int guard = 0;
+        int current = Integer.parseInt(passingScoreInput.inputValue());
+        passingScoreInput.focus();
+        while (current != score && guard++ < 300) {
+            passingScoreInput.press(current < score ? "ArrowUp" : "ArrowDown");
+            current = Integer.parseInt(passingScoreInput.inputValue());
+        }
+        passingScoreInput.press("Tab");
 
         saveEdit();
         waitEditClosed();
