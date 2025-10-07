@@ -1,16 +1,10 @@
-# Compiled class file
 *.class
-
-# Log file
 *.log
-
-# BlueJ files
 *.ctxt
-
-# Mobile Tools for Java (J2ME)
 .mtj.tmp/
-
-# Package Files #
+hs_err_pid*
+replay_pid*
+**/target/
 *.jar
 *.war
 *.nar
@@ -18,29 +12,22 @@
 *.zip
 *.tar.gz
 *.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
-
-# IDE / editors
 .idea/
 *.iml
 .vscode/
-
-# Maven build output
-**/target/
-
-# Allure artifacts (results, built reports, local CLI cache) — не коммитим
+.DS_Store
+Thumbs.db
 **/allure-results/
 **/allure-report/
 ui-tests/.allure/
 allure-report-*.zip
-
-# Playwright artifacts
 **/traces/
 **/playwright-report/
-
-# OS junk
-.DS_Store
-Thumbs.db
+trace.zip
+*.trace.zip
+**/playwright/.cache/
+playwright/.cache/
+**/playwright/.local-browsers/
+ui-tests/src/test/resources/config.properties
+**/src/test/resources/config.properties
+Reports/
