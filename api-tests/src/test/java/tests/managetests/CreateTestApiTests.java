@@ -1,6 +1,7 @@
 package tests.managetests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.qameta.allure.Epic;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,11 +13,12 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("Создание теста через API")
+@Epic("API Tests")
+@DisplayName("Create tests via API")
 public class CreateTestApiTests extends BaseTest {
 
     @Test
-    @DisplayName("Позитивный сценарий: успешное создание теста")
+    @DisplayName("Positive scenario: successful test creation")
     void createTestSuccessfully() {
         String testName = "API Test " + System.currentTimeMillis();
         String testDescription = "This is a test created via API";
@@ -27,7 +29,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Позитивный сценарий: создание теста без описания")
+    @DisplayName("Positive scenario: создание теста без описания")
     void createTestWithoutDescription() {
         String testName = "API Test " + System.currentTimeMillis();
 
@@ -36,7 +38,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Негативный сценарий: создание теста без имени")
+    @DisplayName("Negative scenario: создание теста без названия")
     void createTestWithoutName() {
         String testDescription = "Test without name";
 
@@ -47,7 +49,7 @@ public class CreateTestApiTests extends BaseTest {
 
 
     @Test
-    @DisplayName("Редактирование теста: изменение названия")
+    @DisplayName("Edit test: change name")
     void updateTestName() throws JsonProcessingException {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
@@ -58,7 +60,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Редактирование теста: изменение описания")
+    @DisplayName("Edit test: change description")
     void updateTestDescription() throws JsonProcessingException {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
@@ -69,7 +71,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Редактирование теста: изменение имени и описания")
+    @DisplayName("Edit test: change name and description")
     void updateTestNameAndDescription() throws JsonProcessingException {
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
         String testId = createResponse.jsonPath().getString("id");
@@ -80,7 +82,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Редактирование теста: изменение лимита времени")
+    @DisplayName("Edit test: change time limit")
     void updateTestTimeLimit() throws JsonProcessingException {
 
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
@@ -93,7 +95,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Редактирование теста: изменение проходного балла")
+    @DisplayName("Edit test: change time limit")
     void updateTestPassingScore() throws JsonProcessingException {
 
         Response createResponse = ManageTests.createTest(cookie, "Original Test", "Original Description");
@@ -107,7 +109,7 @@ public class CreateTestApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Редактирование теста: изменение активности")
+    @DisplayName("Edit test: change isActive to true")
     void updateTestIsActive() throws JsonProcessingException {
 
         Response createResponse = ManageTests.createTest(cookie, "Inactive Test", "With flag");

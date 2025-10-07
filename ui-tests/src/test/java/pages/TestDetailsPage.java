@@ -10,9 +10,10 @@ import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-@DisplayName("Страница деталей теста- вопросы")
+@DisplayName("Page: Test Details")
 public class TestDetailsPage {
     private final TestContext context;
     private final Locator modal;
@@ -33,9 +34,15 @@ public class TestDetailsPage {
     private final Locator countCombobox;
     private final Locator typeCombobox;
     private final Locator generateButton;
+    private final Locator editTestButton;
+    private final Locator editContainer;
+    private final Locator editNameInput;
+    private final Locator editSaveButton;
+
     private Locator countOption(int count) {
         return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
     }
+
     private Locator typeOption(String typeText) {
         return context.page.locator("[role='option']:has-text(\"" + typeText + "\")");
     }
@@ -49,9 +56,7 @@ public class TestDetailsPage {
         this.option1 = modal.getByPlaceholder("Option 1");
         this.option2 = modal.getByPlaceholder("Option 2");
         this.saveBtn = modal.getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName("Save"));
-        this.questionsHeader = context.page
-                .locator("div.text-2xl.font-semibold.leading-none.tracking-tight:has-text('Вопросы')")
-                .first();
+        this.questionsHeader = context.page.locator("text=Вопросы").first();
         this.addQuestionBtn = context.page
                 .locator("button:has-text('Add Question'), button:has-text('Добавить вопрос')")
                 .first();
@@ -68,11 +73,18 @@ public class TestDetailsPage {
         this.countCombobox = context.page.locator("label:has-text(\"Count\")").locator("..").locator("[role='combobox']");
         this.typeCombobox = context.page.locator("label:has-text(\"Type\")").locator("..").locator("[role='combobox']");
         this.generateButton = context.page.locator("button:has-text(\"Generate\")");
+        this.editTestButton = context.page.locator(
+                "button:has-text('Редакт'), button:has-text('Edit')"
+        ).first();
+        this.editContainer = context.page.locator("form:has(input[name='name'])").first();
+        this.editNameInput = context.page.locator("input#name, input[name='name']").first();
+        this.editSaveButton = editContainer.locator(
+                "button:has-text('Сохранить'), button:has-text('Save')"
+        ).first();
     }
 
 
-
-    @Step("Проверить заголовок теста: {expected}")
+    @Step("Verify test title is: '{expected}'")
     public void verifyTestTitle(String expected) {
         Locator title = context.page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName(expected));
         if (!title.isVisible()) {
@@ -83,7 +95,7 @@ public class TestDetailsPage {
         Assertions.assertTrue(title.isVisible(), "Ожидали заголовок теста: " + expected);
     }
 
-    @Step("Открыть секцию 'Вопросы'")
+    @Step("Open Questions section")
     public void openQuestionsSection() {
         if (questionsHeader.isVisible()) {
             questionsHeader.scrollIntoViewIfNeeded();
@@ -101,14 +113,14 @@ public class TestDetailsPage {
         Assertions.assertTrue(ok, "Не нашли ни таблицу вопросов, ни плейсхолдер пустого списка.");
     }
 
-    @Step("Открыть модалку добавления вопроса")
+    @Step("Open 'Add Question' modal")
     public void openAddQuestionModal() {
         addQuestionBtn.scrollIntoViewIfNeeded();
         addQuestionBtn.click();
         assertThat(modal).isVisible();
     }
 
-    @Step("Сохранить вопрос и проверить, что он появился в списке")
+    @Step("Save question and verify it appeared in the list")
     public void saveQuestionAndVerifyAppeared() {
         saveBtn.click();
         modal.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.DETACHED));
@@ -126,7 +138,7 @@ public class TestDetailsPage {
         Assertions.assertTrue(tableRows.count() > 0, "После сохранения вопрос не появился в списке.");
     }
 
-    @Step("Заполнить вопрос: текст='{text}', опции: '{opt1}', '{opt2}', баллы={pts}")
+    @Step("Fill question with minimal data: text='{text}', opt1='{opt1}', opt2='{opt2}', pts={pts}")
     public void fillQuestionMinimal(String text, String opt1, String opt2, int pts) {
         questionText.fill(text);
         points.fill(String.valueOf(pts));
@@ -134,38 +146,101 @@ public class TestDetailsPage {
         option2.fill(opt2);
     }
 
-    @Step("Кликнуть по кнопке 'Генерировать вопросы'")
+    @Step("Click 'Generate Questions' button")
     public void clickGenerateQuestions() {
         generateQuestionsButton.click();
     }
 
-    @Step("Проверить, что модалка генерации вопросов видима")
+    @Step("Verify 'Generate Questions' modal is visible")
     public void verifyGenerateQuestionsModalIsVisible() {
         assertThat(generateQuestionsModal).isVisible();
     }
 
-    @Step("Выбрать в модалке генерации количество вопросов: {count}")
+    @Step("Fill in the modal the number of questions to generate: {count}")
     public void selectGenerateCount(int count) {
         countCombobox.click();
         countOption(count).click();
     }
 
-    @Step("Выбрать в модалке генерации тип вопросов: {typeText}")
+    @Step("Fill in the modal the type of questions to generate: {typeText}")
     public void selectGenerateType(String typeText) {
         typeCombobox.click();
         typeOption(typeText).click();
     }
 
-    @Step("Подтвердить генерацию вопросов")
+    @Step("Confirm generation of questions")
     public void confirmGenerateQuestions() {
         generateButton.click();
     }
 
 
-    @Step("Дождаться закрытия модалки генерации вопросов")
+    @Step("Wait until 'Generate Questions' modal is closed")
     public void waitGenerateModalClosed() {
-       assertThat(dialog)
+        assertThat(dialog)
                 .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000)); // 10 сек
+    }
+
+    @Step("Verify 'Edit' button is present on test details page")
+    public void verifyEditButtonPresent() {
+        assertThat(editTestButton).isVisible();
+    }
+
+    @Step("Click 'Edit' button to open edit mode")
+    public void openEditMode() {
+        editTestButton.click();
+        assertThat(editNameInput).isVisible();
+    }
+
+    @Step("Verify edit form (modal) is visible")
+    public void verifyEditFormVisible() {
+        assertThat(editContainer).isVisible();
+        assertThat(editNameInput).isVisible();
+    }
+
+    @Step("Set new test name: {newName}")
+    public void setEditName(String newName) {
+        editNameInput.fill("");
+        editNameInput.type(newName);
+    }
+
+    @Step("Save changes in edit modal")
+    public void saveEdit() {
+        editSaveButton.scrollIntoViewIfNeeded();
+        editSaveButton.click();
+    }
+
+    @Step("Wait for edit modal to close")
+    public void waitEditClosed() {
+        assertThat(editContainer)
+                .isHidden(new LocatorAssertions.IsHiddenOptions().setTimeout(10000));
+    }
+
+
+    @Step("Update name to '{newName}' and verify header")
+    public void updateNameAndVerify(String newName) {
+        openEditMode();
+        setEditName(newName);
+        saveEdit();
+        waitEditClosed();
+        verifyTestTitle(newName);
+    }
+
+    @Step("Verify that validation message mentions minLength={min}")
+    public void verifyValidationErrorShown(int min) {
+        questionText.focus();
+        context.page.keyboard().press("Tab");
+
+        String actual = (String) questionText.evaluate("el => el.validationMessage");
+        Assertions.assertTrue(
+                actual.contains(String.valueOf(min)),
+                "Expected validation message to mention minLength=" + min + ", but was: " + actual
+        );
+    }
+
+    @Step("Add an invalid question '{question}' with answers '{answer1}', '{answer2}' and correct index {correctIndex}")
+    public void addInvalidQuestion(String question, String answer1, String answer2, int correctIndex) {
+        openAddQuestionModal();
+        fillQuestionMinimal(question, answer1, answer2, correctIndex);
     }
 
 

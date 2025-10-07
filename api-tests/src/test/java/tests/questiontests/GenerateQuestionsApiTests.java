@@ -1,6 +1,7 @@
 package tests.questiontests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.qameta.allure.Epic;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,13 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@DisplayName("Генерация вопросов через API")
+
+@Epic("API Tests")
+@DisplayName("Generate Questions via API")
 public class GenerateQuestionsApiTests extends BaseTest {
 
     @Test
-    @DisplayName("Генерация 3 single_choice вопросов: проверка статуса 200 + схемы")
+    @DisplayName("Positive scenario: generate questions with valid data")
     void generateQuestions_success() throws JsonProcessingException {
 
         Response createTestResp = ManageTests.createTest(cookie, "API Test for Generation", "generate questions");
@@ -37,7 +40,7 @@ public class GenerateQuestionsApiTests extends BaseTest {
         resp.then().body(matchesJsonSchemaInClasspath(
                 "schemas/questions/GenerateQuestionsSuccessResponse.json"));
 
-        assertThat(resp.jsonPath().getList("$"), hasSize(3));
-        assertThat(resp.jsonPath().getList("type"), everyItem(equalTo("single_choice")));
+       assertThat(resp.jsonPath().getList("$"), hasSize(3));
+       assertThat(resp.jsonPath().getList("type"), everyItem(equalTo("single_choice")));
     }
 }

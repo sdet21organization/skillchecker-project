@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.Map;
 import static io.restassured.RestAssured.given;
 
-@DisplayName("Назначение теста кандидату через API")
+@DisplayName("API Wrapper for Sessions")
 public class Sessions {
     private static final ObjectMapper om = new ObjectMapper();
 
