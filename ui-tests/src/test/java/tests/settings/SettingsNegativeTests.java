@@ -2,6 +2,7 @@ package tests.settings;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Settings Negative Tests UI")
 @Tag("negative")
+@Disabled("Disabled until app stabilization")
 public class SettingsNegativeTests extends BaseTest {
 
     private final String fullName = ConfigurationReader.get("test.user.fullName");

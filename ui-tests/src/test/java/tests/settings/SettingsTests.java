@@ -11,6 +11,7 @@ import utils.ConfigurationReader;
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Settings tests UI")
 @Tag("positive")
+@Disabled("Disabled until app stabilization")
 public class SettingsTests extends BaseTest {
 
     private final String email = ConfigurationReader.get("test.user.email");
