@@ -1,5 +1,7 @@
 package tests.users;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Owner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,8 @@ import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@Epic("API Tests")
+@Owner("Oleksiy Korniyenko")
 @DisplayName("Delete user (Settings(API))")
 public class DeleteUserTests extends BaseTest {
 

@@ -6,10 +6,16 @@ import io.restassured.response.Response;
 
 public class ResponseVerifier {
 
-    @Step("Verify JSON schema and status code is {statusCode}")
+    @Step("Verify JSON schema and status code is {expectedStatusCode}")
     public static void verifyResponse(Response response, int expectedStatusCode, String pathToSchema) {
         response.then().assertThat()
                 .statusCode(expectedStatusCode)
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath(pathToSchema));
+    }
+
+    @Step("Verify  status code is {expectedStatusCode}")
+    public static void verifyResponse(Response response, int expectedStatusCode) {
+        response.then().assertThat()
+                .statusCode(expectedStatusCode);
     }
 }
