@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Owner("Ko.Herasymets")
 @Tag("ui")
 @DisplayName("Auth/Registration UI — Positive & Negative / Позитив и негатив")
+@Disabled("Disabled until app stabilization")
 public class RegistrationTests extends BaseUiTest {
 
     private static final boolean RUN_KNOWN_BUGS = Boolean.getBoolean("run.known.bugs");

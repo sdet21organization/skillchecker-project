@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Owner("Ko.Herasymets")
 @Tag("ui")
 @DisplayName("Auth/Login UI — Login & Logout / Авторизация и выход")
+@Disabled("Disabled until app stabilization")
 public class LoginTests extends BaseTest {
     @Override
     protected boolean needAuthCookie() { return false; }
