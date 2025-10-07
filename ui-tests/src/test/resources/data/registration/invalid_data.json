@@ -1,0 +1,40 @@
+{
+  "invalid_passwords": [
+    { "password": "a1!1aa",     "title": "длина < 8",           "bug": false },
+    { "password": "aaaaaaa!",   "title": "нет цифры",           "bug": false },
+    { "password": "1234567!",   "title": "нет буквы",           "bug": false },
+    { "password": "Aa123456",   "title": "нет спецсимвола",     "bug": false },
+    { "password": "        ",   "title": "8 пробелов",          "bug": false },
+    { "password": "Aa1!aaa ",   "title": "пробел в конце",      "bug": true  },
+    { "password": " Aa1!aaa",   "title": "пробел в начале",     "bug": true  },
+    { "password": "Aa1!a a",    "title": "внутренние пробелы",  "bug": true  },
+    { "password": "Пароль1!",   "title": "кириллица запрещена", "bug": false }
+  ],
+  "invalid_emails": [
+    { "email": "userexample.com",      "title": "нет @" },
+    { "email": "user@",                "title": "нет домена" },
+    { "email": "user@domain",          "title": "нет TLD" },
+    { "email": "user@domain.",         "title": "точка в конце домена" },
+
+    { "email": "user@@domain.com",     "title": "двойной @",                          "bug": true, "bugId": "SS-115" },
+    { "email": "user name@domain.com", "title": "пробел в local-part" },
+    { "email": "user@domain..com",     "title": "двойная точка в домене",             "bug": true, "bugId": "SS-115" },
+    { "email": ".user@domain.com",     "title": "точка в начале local-part",          "bug": true, "bugId": "SS-115" },
+    { "email": "user@-domain.com",     "title": "дефис в начале метки домена",        "bug": true, "bugId": "SS-115" },
+    { "email": "@domain.com",          "title": "пустой local-part (до @)" },
+    { "email": "user@.domain.com",     "title": "точка сразу после @ (пустая метка)", "bug": true, "bugId": "SS-115" },
+    { "email": "user@domain.com-",     "title": "дефис в конце метки домена",         "bug": true, "bugId": "SS-115" },
+    { "email": "user..name@domain.com","title": "двойная точка в local-part",         "bug": true, "bugId": "SS-115" },
+    { "email": "user.-name@domain.com","title": "точка перед дефисом в local-part",   "bug": true, "bugId": "SS-115" },
+    { "email": "user@domain,com",      "title": "запятая вместо точки в домене" },
+    { "email": "user@domain/com",      "title": "недопустимый символ '/' в домене" },
+    { "email": "юзер@domain.com",      "title": "кириллица в local-part (EAI)" },
+    { "email": "user@домен.com",       "title": "кириллица в домене (без punycode)" },
+    { "email": "юзер@домен.рф",        "title": "полностью не-ASCII адрес (EAI)" },
+    { "email": "user@.com",            "title": "нет метки домена перед TLD" },
+    { "email": "user@domain..co.uk",   "title": "двойная точка между метками",       "bug": true, "bugId": "SS-115" },
+    { "email": "user@domain.c",        "title": "TLD из одной буквы",                "bug": true, "bugId": "SS-115" },
+    { "email": "user@[127.0.0.1]",     "title": "domain-literal в скобках" },
+    { "email": "user@-sub.domain.com", "title": "поддомен начинается с дефиса",      "bug": true, "bugId": "SS-115" }
+  ]
+}
