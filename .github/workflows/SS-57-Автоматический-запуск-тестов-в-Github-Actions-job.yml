@@ -88,6 +88,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Install Playwright Dependencies
+        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps" -f ui-tests/pom.xml
+
       - name: Run UI Tests
         run: mvn clean test -f ui-tests/pom.xml -Dmaven.test.failure.ignore=true
 
@@ -105,17 +108,33 @@ jobs:
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
           JIRA_URL: ${{ secrets.JIRA_URL }}
         run: |
-          if compgen -G "ui-tests/target/surefire-reports/TEST-*.xml" > /dev/null; then
-            for file in ui-tests/target/surefire-reports/TEST-*.xml; do
-              echo "Uploading $file to Zephyr Scale..."
-              curl -u $JIRA_USER:$JIRA_TOKEN \
-                -X POST \
-                -H "Content-Type: multipart/form-data" \
-                -F "file=@$file" \
-                "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=SS"
-            done
+          JSON_FILE="ui-tests/target/zephyrscale_result.json"
+          
+          if [ -f "$JSON_FILE" ]; then
+            echo "Uploading JSON report: $JSON_FILE to Zephyr Scale..."
+            # Используем специальный endpoint для JSON-отчёта
+            curl -u $JIRA_USER:$JIRA_TOKEN \
+              -X POST \
+              -H "Content-Type: multipart/form-data" \
+              -F "file=@$JSON_FILE" \
+              "$JIRA_URL/rest/atm/1.0/automation/execution/json?projectKey=SS" \
+              --fail
           else
-            echo "No Zephyr XML files found, skipping upload."
+            echo "Zephyr Scale JSON report not found. Falling back to standard JUnit XML upload."
+            # Этот блок останется как запасной вариант
+            if compgen -G "ui-tests/target/surefire-reports/TEST-*.xml" > /dev/null; then
+              for file in ui-tests/target/surefire-reports/TEST-*.xml; do
+                echo "Uploading standard JUnit XML: $file"
+                curl -u $JIRA_USER:$JIRA_TOKEN \
+                  -X POST \
+                  -H "Content-Type: multipart/form-data" \
+                  -F "file=@$file" \
+                  "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=SS" \
+                  --fail
+              done
+            else
+              echo "No test report files found to upload."
+            fi
           fi
 
       - name: Upload Allure Results (UI)

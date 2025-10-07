@@ -17,7 +17,7 @@ public class TestPassingTests extends BaseTest {
 
     @DisplayName("Verify successful assignment of the test 'Тест Прохождение тестов с одной опцией' to a candidate")
     @Test
-    @TestCase(name = "Назначение теста через раздел Тесты")
+    @TestCase(key="SS-T53")
     public void assignTestViaTests() {
 
         new TestsPage(context)
@@ -27,10 +27,10 @@ public class TestPassingTests extends BaseTest {
                 .verifyThatTestIsSuccessfullyAssigned();
     }
 
-    @Tag("SS-T13")
+    @TestCase(key="SS-T13")
     @DisplayName("Get link to the test 'Тест Прохождение тестов с одной опцией'")
     @Test
-    public void SS_T13_getLinkToTest () {
+    public void SS_T13 () {
 
         new TestsPage(context)
                 .openTestsPage()
