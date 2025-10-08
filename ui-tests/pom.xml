@@ -120,7 +120,11 @@
                         -Dfile.encoding=${project.build.sourceEncoding}
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.execution.listeners=com.smartbear.zephyrscale.junit.ZephyrScaleJunit5Extension
+                        </configurationParameters>
+                    </properties>
                 </configuration>
             </plugin>
 

@@ -1,13 +1,12 @@
 package tests.passingtests;
 
+import com.smartbear.zephyrscale.junit.annotation.TestCase;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
-import com.smartbear.zephyrscale.junit.annotation.*;
 
 @Epic("UI Tests")
 @Feature("Tests Passing")

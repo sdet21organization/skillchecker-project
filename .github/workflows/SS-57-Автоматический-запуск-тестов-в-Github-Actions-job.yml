@@ -88,35 +88,39 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Install Playwright dependencies
+        run: npx playwright install-deps
+
       - name: Run UI Tests
+        env:
+          ZEPHYR_SCALE_AUTH_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          ZEPHYR_SCALE_PROJECT_KEY: 'SS'
+          ZEPHYR_SCALE_AUTO_CREATE_TEST_CASES: 'false'
         run: mvn clean test -f ui-tests/pom.xml -Dmaven.test.failure.ignore=true
 
       - name: Debug reports
+        if: always()
         run: |
-          echo "All files in target:"
-          ls -lah ui-tests/target/
-          echo "All XML files under target:"
-          find ui-tests/target/ -name "*.xml"
+            echo "All files in target:"
+            ls -lah ui-tests/target/
 
-      - name: Upload JUnit results to Zephyr Scale (UI)
+      - name: Upload results to Zephyr Scale (UI)
         if: always()
         env:
-          JIRA_USER: ${{ secrets.JIRA_USER }}
-          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
-          JIRA_URL: ${{ secrets.JIRA_URL }}
+            ZEPHYR_TOKEN: ${{ secrets.JIRA_TOKEN }}
         run: |
-          if compgen -G "ui-tests/target/surefire-reports/TEST-*.xml" > /dev/null; then
-            for file in ui-tests/target/surefire-reports/TEST-*.xml; do
-              echo "Uploading $file to Zephyr Scale..."
-              curl -u $JIRA_USER:$JIRA_TOKEN \
+            JSON_FILE="ui-tests/target/zephyrscale_result.json"
+            if [ -f "$JSON_FILE" ]; then
+              echo "Uploading Zephyr Scale JSON report to Cloud API..."
+              curl \
                 -X POST \
+                -H "Authorization: Bearer $ZEPHYR_TOKEN" \
                 -H "Content-Type: multipart/form-data" \
-                -F "file=@$file" \
-                "$JIRA_URL/rest/atm/1.0/automation/execution/junit?projectKey=SS"
-            done
-          else
-            echo "No Zephyr XML files found, skipping upload."
-          fi
+                -F "file=@$JSON_FILE" \
+                "https://api.zephyrscale.smartbear.com/v2/automations/executions/json"
+            else
+              echo "Zephyr Scale JSON report ($JSON_FILE) not found. Upload was skipped."
+            fi
 
       - name: Upload Allure Results (UI)
         if: always()
