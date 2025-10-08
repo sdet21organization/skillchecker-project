@@ -96,7 +96,7 @@ jobs:
           ZEPHYR_SCALE_AUTH_TOKEN: ${{ secrets.JIRA_TOKEN }}
           ZEPHYR_SCALE_PROJECT_KEY: 'SS'
           ZEPHYR_SCALE_AUTO_CREATE_TEST_CASES: 'false'
-        run: mvn clean test -f ui-tests/pom.xml -Dtest=ZephyrSanityCheck -Dmaven.test.failure.ignore=true
+        run: mvn clean test -f ui-tests/pom.xml -Dtest=ZephyrSanityCheck -Dmaven.test.failure.ignore=true -X
 
       - name: Debug reports
         if: always()
