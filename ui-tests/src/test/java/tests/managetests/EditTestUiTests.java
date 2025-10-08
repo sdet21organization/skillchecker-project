@@ -44,4 +44,50 @@ public class EditTestUiTests extends BaseTest {
         details.updateNameAndVerify(newName);
     }
 
+    @Test
+    @DisplayName("Change test description → new description is saved")
+    void changeTestDescription_success() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage details = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+        String testName = testsPage.createTestFullyWithUniqueData();
+        details.verifyTestTitle(testName);
+
+        String newDescription = "Updated description by UI autotest";
+        details.updateDescriptionAndVerify(newDescription);
+    }
+
+
+    @Test
+    @DisplayName("Edit test time limit: value is updated and success message is shown")
+    void editTestTimeLimit_success() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.updateTimeLimitAndVerify(32);
+    }
+
+    @Test
+    @DisplayName("Edit test passing score: value is updated and success message is shown")
+    void editTestPassingScore_success() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.updatePassingScoreAndVerify(80);
+    }
+
 }
