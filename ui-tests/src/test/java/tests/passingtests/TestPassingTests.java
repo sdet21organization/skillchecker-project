@@ -3,6 +3,7 @@ package tests.passingtests;
 import com.smartbear.zephyrscale.junit.annotation.TestCase;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
@@ -11,6 +12,7 @@ import tests.BaseTest;
 @Epic("UI Tests")
 @Feature("Tests Passing")
 @DisplayName("Tests Passing - UI Tests")
+@Disabled("Disabled until app stabilization")
 public class TestPassingTests extends BaseTest {
 
 

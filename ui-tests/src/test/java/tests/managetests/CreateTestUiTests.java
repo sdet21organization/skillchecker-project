@@ -1,5 +1,6 @@
 package tests.managetests;
 
+import com.smartbear.zephyrscale.junit.annotation.TestCase;
 import io.qameta.allure.Epic;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +10,6 @@ import tests.BaseTest;
 
 @Epic("UI Tests")
 @DisplayName("Create Test UI Tests")
-@Disabled("Disabled until app stabilization")
 public class CreateTestUiTests extends BaseTest {
 
     @Test
@@ -30,6 +30,7 @@ public class CreateTestUiTests extends BaseTest {
 
     @Test
     @DisplayName("'Create Test' modal appears after clicking the button")
+    @TestCase(key="SS-T4")
     void createTestModalAppearsAfterClick() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
@@ -40,6 +41,7 @@ public class CreateTestUiTests extends BaseTest {
 
     @Test
     @DisplayName("Create Test: positive scenario → test is created successfully")
+    @TestCase(key="SS-T2")
     void createTest() {
         TestsPage testsPage = new TestsPage(context);
         testsPage.openTestsPage();
