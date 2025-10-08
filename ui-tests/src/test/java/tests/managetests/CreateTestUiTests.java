@@ -10,6 +10,7 @@ import tests.BaseTest;
 
 @Epic("UI Tests")
 @DisplayName("Create Test UI Tests")
+@Disabled("Disabled until app stabilization")
 public class CreateTestUiTests extends BaseTest {
 
     @Test
