@@ -110,21 +110,27 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
                 <configuration>
+                    <!-- Свойства для Allure и кодировки -->
                     <systemPropertyVariables>
                         <allure.results.directory>${project.basedir}/target/allure-results</allure.results.directory>
                         <file.encoding>${project.build.sourceEncoding}</file.encoding>
                     </systemPropertyVariables>
-                    <!-- НЕ выключаем сборку на падение тестов -->
-                    <testFailureIgnore>true</testFailureIgnore>
+
+                    <!-- Агент для AspectJ (Allure) -->
                     <argLine>
                         -Dfile.encoding=${project.build.sourceEncoding}
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
+
+                    <!-- Явно включаем Zephyr Listener -->
                     <properties>
                         <configurationParameters>
                             junit.jupiter.execution.listeners=com.smartbear.zephyrscale.junit.ZephyrScaleJunit5Extension
                         </configurationParameters>
                     </properties>
+
+                    <!-- Оставляем сборку работающей даже при падении тестов (только ОДИН раз) -->
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
