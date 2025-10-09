@@ -2,7 +2,7 @@ package testdata;
 
 public enum BulkTestAssigningValidation {
 
-    TESTINFO1("Сказки", "Описание: Проверка знаний сказок.", "Время выполнения: 30 мин.", "Проходной балл: 70%");
+    TESTINFO1("Сказки", "Описание: Проверка знаний сказок", "Время выполнения: 30 мин.", "Проходной балл: 70%");
 
     public final String name;
     public final String description;
