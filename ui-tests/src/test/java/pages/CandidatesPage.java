@@ -1,12 +1,17 @@
 package pages;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.LoadState;
 import context.TestContext;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import utils.ConfigurationReader;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
@@ -18,6 +23,7 @@ public class CandidatesPage {
 
     private final Locator addCandidateButton;
     private final Locator bulkAssignButton;
+    private final Locator assignTestButton;
     private final Locator bulkAssignButtonCounter;
     private final Locator searchInput;
     private final Locator loadingState;
@@ -49,11 +55,15 @@ public class CandidatesPage {
     public final Locator bulkAssignModalSubmitButtonIdle;
     private final Locator bulkAssignModalCloseButton;
     public final Locator toast;
+    public final Locator testInModalSelect;
+    public final Locator assignTestButtonInModal;
+    public final Locator testAssignedNotification;
 
     public CandidatesPage(TestContext context) {
         this.context = context;
         this.addCandidateButton = context.page.locator("[data-testid='add-candidate-button']");
         this.bulkAssignButton = context.page.locator("[data-testid='bulk-assign-button']");
+        this.assignTestButton = context.page.locator("[data-testid='assign-test-button-5106']");
         this.bulkAssignButtonCounter = context.page.locator("[data-testid='bulk-assign-button'] span:nth-of-type(2)");
         this.searchInput = context.page.locator("[data-testid='candidates-search-input']");
         this.loadingState = context.page.getByText("Загрузка...");
@@ -85,6 +95,9 @@ public class CandidatesPage {
         this.bulkAssignModalSubmitButtonIdle = context.page.getByText("Назначение...");
         this.bulkAssignModalCloseButton = context.page.locator("[data-testid='bulk-assign-close-button']");
         this.toast = context.page.locator("div.gap-1");
+        this.testInModalSelect = context.page.getByRole(AriaRole.COMBOBOX).filter(new Locator.FilterOptions().setHasText(Pattern.compile("^$")));
+        this.assignTestButtonInModal = context.page.locator("[data-testid='assign-test-submit-button']");
+        this.testAssignedNotification = context.page.locator("div[class='text-sm font-semibold']");
     }
 
     @Step("Открыть страницу 'Кандидаты'")
@@ -180,7 +193,7 @@ public class CandidatesPage {
     @Step("Получить список кандидатов, который отображен на модалке ʼНазначить тестʼ")
     public List<String> getCandidatesListOnBulkAssignModal() {
         String candidates = bulkAssignModalCandidatesList.textContent();
-        return  Arrays.stream(candidates.split(", ")).toList();
+        return Arrays.stream(candidates.split(", ")).toList();
     }
 
     @Step("Выбрать тест {test} из списка ʼВыберите тестʼ")
@@ -240,5 +253,25 @@ public class CandidatesPage {
     public CandidatesPage clickImportCancelButton() {
         importCancelImportModalButton.click();
         return this;
+    }
+
+    @Step("Assign test to candidate via Candidates page")
+    public CandidatesPage assignTestToCandidateViaCandidatesPage() {
+        context.page.waitForLoadState(LoadState.NETWORKIDLE);
+        assignTestButton.click();
+        addCandidateModalTitle.waitFor();
+        testInModalSelect.click();
+        Locator option = context.page.getByRole(AriaRole.OPTION,
+                new Page.GetByRoleOptions().setName(ConfigurationReader.get("test.for.successful.passing")));
+        option.scrollIntoViewIfNeeded();
+        option.click();
+        assignTestButtonInModal.click();
+        return this;
+    }
+
+    @Step("Verify that test is successfully assigned")
+    public void verifyThatTestIsSuccessfullyAssigned() {
+        String actualText = testAssignedNotification.textContent();
+        Assertions.assertEquals("Test assigned successfully", actualText);
     }
 }

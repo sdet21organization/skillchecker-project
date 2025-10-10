@@ -8,13 +8,13 @@ import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import utils.ConfigurationReader;
 
 @DisplayName("Page: Tests")
 public class TestsPage {
     TestContext context;
 
     private final Locator searchInput;
-    //    private final Locator testsButton;
     private final Locator assignTestButton;
     private final Locator candidateNameSelect;
     private final Locator assignTestButtonInModal;
@@ -31,7 +31,6 @@ public class TestsPage {
 
     public TestsPage(TestContext context) {
         this.context = context;
-//        this.testsButton = context.page.getByText("Тесты");
         this.searchInput = context.page.locator("input[placeholder='Найти...']");
         this.assignTestButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Назначить тест"));
@@ -42,8 +41,6 @@ public class TestsPage {
         this.copyLinkButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Copy link"));
         this.testAssignedNotification = context.page.locator("div[class='text-sm font-semibold']");
-
-        // --- мои ---
         this.createTestButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Создать тест"));
         this.testNameInput = context.page.locator("//input[@id='name']");
@@ -53,7 +50,7 @@ public class TestsPage {
 
     @Step("Open Tests page")
     public TestsPage openTestsPage() {
-        context.page.navigate("https://skillchecker.tech/dashboard/tests");
+        context.page.navigate(ConfigurationReader.get("URL") + "dashboard/tests");
         return this;
     }
 
@@ -160,26 +157,26 @@ public class TestsPage {
         rowByText.locator("a, button, td, div").first().click();
     }
 
-    @Step("Find test 'Тест Прохождение тестов с одной опцией'")
-    public TestsPage findTestPassingTestWithOneOption() {
-        searchInput.fill("Тест Прохождение тестов с одной опцией");
+    @Step("Find test {test}")
+    public TestsPage findTestPassingTestWithOneOption(String test) {
+        searchInput.fill(test);
         return this;
     }
 
-    @Step("Assign test 'Тест Прохождение тестов с одной опцией' to candidate")
+    @Step("Assign test to candidate via Tests page")
     public TestsPage assignTestToCandidate() {
         assignTestButton.click();
         candidateNameSelect.click();
-        context.page.getByText("John Doe (john.doe@example.").click();
+        context.page.getByText(ConfigurationReader.get("candidate.email")).click();
         assignTestButtonInModal.click();
         return this;
     }
 
-    @Step("Copy link to the test 'Тест Прохождение тестов с одной опцией'")
-    public TestsPage copyLinkToTest() {
+    @Step("Copy test link")
+    public TestsPage copyLinkTest() {
         assignTestButton.click();
         candidateNameSelect.click();
-        context.page.getByText("John Doe (john.doe@example.").click();
+        context.page.getByText(ConfigurationReader.get("candidate.email")).click();
         assignTestButtonInModal.click();
         copyLinkButton.click();
         return this;
@@ -193,7 +190,7 @@ public class TestsPage {
         return newTab;
     }
 
-    @Step("Copy link to clipboard {copyLinkButton}")
+    @Step("Copy link to clipboard")
     public String copyLinkToClipboard(Locator copyButton) {
         copyButton.click();
         return context.page.evaluate("() => navigator.clipboard.readText()").toString();
@@ -209,7 +206,7 @@ public class TestsPage {
     @Step("Verify that link is copied to clipboard")
     public void verifyThatLinkIsCopiedToClipboard() {
         String actualResult = context.page.evaluate("() => navigator.clipboard.readText()").toString();
-        Assertions.assertTrue(actualResult.contains("https://skillchecker.tech/take-test/"));
+        Assertions.assertTrue(actualResult.contains(ConfigurationReader.get("URL") + "take-test/"));
     }
 
     @Step("Verify that test is successfully assigned")
