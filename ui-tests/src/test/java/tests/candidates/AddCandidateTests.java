@@ -1,6 +1,8 @@
 package tests.candidates;
 
 import com.github.javafaker.Faker;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +28,13 @@ public class AddCandidateTests extends BaseTest {
         String position = fakerData.job().position();
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).fillPosition(position).clickModalButtonAddCandidate().searchCandidateBy(email);
+        candidatesPage.open();
+        candidatesPage.clickAddCandidateButton();
+        candidatesPage.fillName(name).fillEmail(email);
+        candidatesPage.fillPosition(position);
+        candidatesPage.clickModalButtonAddCandidate();
+        candidatesPage.searchCandidateBy(email);
+
         assertEquals(name, candidatesPage.candidatesTableNames.textContent(), "Кандидат не найден на страниу");
     }
 
@@ -37,7 +45,11 @@ public class AddCandidateTests extends BaseTest {
     public void addNewCandidateValidationErrors(AddCandidateValidation addCandidateValidation) {
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage.open().clickAddCandidateButton().fillName(addCandidateValidation.getName()).fillEmail(addCandidateValidation.getEmail()).clickModalButtonAddCandidate();
+        candidatesPage.open();
+        candidatesPage.clickAddCandidateButton();
+        candidatesPage.fillName(addCandidateValidation.getName());
+        candidatesPage.fillEmail(addCandidateValidation.getEmail());
+        candidatesPage.clickModalButtonAddCandidate();
 
         String actualError = candidatesPage.getModalErrorMessageText();
         assertEquals(addCandidateValidation.getExpectedError(), actualError, "Валидационное сообщение об ошибке в модальном окне не совпадает с ожидаемым результатом");
@@ -51,18 +63,32 @@ public class AddCandidateTests extends BaseTest {
         String email = fakerData.internet().safeEmailAddress(name);
 
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage.open().clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        candidatesPage.open();
+        candidatesPage.clickAddCandidateButton();
+        candidatesPage.fillName(name);
+        candidatesPage.fillEmail(email);
+        candidatesPage.clickModalButtonAddCandidate();
         context.page.waitForTimeout(1500);
 
-        candidatesPage.clickAddCandidateButton().fillName(name).fillEmail(email).clickModalButtonAddCandidate();
+        candidatesPage.clickAddCandidateButton();
+        candidatesPage.fillName(name).fillEmail(email);
+        candidatesPage.clickModalButtonAddCandidate();
+
         assertTrue(candidatesPage.toast.isVisible(), "Тоаст с сообщением об ошибке не показан");
     }
 
     @Test
     @DisplayName("Проверка закрытия модалки 'Добавить кандидата'")
     public void closeAddCandidateModal() {
+
         CandidatesPage candidatesPage = new CandidatesPage(context);
-        candidatesPage.open().clickAddCandidateButton().clickCancelModalButton();
+        candidatesPage.open();
+        candidatesPage.clickAddCandidateButton();
+        candidatesPage.clickCancelModalButton();
+        candidatesPage.addCandidateModalTitle.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+
+
+
         assertTrue(candidatesPage.addCandidateModalTitle.isHidden(), "Модалка ʼДобавить кандидатаʼ не закрыта");
     }
 }

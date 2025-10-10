@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Page: Test Details")
 public class TestDetailsPage {
@@ -41,6 +42,10 @@ public class TestDetailsPage {
     private final Locator timeLimitInput;
     private final Locator successToast;
     private final Locator passingScoreInput;
+    private final Locator activeToggle;
+    private final Locator cancelButton;
+    private final Locator nameErrorMessage;
+    private final Locator timeLimitErrorMessage;
 
     private Locator countOption(int count) {
         return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
@@ -91,6 +96,16 @@ public class TestDetailsPage {
                 "[role='status']:has-text('Успех'), [role='alert']:has-text('Успех')"
         ).first();
         this.passingScoreInput = context.page.locator("[data-testid='passing-score-input'], input[name='passingScore']").first();
+        this.activeToggle = context.page.locator("button[role='switch']").first();
+        this.cancelButton = context.page.locator("button[data-testid='cancel-button']");
+        this.nameErrorMessage = context.page
+                .locator(".text-destructive:has-text('Test name must be at least 3 characters'), " +
+                        "[id$='form-item-message']:has-text('Test name must be at least 3 characters')")
+                .first();
+        this.timeLimitErrorMessage = context.page
+                .locator("[id$='form-item-message']:has-text('greater than or equal to 0')")
+                .first();
+
     }
 
 
@@ -102,7 +117,7 @@ public class TestDetailsPage {
             title = context.page.locator("h1:has-text(\"" + esc + "\"), h2:has-text(\"" + esc + "\")");
         }
         title.waitFor(new Locator.WaitForOptions().setTimeout(7000).setState(WaitForSelectorState.VISIBLE));
-        Assertions.assertTrue(title.isVisible(), "Ожидали заголовок теста: " + expected);
+        assertTrue(title.isVisible(), "Ожидали заголовок теста: " + expected);
     }
 
     @Step("Open Questions section")
@@ -120,7 +135,7 @@ public class TestDetailsPage {
             context.page.waitForTimeout(100);
         }
         boolean ok = questionsTable.isVisible() || emptyPlaceholder.isVisible();
-        Assertions.assertTrue(ok, "Не нашли ни таблицу вопросов, ни плейсхолдер пустого списка.");
+        assertTrue(ok, "Не нашли ни таблицу вопросов, ни плейсхолдер пустого списка.");
     }
 
     @Step("Open 'Add Question' modal")
@@ -145,7 +160,7 @@ public class TestDetailsPage {
                 .setState(WaitForSelectorState.VISIBLE)
                 .setTimeout(5000));
 
-        Assertions.assertTrue(tableRows.count() > 0, "После сохранения вопрос не появился в списке.");
+        assertTrue(tableRows.count() > 0, "После сохранения вопрос не появился в списке.");
     }
 
     @Step("Fill question with minimal data: text='{text}', opt1='{opt1}', opt2='{opt2}', pts={pts}")
@@ -241,7 +256,7 @@ public class TestDetailsPage {
         context.page.keyboard().press("Tab");
 
         String actual = (String) questionText.evaluate("el => el.validationMessage");
-        Assertions.assertTrue(
+        assertTrue(
                 actual.contains(String.valueOf(min)),
                 "Expected validation message to mention minLength=" + min + ", but was: " + actual
         );
@@ -254,7 +269,7 @@ public class TestDetailsPage {
 
         String actual = (String) questionText.evaluate("el => el.validationMessage");
 
-        Assertions.assertTrue(
+        assertTrue(
                 actual != null && !actual.isBlank(),
                 "Ожидали, что появится сообщение об обязательности поля, но оно отсутствует"
         );
@@ -283,7 +298,7 @@ public class TestDetailsPage {
                 new Locator.FilterOptions().setHasText(newDescription)
         ).first();
         descBlock.waitFor(new Locator.WaitForOptions().setTimeout(5000).setState(WaitForSelectorState.VISIBLE));
-        Assertions.assertTrue(descBlock.isVisible(), "Ожидали увидеть новое описание: " + newDescription);
+        assertTrue(descBlock.isVisible(), "Ожидали увидеть новое описание: " + newDescription);
     }
 
     @Step("Update time limit to {minutes} minutes and verify")
@@ -342,6 +357,72 @@ public class TestDetailsPage {
         assertThat(successToast).containsText("Успех");
     }
 
+    @Step("Toggle active state and verify success message")
+    public void toggleActiveStateAndVerify() {
+        openEditMode();
+
+        assertThat(activeToggle).isVisible();
+        assertThat(activeToggle).isEnabled();
+        activeToggle.click();
+
+        saveEdit();
+        waitEditClosed();
+
+        successToast.waitFor(new Locator.WaitForOptions()
+                .setTimeout(15000)
+                .setState(WaitForSelectorState.ATTACHED));
+        assertThat(successToast)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(15000));
+        assertThat(successToast).containsText("Успех");
+    }
+
+    @Step("Edit active state, click Cancel and verify no changes applied")
+    public void cancelActiveStateChangeAndVerify() {
+        openEditMode();
+        String before = activeToggle.getAttribute("data-state");
+
+        activeToggle.click();
+        cancelButton.click();
+
+        waitEditClosed();
+
+        openEditMode();
+        String after = activeToggle.getAttribute("data-state");
+        Assertions.assertEquals(before, after, "Состояние тумблера изменилось после отмены");
+    }
+
+
+    @Step("Edit name to empty and verify validation error")
+    public void updateNameToEmptyAndVerifyError() {
+        openEditMode();
+
+        assertThat(editNameInput).isVisible();
+        assertThat(editNameInput).isEnabled();
+
+        editNameInput.fill("");
+        saveEdit();
+
+        assertThat(nameErrorMessage)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(5000));
+        assertThat(editContainer).isVisible();
+    }
+
+    @Step("Edit time limit to negative value and verify validation error appears")
+    public void editTimeLimitToNegativeAndVerifyValidationError(int minutes) {
+        openEditMode();
+
+        assertThat(timeLimitInput).isVisible();
+        assertThat(timeLimitInput).isEnabled();
+
+        timeLimitInput.fill(String.valueOf(minutes));
+        timeLimitInput.press("Tab");
+        saveEdit();
+
+        timeLimitErrorMessage.waitFor(new Locator.WaitForOptions()
+                .setTimeout(5000)
+                .setState(WaitForSelectorState.VISIBLE));
+        assertThat(timeLimitErrorMessage).isVisible();
+    }
 
 }
 

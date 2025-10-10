@@ -90,4 +90,66 @@ public class EditTestUiTests extends BaseTest {
         detailsPage.updatePassingScoreAndVerify(80);
     }
 
+
+    @Test
+    @DisplayName("Edit test active state: value is toggled and success message is shown")
+    void editTestActiveState_success() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.toggleActiveStateAndVerify();
+    }
+
+    @Test
+    @DisplayName("Edit active state: cancel button discards changes")
+    void editActiveState_cancelChanges() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.cancelActiveStateChangeAndVerify();
+    }
+
+
+    @Test
+    @DisplayName("Edit test name: validation fails when name is empty")
+    void editTestName_validationError_empty() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.updateNameToEmptyAndVerifyError();
+    }
+
+    @Test
+    @DisplayName("Edit test time limit: validation error when negative value entered")
+    void editTestTimeLimit_negativeValue_validationError() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage detailsPage = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        detailsPage.verifyTestTitle(testName);
+
+        detailsPage.editTimeLimitToNegativeAndVerifyValidationError(-4);
+    }
+
 }
