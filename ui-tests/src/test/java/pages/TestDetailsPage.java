@@ -10,9 +10,10 @@ import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Page: Test Details")
 public class TestDetailsPage {
@@ -53,6 +54,12 @@ public class TestDetailsPage {
 
     private Locator typeOption(String typeText) {
         return context.page.locator("[role='option']:has-text(\"" + typeText + "\")");
+    }
+
+    private void selectAllTextInInput(Locator input) {
+        input.focus();
+        String key = System.getProperty("os.name").toLowerCase().contains("mac") ? "Meta+A" : "Control+A";
+        context.page.keyboard().press(key);
     }
 
     public TestDetailsPage(TestContext context) {
@@ -423,6 +430,90 @@ public class TestDetailsPage {
                 .setState(WaitForSelectorState.VISIBLE));
         assertThat(timeLimitErrorMessage).isVisible();
     }
+
+    @Step("Time limit: typing letters keeps previous numeric value unchanged")
+    public void verifyTimeLimitRejectsLetters() {
+        openEditMode();
+
+        String before = timeLimitInput.inputValue();
+
+        selectAllTextInInput(timeLimitInput);
+        timeLimitInput.type("abc");
+
+        String after = timeLimitInput.inputValue();
+        assertEquals(before, after, "Letters should not be accepted in numeric input");
+
+        saveEdit();
+        waitEditClosed();
+    }
+
+    @Step("Time limit: comma cannot be entered (no comma remains in the input)")
+    public void verifyTimeLimitCommaIsRejected() {
+        openEditMode();
+
+        selectAllTextInInput(timeLimitInput);
+        timeLimitInput.type("12,5");
+
+        String value = timeLimitInput.inputValue();
+        assertFalse(value.contains(","),
+                "Comma must not be accepted in number input, but found: " + value);
+        assertTrue(value.matches("\\d+"),
+                "Value must remain numeric after typing '12,5', got: " + value);
+    }
+
+    @Step("Passing score: cannot be negative")
+    public void verifyPassingScoreRejectsNegativeValue() {
+        openEditMode();
+
+        selectAllTextInInput(passingScoreInput);
+        passingScoreInput.type("-5");
+
+        String value = passingScoreInput.inputValue();
+        assertTrue(!value.startsWith("-"),
+                "Negative value should not be accepted, but got: " + value);
+        assertTrue(value.matches("\\d*"),
+                "Passing score must remain numeric (non-negative), got: " + value);
+
+        saveEdit();
+        waitEditClosed();
+    }
+
+    @Step("Passing score: comma cannot be entered (no comma remains in the input)")
+    public void verifyPassingScoreCommaIsRejected() {
+        openEditMode();
+
+        selectAllTextInInput(passingScoreInput);
+        passingScoreInput.type("75,5");
+
+        String value = passingScoreInput.inputValue();
+       assertFalse(value.contains(","),
+                "Comma must not be accepted in passing score input, but found: " + value);
+       assertTrue(value.matches("\\d+"),
+                "Passing score must remain numeric after typing '75,5', got: " + value);
+
+        saveEdit();
+        waitEditClosed();
+    }
+
+    @Step("Passing score: поле не принимает значение > 100 (без сохранения)")
+    public void verifyPassingScoreRejectsOverHundred_NoSave() {
+        openEditMode();
+
+        String before = passingScoreInput.inputValue();
+
+        selectAllTextInInput(passingScoreInput);
+        passingScoreInput.type("150");
+
+        String after = passingScoreInput.inputValue();
+
+        assertTrue(
+                "100".equals(after) || before.equals(after),
+                "Поле не должно принимать >100; ожидали '100' или предыдущее '" + before + "', а получили: " + after
+        );
+
+    }
+
+
 
 }
 

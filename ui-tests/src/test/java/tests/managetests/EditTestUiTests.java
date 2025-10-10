@@ -59,7 +59,6 @@ public class EditTestUiTests extends BaseTest {
         details.updateDescriptionAndVerify(newDescription);
     }
 
-
     @Test
     @DisplayName("Edit test time limit: value is updated and success message is shown")
     void editTestTimeLimit_success() {
@@ -89,7 +88,6 @@ public class EditTestUiTests extends BaseTest {
 
         detailsPage.updatePassingScoreAndVerify(80);
     }
-
 
     @Test
     @DisplayName("Edit test active state: value is toggled and success message is shown")
@@ -121,7 +119,6 @@ public class EditTestUiTests extends BaseTest {
         detailsPage.cancelActiveStateChangeAndVerify();
     }
 
-
     @Test
     @DisplayName("Edit test name: validation fails when name is empty")
     void editTestName_validationError_empty() {
@@ -152,4 +149,78 @@ public class EditTestUiTests extends BaseTest {
         detailsPage.editTimeLimitToNegativeAndVerifyValidationError(-4);
     }
 
+    @Test
+    @DisplayName("Time limit: comma cannot be entered")
+    void editTimeLimit_commaIsRejected() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage details = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        details.verifyTestTitle(testName);
+
+        details.verifyTimeLimitCommaIsRejected();
+    }
+
+    @Test
+    @DisplayName("Edit time limit: typing letters is ignored (value stays unchanged)")
+    void editTimeLimit_lettersAreIgnored() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage details = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        details.verifyTestTitle(testName);
+
+        details.verifyTimeLimitRejectsLetters();
+    }
+
+    @Test
+    @DisplayName("Edit Passing Score: negative value is rejected")
+    void editPassingScore_negativeValue_rejected() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage details = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        details.verifyTestTitle(testName);
+
+        details.verifyPassingScoreRejectsNegativeValue();
+    }
+
+    @Test
+    @DisplayName("Edit Passing Score: comma cannot be entered")
+    void editPassingScore_commaIsRejected() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage details = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        details.verifyTestTitle(testName);
+
+        details.verifyPassingScoreCommaIsRejected();
+    }
+
+    @Test
+    @DisplayName("Edit Passing Score: нельзя ввести значение > 100 (без сохранения)")
+    void editPassingScore_overHundred_rejected_noSave() {
+        TestsPage testsPage = new TestsPage(context);
+        TestDetailsPage details = new TestDetailsPage(context);
+
+        testsPage.openTestsPage();
+        testsPage.verifyTestsPageIsOpened();
+
+        String testName = testsPage.createTestFullyWithUniqueData();
+        details.verifyTestTitle(testName);
+
+        details.verifyPassingScoreRejectsOverHundred_NoSave();
+    }
 }
