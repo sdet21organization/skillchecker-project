@@ -10,8 +10,10 @@ import context.TestContext;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Page: Test Details")
 public class TestDetailsPage {
@@ -38,6 +40,13 @@ public class TestDetailsPage {
     private final Locator editContainer;
     private final Locator editNameInput;
     private final Locator editSaveButton;
+    private final Locator timeLimitInput;
+    private final Locator successToast;
+    private final Locator passingScoreInput;
+    private final Locator activeToggle;
+    private final Locator cancelButton;
+    private final Locator nameErrorMessage;
+    private final Locator timeLimitErrorMessage;
 
     private Locator countOption(int count) {
         return context.page.locator("[role='option']:has-text(\"" + count + " questions\")");
@@ -45,6 +54,12 @@ public class TestDetailsPage {
 
     private Locator typeOption(String typeText) {
         return context.page.locator("[role='option']:has-text(\"" + typeText + "\")");
+    }
+
+    private void selectAllTextInInput(Locator input) {
+        input.focus();
+        String key = System.getProperty("os.name").toLowerCase().contains("mac") ? "Meta+A" : "Control+A";
+        context.page.keyboard().press(key);
     }
 
     public TestDetailsPage(TestContext context) {
@@ -81,6 +96,23 @@ public class TestDetailsPage {
         this.editSaveButton = editContainer.locator(
                 "button:has-text('Сохранить'), button:has-text('Save')"
         ).first();
+        this.timeLimitInput = context.page.locator(
+                "[data-testid='time-limit-input'], input[name='timeLimit']"
+        ).first();
+        this.successToast = context.page.locator(
+                "[role='status']:has-text('Успех'), [role='alert']:has-text('Успех')"
+        ).first();
+        this.passingScoreInput = context.page.locator("[data-testid='passing-score-input'], input[name='passingScore']").first();
+        this.activeToggle = context.page.locator("button[role='switch']").first();
+        this.cancelButton = context.page.locator("button[data-testid='cancel-button']");
+        this.nameErrorMessage = context.page
+                .locator(".text-destructive:has-text('Test name must be at least 3 characters'), " +
+                        "[id$='form-item-message']:has-text('Test name must be at least 3 characters')")
+                .first();
+        this.timeLimitErrorMessage = context.page
+                .locator("[id$='form-item-message']:has-text('greater than or equal to 0')")
+                .first();
+
     }
 
 
@@ -92,7 +124,7 @@ public class TestDetailsPage {
             title = context.page.locator("h1:has-text(\"" + esc + "\"), h2:has-text(\"" + esc + "\")");
         }
         title.waitFor(new Locator.WaitForOptions().setTimeout(7000).setState(WaitForSelectorState.VISIBLE));
-        Assertions.assertTrue(title.isVisible(), "Ожидали заголовок теста: " + expected);
+        assertTrue(title.isVisible(), "Ожидали заголовок теста: " + expected);
     }
 
     @Step("Open Questions section")
@@ -110,7 +142,7 @@ public class TestDetailsPage {
             context.page.waitForTimeout(100);
         }
         boolean ok = questionsTable.isVisible() || emptyPlaceholder.isVisible();
-        Assertions.assertTrue(ok, "Не нашли ни таблицу вопросов, ни плейсхолдер пустого списка.");
+        assertTrue(ok, "Не нашли ни таблицу вопросов, ни плейсхолдер пустого списка.");
     }
 
     @Step("Open 'Add Question' modal")
@@ -135,7 +167,7 @@ public class TestDetailsPage {
                 .setState(WaitForSelectorState.VISIBLE)
                 .setTimeout(5000));
 
-        Assertions.assertTrue(tableRows.count() > 0, "После сохранения вопрос не появился в списке.");
+        assertTrue(tableRows.count() > 0, "После сохранения вопрос не появился в списке.");
     }
 
     @Step("Fill question with minimal data: text='{text}', opt1='{opt1}', opt2='{opt2}', pts={pts}")
@@ -231,9 +263,22 @@ public class TestDetailsPage {
         context.page.keyboard().press("Tab");
 
         String actual = (String) questionText.evaluate("el => el.validationMessage");
-        Assertions.assertTrue(
+        assertTrue(
                 actual.contains(String.valueOf(min)),
                 "Expected validation message to mention minLength=" + min + ", but was: " + actual
+        );
+    }
+
+    @Step("Check that an error message is shown for empty question name")
+    public void verifyEmptyNameError() {
+        questionText.focus();
+        context.page.keyboard().press("Tab");
+
+        String actual = (String) questionText.evaluate("el => el.validationMessage");
+
+        assertTrue(
+                actual != null && !actual.isBlank(),
+                "Ожидали, что появится сообщение об обязательности поля, но оно отсутствует"
         );
     }
 
@@ -242,6 +287,232 @@ public class TestDetailsPage {
         openAddQuestionModal();
         fillQuestionMinimal(question, answer1, answer2, correctIndex);
     }
+
+    @Step("Set new test description: {newDescription}")
+    public void setEditDescription(String newDescription) {
+        editContainer.locator("textarea#description, textarea[name='description']").fill("");
+        editContainer.locator("textarea#description, textarea[name='description']").type(newDescription);
+    }
+
+    @Step("Update description to '{newDescription}' and verify on page")
+    public void updateDescriptionAndVerify(String newDescription) {
+        openEditMode();
+        setEditDescription(newDescription);
+        saveEdit();
+        waitEditClosed();
+
+        Locator descBlock = context.page.locator("div, p").filter(
+                new Locator.FilterOptions().setHasText(newDescription)
+        ).first();
+        descBlock.waitFor(new Locator.WaitForOptions().setTimeout(5000).setState(WaitForSelectorState.VISIBLE));
+        assertTrue(descBlock.isVisible(), "Ожидали увидеть новое описание: " + newDescription);
+    }
+
+    @Step("Update time limit to {minutes} minutes and verify")
+    public void updateTimeLimitAndVerify(int minutes) {
+        openEditMode();
+
+        assertThat(timeLimitInput).isVisible();
+        assertThat(timeLimitInput).isEnabled();
+
+        int guard = 0;
+        int current = Integer.parseInt(timeLimitInput.inputValue());
+        timeLimitInput.focus();
+        while (current != minutes && guard++ < 300) {
+            timeLimitInput.press(current < minutes ? "ArrowUp" : "ArrowDown");
+            current = Integer.parseInt(timeLimitInput.inputValue());
+        }
+        timeLimitInput.press("Tab");
+
+        saveEdit();
+        waitEditClosed();
+
+        successToast.waitFor(new Locator.WaitForOptions()
+                .setTimeout(15000)
+                .setState(WaitForSelectorState.ATTACHED));
+
+        assertThat(successToast)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(15000));
+        assertThat(successToast).containsText("Успех");
+    }
+
+    @Step("Update passing score to {score} and verify")
+    public void updatePassingScoreAndVerify(int score) {
+        openEditMode();
+
+        assertThat(passingScoreInput).isVisible();
+        assertThat(passingScoreInput).isEnabled();
+
+        int guard = 0;
+        int current = Integer.parseInt(passingScoreInput.inputValue());
+        passingScoreInput.focus();
+        while (current != score && guard++ < 300) {
+            passingScoreInput.press(current < score ? "ArrowUp" : "ArrowDown");
+            current = Integer.parseInt(passingScoreInput.inputValue());
+        }
+        passingScoreInput.press("Tab");
+
+        saveEdit();
+        waitEditClosed();
+
+        successToast.waitFor(new Locator.WaitForOptions()
+                .setTimeout(15000)
+                .setState(WaitForSelectorState.ATTACHED));
+
+        assertThat(successToast)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(15000));
+        assertThat(successToast).containsText("Успех");
+    }
+
+    @Step("Toggle active state and verify success message")
+    public void toggleActiveStateAndVerify() {
+        openEditMode();
+
+        assertThat(activeToggle).isVisible();
+        assertThat(activeToggle).isEnabled();
+        activeToggle.click();
+
+        saveEdit();
+        waitEditClosed();
+
+        successToast.waitFor(new Locator.WaitForOptions()
+                .setTimeout(15000)
+                .setState(WaitForSelectorState.ATTACHED));
+        assertThat(successToast)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(15000));
+        assertThat(successToast).containsText("Успех");
+    }
+
+    @Step("Edit active state, click Cancel and verify no changes applied")
+    public void cancelActiveStateChangeAndVerify() {
+        openEditMode();
+        String before = activeToggle.getAttribute("data-state");
+
+        activeToggle.click();
+        cancelButton.click();
+
+        waitEditClosed();
+
+        openEditMode();
+        String after = activeToggle.getAttribute("data-state");
+        Assertions.assertEquals(before, after, "Состояние тумблера изменилось после отмены");
+    }
+
+
+    @Step("Edit name to empty and verify validation error")
+    public void updateNameToEmptyAndVerifyError() {
+        openEditMode();
+
+        assertThat(editNameInput).isVisible();
+        assertThat(editNameInput).isEnabled();
+
+        editNameInput.fill("");
+        saveEdit();
+
+        assertThat(nameErrorMessage)
+                .isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(5000));
+        assertThat(editContainer).isVisible();
+    }
+
+    @Step("Edit time limit to negative value and verify validation error appears")
+    public void editTimeLimitToNegativeAndVerifyValidationError(int minutes) {
+        openEditMode();
+
+        assertThat(timeLimitInput).isVisible();
+        assertThat(timeLimitInput).isEnabled();
+
+        timeLimitInput.fill(String.valueOf(minutes));
+        timeLimitInput.press("Tab");
+        saveEdit();
+
+        timeLimitErrorMessage.waitFor(new Locator.WaitForOptions()
+                .setTimeout(5000)
+                .setState(WaitForSelectorState.VISIBLE));
+        assertThat(timeLimitErrorMessage).isVisible();
+    }
+
+    @Step("Time limit: typing letters keeps previous numeric value unchanged")
+    public void verifyTimeLimitRejectsLetters() {
+        openEditMode();
+
+        String before = timeLimitInput.inputValue();
+
+        selectAllTextInInput(timeLimitInput);
+        timeLimitInput.type("abc");
+
+        String after = timeLimitInput.inputValue();
+        assertEquals(before, after, "Letters should not be accepted in numeric input");
+
+        saveEdit();
+        waitEditClosed();
+    }
+
+    @Step("Time limit: comma cannot be entered (no comma remains in the input)")
+    public void verifyTimeLimitCommaIsRejected() {
+        openEditMode();
+
+        selectAllTextInInput(timeLimitInput);
+        timeLimitInput.type("12,5");
+
+        String value = timeLimitInput.inputValue();
+        assertFalse(value.contains(","),
+                "Comma must not be accepted in number input, but found: " + value);
+        assertTrue(value.matches("\\d+"),
+                "Value must remain numeric after typing '12,5', got: " + value);
+    }
+
+    @Step("Passing score: cannot be negative")
+    public void verifyPassingScoreRejectsNegativeValue() {
+        openEditMode();
+
+        selectAllTextInInput(passingScoreInput);
+        passingScoreInput.type("-5");
+
+        String value = passingScoreInput.inputValue();
+        assertTrue(!value.startsWith("-"),
+                "Negative value should not be accepted, but got: " + value);
+        assertTrue(value.matches("\\d*"),
+                "Passing score must remain numeric (non-negative), got: " + value);
+
+        saveEdit();
+        waitEditClosed();
+    }
+
+    @Step("Passing score: comma cannot be entered (no comma remains in the input)")
+    public void verifyPassingScoreCommaIsRejected() {
+        openEditMode();
+
+        selectAllTextInInput(passingScoreInput);
+        passingScoreInput.type("75,5");
+
+        String value = passingScoreInput.inputValue();
+       assertFalse(value.contains(","),
+                "Comma must not be accepted in passing score input, but found: " + value);
+       assertTrue(value.matches("\\d+"),
+                "Passing score must remain numeric after typing '75,5', got: " + value);
+
+        saveEdit();
+        waitEditClosed();
+    }
+
+    @Step("Passing score: поле не принимает значение > 100 (без сохранения)")
+    public void verifyPassingScoreRejectsOverHundred_NoSave() {
+        openEditMode();
+
+        String before = passingScoreInput.inputValue();
+
+        selectAllTextInInput(passingScoreInput);
+        passingScoreInput.type("150");
+
+        String after = passingScoreInput.inputValue();
+
+        assertTrue(
+                "100".equals(after) || before.equals(after),
+                "Поле не должно принимать >100; ожидали '100' или предыдущее '" + before + "', а получили: " + after
+        );
+
+    }
+
 
 
 }
