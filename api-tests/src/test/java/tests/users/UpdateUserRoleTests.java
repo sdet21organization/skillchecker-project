@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Update user role (Settings(API)")
+@Tag("positive")
 public class UpdateUserRoleTests extends BaseTest {
 
     private String id;

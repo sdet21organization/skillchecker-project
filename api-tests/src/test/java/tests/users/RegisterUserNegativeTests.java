@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Register duplicate user (Settings(API)")
+@Tag("negative")
 public class RegisterUserNegativeTests extends BaseTest {
 
     @BeforeEach

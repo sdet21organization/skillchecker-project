@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Reset user password (Settings(API)")
+@Tag("positive")
 public class ResetUserPasswordTests extends BaseTest {
 
     private String id;

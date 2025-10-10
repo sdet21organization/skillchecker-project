@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Delete user (Settings(API))")
+@Tag("positive")
 public class DeleteUserTests extends BaseTest {
 
     private String id;
