@@ -14,7 +14,6 @@ public class TestsPage {
     TestContext context;
 
     private final Locator searchInput;
-    //    private final Locator testsButton;
     private final Locator assignTestButton;
     private final Locator candidateNameSelect;
     private final Locator assignTestButtonInModal;
@@ -24,6 +23,8 @@ public class TestsPage {
     private final Locator testNameInput;
     private final Locator testDescriptionInput;
     private final Locator createTestConfirmButton;
+    private final Locator testHeaderByRole;
+    private final Locator testHeaderFallback;
 
     public String uniqueName(String prefix) {
         return prefix + "-" + System.currentTimeMillis();
@@ -31,7 +32,7 @@ public class TestsPage {
 
     public TestsPage(TestContext context) {
         this.context = context;
-//        this.testsButton = context.page.getByText("Тесты");
+
         this.searchInput = context.page.locator("input[placeholder='Найти...']");
         this.assignTestButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Назначить тест"));
@@ -42,13 +43,13 @@ public class TestsPage {
         this.copyLinkButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Copy link"));
         this.testAssignedNotification = context.page.locator("div[class='text-sm font-semibold']");
-
-        // --- мои ---
         this.createTestButton = context.page.getByRole(AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Создать тест"));
         this.testNameInput = context.page.locator("//input[@id='name']");
         this.testDescriptionInput = context.page.locator("textarea[name='description']");
         this.createTestConfirmButton = context.page.locator("//button[@type='submit']");
+        this.testHeaderByRole = context.page.getByRole(AriaRole.HEADING);
+        this.testHeaderFallback = context.page.locator("h1, h2");
     }
 
     @Step("Open Tests page")
@@ -102,18 +103,20 @@ public class TestsPage {
     @Step("Wait for test to be created and header to be: {expectedName}")
     public void waitTestCreatedAndHeaderIs(String expectedName) {
 
-        context.page.waitForURL("**/dashboard/tests/**", new Page.WaitForURLOptions().setTimeout(15000));
-
-
-        Locator headerByRole = context.page.getByRole(
-                AriaRole.HEADING,
-                new Page.GetByRoleOptions().setName(expectedName)
+        context.page.waitForURL("**/dashboard/tests/**",
+                new Page.WaitForURLOptions().setTimeout(15000));
+        Locator headerByRole = testHeaderByRole.filter(
+                new Locator.FilterOptions().setHasText(expectedName)
         );
-        Locator headerFallback = context.page.locator("h1:has-text('" + expectedName + "'), h2:has-text('" + expectedName + "')");
+        Locator headerFallback = testHeaderFallback.filter(
+                new Locator.FilterOptions().setHasText(expectedName)
+        );
 
         boolean visible = headerByRole.isVisible() || headerFallback.isVisible();
         if (!visible) {
-            headerByRole.waitFor(new Locator.WaitForOptions().setTimeout(5000).setState(WaitForSelectorState.VISIBLE));
+            headerByRole.waitFor(new Locator.WaitForOptions()
+                    .setTimeout(5000)
+                    .setState(WaitForSelectorState.VISIBLE));
         }
 
         Assertions.assertTrue(
@@ -121,6 +124,7 @@ public class TestsPage {
                 "Created test header does not match expected name: " + expectedName
         );
     }
+
 
     @Step("Create test with unique name and description")
     public String createTestFullyWithUniqueData() {
@@ -145,19 +149,6 @@ public class TestsPage {
     public void verifyEmptyNameErrorVisible() {
         Locator error = context.page.getByText("Test name must be at least 3 characters");
         Assertions.assertTrue(error.isVisible(), "Сообщение об ошибке для пустого имени теста не отображается");
-    }
-
-
-    @Step("Open test by name: {testName}")
-    public void openTestByName(String testName) {
-
-        Locator rowByText = context.page.locator("tr:has-text(\"" + testName + "\")");
-        rowByText.waitFor(new Locator.WaitForOptions()
-                .setTimeout(7000)
-                .setState(WaitForSelectorState.VISIBLE));
-
-        rowByText.locator("a, button, td, div").first().scrollIntoViewIfNeeded();
-        rowByText.locator("a, button, td, div").first().click();
     }
 
     @Step("Find test 'Тест Прохождение тестов с одной опцией'")
@@ -218,3 +209,9 @@ public class TestsPage {
         Assertions.assertEquals("Test assigned successfully", actualText);
     }
 }
+
+
+
+
+
+
