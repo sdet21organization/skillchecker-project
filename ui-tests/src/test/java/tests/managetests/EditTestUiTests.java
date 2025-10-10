@@ -210,7 +210,7 @@ public class EditTestUiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Edit Passing Score: нельзя ввести значение > 100 (без сохранения)")
+    @DisplayName("Edit Passing Score: values greater than 100 cannot be entered")
     void editPassingScore_overHundred_rejected_noSave() {
         TestsPage testsPage = new TestsPage(context);
         TestDetailsPage details = new TestDetailsPage(context);
