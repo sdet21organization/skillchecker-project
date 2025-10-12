@@ -1,5 +1,6 @@
 package pages;
 
+import com.microsoft.playwright.Download;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -20,6 +21,7 @@ public class CandidatesPage {
 
     TestContext context;
 
+    private Page page;
 
     private final Locator addCandidateButton;
     private final Locator bulkAssignButton;
@@ -58,9 +60,11 @@ public class CandidatesPage {
     public final Locator testInModalSelect;
     public final Locator assignTestButtonInModal;
     public final Locator testAssignedNotification;
+    private final Locator exportButton;
 
     public CandidatesPage(TestContext context) {
         this.context = context;
+        this.page = context.page;
         this.addCandidateButton = context.page.locator("[data-testid='add-candidate-button']");
         this.bulkAssignButton = context.page.locator("[data-testid='bulk-assign-button']");
         this.assignTestButton = context.page.locator("[data-testid='assign-test-button-5106']");
@@ -98,7 +102,17 @@ public class CandidatesPage {
         this.testInModalSelect = context.page.getByRole(AriaRole.COMBOBOX).filter(new Locator.FilterOptions().setHasText(Pattern.compile("^$")));
         this.assignTestButtonInModal = context.page.locator("[data-testid='assign-test-submit-button']");
         this.testAssignedNotification = context.page.locator("div[class='text-sm font-semibold']");
+        this.exportButton = context.page.locator("[data-testid='export-button']");
     }
+
+
+
+        public Download exportCandidates() {
+            return page.waitForDownload(() -> {
+                exportButton.click();
+            });
+        }
+
 
     @Step("Открыть страницу 'Кандидаты'")
     public CandidatesPage open() {
