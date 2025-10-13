@@ -107,8 +107,10 @@ public class CandidatesPage {
 
 
 
+     @Step("Открыть страницу 'Кандидаты'")
         public Download exportCandidates() {
-            return page.waitForDownload(() -> {
+        page.waitForCondition(() -> exportButton.isEnabled());
+        return page.waitForDownload(() -> {
                 exportButton.click();
             });
         }
