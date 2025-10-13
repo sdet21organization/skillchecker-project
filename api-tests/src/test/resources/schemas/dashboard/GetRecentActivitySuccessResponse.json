@@ -33,7 +33,6 @@
       "candidateName",
       "testName",
       "status",
-      "passed",
       "date"
     ]
   }

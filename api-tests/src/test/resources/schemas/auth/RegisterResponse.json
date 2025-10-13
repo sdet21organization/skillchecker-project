@@ -1,36 +1,33 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Generated schema for Root",
   "type": "object",
+  "required": ["id", "organizationId", "fullName", "role", "email", "active"],
   "properties": {
     "id": {
-      "type": "number"
+      "type": "integer"
     },
     "organizationId": {
-      "type": "number"
+      "type": "integer"
     },
     "fullName": {
       "type": "string"
     },
     "role": {
-      "type": "string"
+      "type": "string",
+      "enum": ["admin", "recruiter", "interviewer"]
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "format": "email"
     },
     "active": {
       "type": "boolean"
     },
     "lastLogin": {
       "type": ["string", "null"]
+    },
+    "autoLogin": {
+      "type": "boolean"
     }
-  },
-  "required": [
-    "id",
-    "organizationId",
-    "fullName",
-    "role",
-    "email",
-    "active"
-  ]
+  }
 }
