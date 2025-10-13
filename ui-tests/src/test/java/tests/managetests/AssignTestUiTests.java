@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.TestsPage;
 import tests.BaseTest;
+import utils.ConfigurationReader;
 
 @Epic("UI Tests")
 @DisplayName("Assign Test UI Tests")
@@ -17,7 +18,7 @@ public class AssignTestUiTests extends BaseTest {
 
         testsPage.openTestsPage();
         testsPage.verifyTestsPageIsOpened();
-        testsPage.findTestPassingTestWithOneOption();
+        testsPage.findTestPassingTestWithOneOption(ConfigurationReader.get("test.for.successful.passing"));
         testsPage.assignTestToCandidate();
         testsPage.verifyThatTestIsSuccessfullyAssigned();
     }

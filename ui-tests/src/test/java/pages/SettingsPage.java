@@ -40,7 +40,7 @@ public class SettingsPage {
     }
 
     @Step("Open Add-User modal")
-    private SettingsPage openAddUserModal() {
+    public SettingsPage openAddUserModal() {
         addUserButton.click();
         return this;
     }
@@ -191,5 +191,11 @@ public class SettingsPage {
         rowDeleteButton(email).click();
         confirmDeleteInDialog();
         waitUserRowAbsent(email);
+    }
+
+    public boolean hasInlineError(String text) {
+        return context.page
+                .getByText(text, new Page.GetByTextOptions().setExact(true))
+                .isVisible();
     }
 }

@@ -1,47 +1,86 @@
 package wrappers;
 
 import dto.auth.LoginRequest;
+import dto.auth.SelfRegisterRequest;
+import dto.auth.SendEmailCodeRequest;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
-import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
+
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
 public class Auth {
-    @Step("Send login request with {email} and {password}")
+
+    @Step("POST /login")
     public static Response loginUser(String email, String password) {
-
-        LoginRequest loginPayload = new LoginRequest();
-        loginPayload.setEmail(email);
-        loginPayload.setPassword(password);
-
-        Response response =
-                given()
-                        .contentType("application/json")
-                        .body(loginPayload)
-                        .when()
-                        .post("login")
-                        .then()
-                        .assertThat()
-                        .contentType(ContentType.JSON)
-                        .extract().response();
-response.getCookie("connect.sid");
-        return response;
+        LoginRequest body = new LoginRequest();
+        body.setEmail(email);
+        body.setPassword(password);
+        return given()
+                .relaxedHTTPSValidation()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .post("/login");
     }
 
-
-    @Step("Verify JSON schema and status code is 200")
-    public static void verifySuccessfulLoginResponse(Response response) {
-        response.then().assertThat()
-                .statusCode(200)
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/auth/LoginSuccessResponse.json"));
+    @Step("POST /logout")
+    public static Response logout(String cookie) {
+        return given()
+                .relaxedHTTPSValidation()
+                .header("Cookie", cookie)
+                .contentType(ContentType.JSON)
+                .post("/logout");
     }
 
-    @Step("Verify JSON schema and status code is 401")
-    public static void verifyUnsuccessfulLoginResponse(Response response) {
-        response.then().assertThat()
-                .statusCode(401)
-                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/auth/ErrorResponse.json"));
+    @Step("POST /send-email-code")
+    public static Response sendEmailCode(String email) {
+        SendEmailCodeRequest body = new SendEmailCodeRequest();
+        body.setEmail(email);
+        return given()
+                .relaxedHTTPSValidation()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .post("/send-email-code");
+    }
+
+    @Step("POST /self-register (Map)")
+    public static Response selfRegister(Map<String, Object> payload) {
+        return given()
+                .relaxedHTTPSValidation()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .post("/self-register");
+    }
+
+    @Step("POST /self-register (DTO)")
+    public static Response selfRegister(SelfRegisterRequest body) {
+        return given()
+                .relaxedHTTPSValidation()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .post("/self-register");
+    }
+
+    @Step("POST /register (admin)")
+    public static Response adminRegisterUser(String cookie,
+                                             String email,
+                                             String fullName,
+                                             String password,
+                                             String role,
+                                             boolean active) {
+        return given()
+                .relaxedHTTPSValidation()
+                .header("Cookie", cookie)
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "email", email,
+                        "fullName", fullName,
+                        "password", password,
+                        "role", role,
+                        "active", active
+                ))
+                .post("/register");
     }
 }

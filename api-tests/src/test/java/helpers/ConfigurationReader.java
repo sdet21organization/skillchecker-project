@@ -24,4 +24,11 @@ public class ConfigurationReader {
         }
         return properties.getProperty(key);
     }
+
+    public static Properties getAllProperties() {
+        if (properties == null) {
+            readConfigs();
+        }
+        return properties;
+    }
 }

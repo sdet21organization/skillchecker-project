@@ -2,6 +2,7 @@ package wrappers;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+
 import static io.restassured.RestAssured.given;
 
 public class Dashboard {
@@ -11,9 +12,8 @@ public class Dashboard {
         return given()
                 .header("Cookie", cookie)
                 .when()
-                .get("/stats")
+                .get("stats")
                 .then()
-                .log().all()
                 .extract().response();
     }
 
@@ -22,9 +22,26 @@ public class Dashboard {
         return given()
                 .header("Cookie", cookie)
                 .when()
-                .get("/recent-activity")
+                .get("recent-activity")
                 .then()
-                .log().all()
+                .extract().response();
+    }
+
+    @Step("Get dashboard statistics (unauthorized)")
+    public static Response getStats() {
+        return given()
+                .when()
+                .get("stats")
+                .then()
+                .extract().response();
+    }
+
+    @Step("Get recent activity (unauthorized)")
+    public static Response getRecentActivity() {
+        return given()
+                .when()
+                .get("recent-activity")
+                .then()
                 .extract().response();
     }
 }
