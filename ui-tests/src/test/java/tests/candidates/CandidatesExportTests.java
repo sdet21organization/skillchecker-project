@@ -26,8 +26,10 @@ public class CandidatesExportTests extends BaseTest {
         CandidatesPage candidatesPage = new CandidatesPage(context);
         candidatesPage.open();
 
-        Download download = candidatesPage.exportCandidates();
 
+        Download download = candidatesPage.exportCandidates();
+        context.page.waitForTimeout(1500);
+        
         Path savePath = Paths.get("downloads", download.suggestedFilename());
         download.saveAs(savePath);
 
