@@ -30,6 +30,8 @@ public class CandidatesPage {
     private final Locator candidatesTableChcekboxes;
     private final Locator sellectAllCheckbox;
     public final Locator candidatesTableNames;
+    public final Locator candidatesTableEmails;
+    public final Locator candidatesTablePosition;
 
     private final Locator importButton;
     public final Locator importInfoStatus;
@@ -70,6 +72,8 @@ public class CandidatesPage {
         this.candidatesTableChcekboxes = context.page.locator("[data-testid^='candidate-checkbox-']");
         this.sellectAllCheckbox = context.page.locator("[data-testid='select-all-checkbox']");
         this.candidatesTableNames = context.page.locator("[data-testid^='candidate-link-']");
+        this.candidatesTableEmails = context.page.locator("td.p-4:nth-of-type(3)");
+        this.candidatesTablePosition = context.page.locator("td.p-4:nth-of-type(4)");
 
         this.importButton = context.page.locator("button[class*='inline-flex'] span:has(svg.lucide-download)");
         this.importInfoStatus = context.page.locator("div[role*=\"dialog\"] div.space-y-1");

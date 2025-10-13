@@ -1,27 +1,33 @@
 package tests.auth;
 
-import helpers.ConfigurationReader;
 import helpers.ResponseVerifier;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Story;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Auth;
 import wrappers.Dashboard;
 
-@DisplayName("[SS-T69] ACC Auth/Logout — Logout делает Dashboard недоступной")
+@Epic("API Tests")
+@Feature("Auth/Logout")
+@Owner("Ko.Herasymets")
+@DisplayName("Auth/Logout API Tests")
 public class LogoutTests extends BaseTest {
 
     @Test
-    @DisplayName("локальная сессия: logout 200 → stats 401/403")
-    void logout_then_forbidden() {
-        Response login = Auth.loginUser(ConfigurationReader.get("email"), ConfigurationReader.get("password"));
-        String localCookie = "connect.sid=" + login.getCookie("connect.sid");
+    @Story("SS-T69")
+    @Tag("positive")
+    @DisplayName("[SS-T69][ACC] Auth/Logout — Logout делает Dashboard недоступной → 401")
+    void ssT69_logout_makes_dashboard_unavailable() {
+        Response logoutResp = Auth.logout(cookie);
+        ResponseVerifier.verifyResponse(logoutResp, 200);
 
-        Response out = Auth.logout(localCookie);
-        ResponseVerifier.verifyResponse(out, 200);
-
-        Response stats = Dashboard.getStats(localCookie);
-        ResponseVerifier.verifyUnauthorized(stats);
+        Response dashboardResp = Dashboard.getStats();
+        ResponseVerifier.verifyUnauthorized(dashboardResp);
     }
 }
