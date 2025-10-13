@@ -10,7 +10,6 @@ import utils.ConfigurationReader;
 @Epic("UI Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Settings tests UI")
-@Tag("positive")
 public class SettingsTests extends BaseTest {
 
     private final String email = ConfigurationReader.get("test.user.email");
