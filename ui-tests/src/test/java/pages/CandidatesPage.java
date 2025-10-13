@@ -107,10 +107,12 @@ public class CandidatesPage {
 
 
 
-     @Step("Открыть страницу 'Кандидаты'")
+     @Step("Нажать кнопку 'Экспорт'")
         public Download exportCandidates() {
-        page.waitForCondition(() -> exportButton.isEnabled());
-        return page.waitForDownload(() -> {
+        context.page.waitForCondition(() -> exportButton.isEnabled());
+        context.page.waitForTimeout(1500);
+
+        return context.page.waitForDownload(() -> {
                 exportButton.click();
             });
         }
