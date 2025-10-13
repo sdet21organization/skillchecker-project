@@ -110,8 +110,6 @@ public class CandidatesPage {
      @Step("Нажать кнопку 'Экспорт'")
         public Download exportCandidates() {
         context.page.waitForCondition(() -> exportButton.isEnabled());
-        context.page.waitForTimeout(1500);
-
         return context.page.waitForDownload(() -> {
                 exportButton.click();
             });
