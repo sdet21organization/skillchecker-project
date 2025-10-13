@@ -1,6 +1,8 @@
 package tests.users;
 
 import dto.users.RegisterUserRequest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Owner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,8 @@ import wrappers.Users;
 import static helpers.ConfigurationReader.get;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Epic("API Tests")
+@Owner("Oleksiy Korniyenko")
 @DisplayName("Register user (Settings(API)")
 public class RegisterUserTests extends BaseTest {
 

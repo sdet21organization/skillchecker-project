@@ -2,21 +2,19 @@ package tests.dashboard;
 
 import helpers.ResponseVerifier;
 import io.qameta.allure.Epic;
-import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.BaseTest;
 import wrappers.Dashboard;
 
-@Epic("Dashboard")
-@Owner("Ваше Имя")
-@DisplayName("API-тесты для страницы Dashboard")
+@Epic("API Tests")
+@DisplayName("API-tests for Dashboard")
 public class DashboardApiTests extends BaseTest {
 
 
     @Test
-    @DisplayName("Проверка получения статистики дашборда")
+    @DisplayName("Verify Dashboard Statistics Retrieval")
     void getDashboardStatsTest() {
         Response response = Dashboard.getStats(cookie);
 
@@ -24,7 +22,7 @@ public class DashboardApiTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Проверка получения списка недавней активности")
+    @DisplayName("Verify Retrieval of Recent Activity List")
     void getRecentActivityListTest() {
         Response response = Dashboard.getRecentActivity(cookie);
 

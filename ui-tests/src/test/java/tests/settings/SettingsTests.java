@@ -1,13 +1,14 @@
 package tests.settings;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Owner;
+import org.junit.jupiter.api.*;
 import pages.SettingsPage;
 import tests.BaseTest;
 import utils.ConfigurationReader;
 
+@Epic("UI Tests")
+@Owner("Oleksiy Korniyenko")
 @DisplayName("Settings tests UI")
 public class SettingsTests extends BaseTest {
 
