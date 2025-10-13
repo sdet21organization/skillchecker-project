@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Users Negative API Tests")
-@Tag("negative")
 
 public class UsersNegativeApiTests extends BaseTest {
 

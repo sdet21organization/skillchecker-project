@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Block & unblock user (Settings(API)")
-@Tag("positive")
 public class UpdateUserActiveTests extends BaseTest {
 
     private String id;

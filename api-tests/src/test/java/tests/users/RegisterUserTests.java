@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("API Tests")
 @Owner("Oleksiy Korniyenko")
 @DisplayName("Register user (Settings(API)")
-@Tag("positive")
 public class RegisterUserTests extends BaseTest {
 
     @BeforeEach
