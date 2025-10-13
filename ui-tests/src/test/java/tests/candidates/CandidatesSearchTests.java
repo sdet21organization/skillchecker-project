@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+@DisplayName("Search candidates functionality")
 public class CandidatesSearchTests extends BaseTest {
 
     Faker fakerData = new Faker();
