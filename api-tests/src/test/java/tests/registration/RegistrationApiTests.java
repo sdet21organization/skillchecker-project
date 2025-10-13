@@ -11,6 +11,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -107,7 +108,6 @@ public class RegistrationApiTests extends BaseTest {
     void ssT83_invalid_verification_code_409() {
         String email = EmailGenerator.generateUnique();
         Auth.sendEmailCode(email);
-
         Map<String, Object> req = payload(email, "API Autotest", "Qwerty123!", "Org-" + (int) (Math.random() * 9000 + 1000), "000000");
         Response r = Auth.selfRegister(req);
         ResponseVerifier.verifyResponse(r, 409, "schemas/auth/ErrorResponse.json");
@@ -127,11 +127,12 @@ public class RegistrationApiTests extends BaseTest {
         long searchStartTime = System.currentTimeMillis();
 
         Auth.sendEmailCode(email);
+        Thread.sleep(2000);
 
         String code = ImapCodeFetcher.fetchVerificationCode(email, searchStartTime);
-        Assumptions.assumeTrue(code != null, "Verification code not received via IMAP");
+        org.junit.jupiter.api.Assertions.assertNotNull(code, "Verification code was not received via IMAP within timeout");
 
-        Map<String, Object> req = payload(email, "API Autotest", "Qwerty123!", "Org-" + (int) (Math.random() * 9000 + 1000), code);
+        Map<String, Object> req = payload(email, "API Autotest", "Qwerty123!", "Org-" + (int)(Math.random()*9000+1000), code);
         Response r = Auth.selfRegister(req);
         ResponseVerifier.verifyResponse(r, 201, "schemas/auth/RegisterResponse.json");
     }
@@ -150,9 +151,10 @@ public class RegistrationApiTests extends BaseTest {
         long searchStartTime = System.currentTimeMillis();
 
         Auth.sendEmailCode(email);
+        Thread.sleep(2000);
 
         String code = ImapCodeFetcher.fetchVerificationCode(email, searchStartTime);
-        Assumptions.assumeTrue(code != null, "Verification code not received via IMAP");
+        org.junit.jupiter.api.Assertions.assertNotNull(code, "Verification code was not received via IMAP within timeout");
 
         String org = "Org_#2025-API!@%+";
         Map<String, Object> req = payload(email, "API Autotest", "Qwerty123!", org, code);
